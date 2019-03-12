@@ -10,7 +10,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { NFC, Ndef } from '@ionic-native/nfc';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
+import { DeviceProvider } from '../providers/device/device';
+import { DialogProvider } from '../providers/dialog/dialog';
+import { LanguageProvider } from '../providers/language/language';
+import { SubscriptionProvider } from '../providers/subscription/subscription';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfhQIXhUXY1FQOov_pQk63G4frcZe5HBk",
@@ -24,7 +27,6 @@ const firebaseConfig = {
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
   ],
   imports: [
     BrowserModule,
@@ -37,13 +39,16 @@ const firebaseConfig = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
   ],
   providers: [
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     NFC,
-    Ndef
+    Ndef,
+    DeviceProvider,
+    DialogProvider,
+    LanguageProvider,
+    SubscriptionProvider
   ]
 })
 export class AppModule {}
