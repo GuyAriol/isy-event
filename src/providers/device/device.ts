@@ -34,6 +34,7 @@ export class DeviceProvider {
             })
 
           this.nfcSubscription = observable.subscribe(event => {
+            console.log(event)
             this.handleNFCread(event.tag)
           })
         }

@@ -14,6 +14,8 @@ import { DeviceProvider } from '../providers/device/device';
 import { DialogProvider } from '../providers/dialog/dialog';
 import { LanguageProvider } from '../providers/language/language';
 import { SubscriptionProvider } from '../providers/subscription/subscription';
+import { NfcProvider } from '../providers/nfc/nfc';
+import { StorageProvider } from '../providers/storage/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfhQIXhUXY1FQOov_pQk63G4frcZe5HBk",
@@ -48,7 +50,9 @@ const firebaseConfig = {
     DeviceProvider,
     DialogProvider,
     LanguageProvider,
-    SubscriptionProvider
+    SubscriptionProvider,
+    NfcProvider,
+    StorageProvider
   ]
 })
 export class AppModule {}
