@@ -7,6 +7,7 @@ import {AngularFireDatabaseModule} from 'angularfire2/database';
 import {AngularFireAuthModule} from 'angularfire2/auth';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { NFC, Ndef } from '@ionic-native/nfc';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -40,7 +41,9 @@ const firebaseConfig = {
   ],
   providers: [
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    NFC,
+    Ndef
   ]
 })
 export class AppModule {}
