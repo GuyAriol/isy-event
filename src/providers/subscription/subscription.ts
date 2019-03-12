@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { DeviceProvider } from '../device/device';
+import { NfcProvider } from '../nfc/nfc';
 
 @Injectable()
 export class SubscriptionProvider {
 
   constructor(
-    private deviceProv: DeviceProvider,
+    private nfcProv: NfcProvider,
 
   ) {
 
@@ -13,7 +13,7 @@ export class SubscriptionProvider {
 
   defaultSubscription(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.deviceProv.subscribeNFC()
+      this.nfcProv.subscribeNFC()
 
       resolve()
     });
@@ -24,6 +24,6 @@ export class SubscriptionProvider {
   }
 
   defaultUnscription() {
-    this.deviceProv.unsubscribeNFC()
+    this.nfcProv.unsubscribeNFC()
   }
 }
