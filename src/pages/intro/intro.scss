@@ -1,3 +1,19 @@
 page-intro {
+  .border {
+    border-style: solid;
+    min-width: 320px;
+    margin: 25px;
+    margin-bottom: 25px;
+    background: white;
+    border-color: gray;
+    border-width: 1px;
+  }
 
+  .content{
+    background: gainsboro;
+  }
+
+  ion-slide{
+    background: white;
+  }
 }

@@ -9,6 +9,7 @@ import {AngularFireAuthModule} from 'angularfire2/auth';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { NFC, Ndef } from '@ionic-native/nfc';
+import { AES256 } from '@ionic-native/aes-256';
 
 import { MyApp } from './app.component';
 import { DeviceProvider } from '../providers/device/device';
@@ -17,6 +18,7 @@ import { LanguageProvider } from '../providers/language/language';
 import { SubscriptionProvider } from '../providers/subscription/subscription';
 import { NfcProvider } from '../providers/nfc/nfc';
 import { StorageProvider } from '../providers/storage/storage';
+import { UserProvider } from '../providers/user/user';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfhQIXhUXY1FQOov_pQk63G4frcZe5HBk",
@@ -54,7 +56,9 @@ const firebaseConfig = {
     LanguageProvider,
     SubscriptionProvider,
     NfcProvider,
-    StorageProvider
+    StorageProvider,
+    AES256,
+    UserProvider
   ]
 })
 export class AppModule {}

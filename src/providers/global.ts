@@ -3,6 +3,11 @@ export var global = {
   reportError: true,
 }
 
+export var encription = {
+  key : '73f0aa401a863e7672324ec953f3c423',
+  IV : '4ebd3c6ee24a1cd3'
+}
+
 export interface langExprType {
   wrongInput: string
   emailInUse: string,
