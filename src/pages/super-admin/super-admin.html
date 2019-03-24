@@ -1,0 +1,139 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>super-admin</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row justify-content-center>
+    <div class="sub-menu1">
+      <ion-list padding>
+        <ion-item-divider>
+          <p style="font-size: 20px; color: black">Client</p>
+          <p>Total events: {{selectedUserEventsId?.length}}</p>
+          <ion-icon *ngIf="selectedUser?.id" padding-right item-right name="add-circle" (click)="isNewEvent = true; isNewUser = false"></ion-icon>
+          <ion-icon item-right name="person-add" (click)="isNewUser = true; isNewEvent = false"></ion-icon>
+        </ion-item-divider>
+
+        <ion-item>
+          <ion-label>Nom</ion-label>
+          <ion-select (ionChange)="clientSelected($event)">
+            <ion-option *ngFor="let user of allusers | async" [value]="user">{{user?.name ? user?.name :
+              selectedUser.name}} </ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Event</ion-label>
+          <ion-select (ionChange)="eventSelected($event)">
+            <ion-option *ngFor="let eventId of selectedUserEventsId">{{selectedUser?.events[eventId].title}}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item no-lines>
+          <p>Total events:</p>
+          <p item-right>{{selectedUserEventsId?.length}}</p>
+        </ion-item>
+
+        <ion-item no-lines>
+            <p>Total cartes:</p>
+            <!-- <p item-right>{{(selectedUserCard$ | async)?.length}}</p> -->
+          </ion-item>
+      </ion-list>
+    </div>
+
+    <div *ngIf="isNewUser" class="sub-menu1 box-shadow">
+      <ion-list padding>
+        <ion-item-divider>
+          <p style="font-size: 20px; color: black">Créer client</p>
+          <ion-icon item-right padding-right name="checkmark-circle" (click)="createNewUser()"></ion-icon>
+          <ion-icon item-right name="close-circle" (click)="isNewUser = false"></ion-icon>
+        </ion-item-divider>
+
+        <ion-item>
+          <ion-label stacked>Name</ion-label>
+          <ion-input [(ngModel)]="credentials.name" type=text></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label stacked>Email</ion-label>
+          <ion-input [(ngModel)]="credentials.email" type=email></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label stacked>Mot de passe</ion-label>
+          <ion-input [(ngModel)]="credentials.password" type="password"></ion-input>
+        </ion-item>
+
+      </ion-list>
+    </div>
+
+    <div *ngIf="isNewEvent" class="sub-menu1 box-shadow">
+      <ion-list padding>
+        <ion-item-divider>
+          <p style="font-size: 20px; color: black">Créer event</p>
+          <ion-icon item-right padding-right name="checkmark-circle" (click)="createNewEvent()"></ion-icon>
+          <ion-icon item-right name="close-circle" (click)="isNewEvent = false"></ion-icon>
+        </ion-item-divider>
+
+        <ion-item>
+          <ion-label stacked>Titre</ion-label>
+          <ion-input [(ngModel)]="newEvent.title" type=text></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label stacked>Lieu</ion-label>
+          <ion-input [(ngModel)]="newEvent.location" type=text></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label stacked>Date</ion-label>
+          <ion-input [(ngModel)]="newEvent.date" type=text></ion-input>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div class="sub-menu1">
+      <ion-list padding>
+        <ion-item-divider>
+          <p style="font-size: 20px; color: black">Activer carte</p>
+          <ion-icon item-right name="checkmark-circle"></ion-icon>
+        </ion-item-divider>
+
+        <ion-list radio-group no-lines [(ngModel)]="nfcCard.role">
+          <ion-item class="card">
+            <ion-label>Caissier boisson</ion-label>
+            <ion-radio value="2"></ion-radio>
+          </ion-item>
+
+          <ion-item class="card">
+            <ion-label>Caissier entrée</ion-label>
+            <ion-radio value="1"></ion-radio>
+          </ion-item>
+
+          <ion-item class="card">
+            <ion-label>Barman</ion-label>
+            <ion-radio value="3"></ion-radio>
+          </ion-item>
+
+          <ion-item class="card">
+            <ion-label>Admin</ion-label>
+            <ion-radio value="0"></ion-radio>
+          </ion-item>
+        </ion-list>
+
+      </ion-list>
+
+    </div>
+
+    <div class="sub-menu1">
+
+    </div>
+
+    <div class="sub-menu1">
+
+    </div>
+  </ion-row>
+
+</ion-content>
