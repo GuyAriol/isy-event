@@ -1,7 +1,0 @@
-{
-  "name": "isy_Event",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "ionic-angular"
-}
