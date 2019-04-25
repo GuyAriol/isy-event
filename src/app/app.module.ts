@@ -11,7 +11,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
 import { DeviceProvider } from '../providers/device/device';
 import { DialogProvider } from '../providers/dialog/dialog';
 import { LanguageProvider } from '../providers/language/language';
@@ -32,7 +31,6 @@ const firebaseConfig = {
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
   ],
   imports: [
     BrowserModule,
@@ -45,7 +43,6 @@ const firebaseConfig = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
   ],
   providers: [
     StatusBar,
