@@ -6,6 +6,13 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { DeviceProvider } from '../providers/device/device';
+import { DialogProvider } from '../providers/dialog/dialog';
+import { LanguageProvider } from '../providers/language/language';
+import { NfcProvider } from '../providers/nfc/nfc';
+import { StorageProvider } from '../providers/storage/storage';
+import { SubscriptionProvider } from '../providers/subscription/subscription';
+import { UserProvider } from '../providers/user/user';
 
 @NgModule({
   declarations: [
@@ -24,7 +31,14 @@ import { HomePage } from '../pages/home/home';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    DeviceProvider,
+    DialogProvider,
+    LanguageProvider,
+    NfcProvider,
+    StorageProvider,
+    SubscriptionProvider,
+    UserProvider
   ]
 })
 export class AppModule {}
