@@ -1,15 +1,44 @@
-<!--
-  Generated template for the InputPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-  <ion-navbar>
-    <ion-title>input</ion-title>
+  <ion-navbar color="header">
+    <ion-title>Diaspo Night</ion-title>
+
+    <ion-buttons end>
+      <button ion-button text-capitalize style="font-family: 'MontSerrat'">Kasse 1</button>
+    </ion-buttons>
   </ion-navbar>
+
+  <ion-item>
+    <p item-right style="color: goldenrod; font-family: MontSerrat">Mrs Sandra</p>
+  </ion-item>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
 
+  <div padding *ngIf="terminalType=='terminal'">
+    sdgd fd63313
+  </div>
+
+  <div *ngIf="terminalType=='display'">
+    <ion-row>
+      <ion-col>
+        <ion-scroll padding scrollY="true" style="height: 250px; font-size: 10px; color: white; padding: 0px">
+          <p>Dernières conso:</p>
+          <p>26.04.19 19:26 XS</p>
+          <p>26.04.19 19:58 L</p>
+        </ion-scroll>
+      </ion-col>
+
+      <ion-col padding>
+        <div class="balance">
+
+        </div>
+      </ion-col>
+    </ion-row>
+
+
+  </div>
 </ion-content>
+
+<ion-footer no-border style="height: 22px; background: white">
+  <p padding-right float-right style="font-size: 9px">Powered by Vihautech.net</p>
+</ion-footer>

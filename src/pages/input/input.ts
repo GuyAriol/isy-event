@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the InputPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -15,11 +9,19 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class InputPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  terminalType = 'display'   // terminal || display
+
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+
+  ) {
+    if (Object.keys(navParams.data).length) this.terminalType = navParams.data
+
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad InputPage');
+    console.log(this.terminalType);
   }
 
 }
