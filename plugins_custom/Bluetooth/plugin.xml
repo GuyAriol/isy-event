@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android" id="vihautech-plugin-bluetooth" version="1.0.0">
+  <name>bluetooth</name>
+  <description>scan connect interact</description>
+  <license>Copyright Vihautech</license>
+  <keywords>cordova,vihautech, bluetooth</keywords>
+  <repo></repo>
+  <issue></issue>
+
+  <js-module src="www/bluetooth.js" name="bluetooth">
+    <clobbers target="bluetooth" />
+  </js-module>
+
+  <!-- android -->
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="bluetooth">
+        <param name="android-package" value="cm.vihautech.isyevent.bluetooth"/>
+        <!-- To use this plugin replace value with your own package's name-->
+      </feature>
+    </config-file>
+
+    <config-file target="app\src\main\AndroidManifest.xml" parent="/*">
+      <uses-permission android:name="android.permission.BLUETOOTH"/>
+      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    </config-file>
+
+    <config-file target="app\src\main\AndroidManifest.xml" parent="/manifest/application">
+    </config-file>
+
+    <!-- To use this plugin replace target-dir with your own package's name-->
+    <source-file src="src/android/bluetooth.java" target-dir="app/src/main/java/cm/vihautech/isymoney2018" />
+  </platform>
+</plugin>

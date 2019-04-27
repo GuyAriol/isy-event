@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { BleProvider } from '../../providers/ble/ble';
 
-/**
- * Generated class for the IntroPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -15,11 +10,27 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class IntroPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    public ble: BleProvider
+
+  ) {
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad IntroPage');
+  }
+
+  sc() {
+
+    //  this.ble.statScan()
+    bluetooth.Test({id: '123', name: 'Ariol'})
+
+  }
+
+  stc() {
+    this.ble.stopScan()
   }
 
 }

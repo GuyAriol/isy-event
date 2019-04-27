@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "name": "vihautech-plugin-bluetooth",
+  "cordova_name": "Bluetooth features",
+  "description": "scan connect interact",
+  "license": "Copyright Vihautech",
+  "repo": "",
+  "issue": "",
+  "keywords": [
+      "cordova",
+      "device",
+      "vihautech"
+  ],
+  "platforms": [
+      "android"
+  ],
+  "engines": [],
+  "englishdoc": ""
+}
