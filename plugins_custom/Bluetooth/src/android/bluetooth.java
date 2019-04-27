@@ -52,7 +52,7 @@ public class bluetooth extends CordovaPlugin {
     else if ("activateBluetooth".equals(action)) {
       if (!bluetoothAdapter.isEnabled()) {
         Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(enableIntent, 1);
+        cordova.getActivity().startActivityForResult(enableIntent, 1);
       }
 
       else {

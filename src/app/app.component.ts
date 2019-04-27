@@ -19,7 +19,7 @@ export class MyApp {
     platform.ready().then(() => {
       if (platform.is('cordova')) {splashScreen.hide(); status.hide()}
 
-
+      bluetooth.activateBluetooth()
     });
   }
 }
