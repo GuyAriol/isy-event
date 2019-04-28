@@ -38,5 +38,12 @@ export class SuperadminPage {
     }
   }
 
+  connectPairedDevice(deviceAddress){
+    bluetooth.stopScan()
+    bluetooth.connect({address: deviceAddress}).then(res => {
+
+    })
+  }
+
 
 }

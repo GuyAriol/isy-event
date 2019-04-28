@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { global } from '../global';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class BleProvider {

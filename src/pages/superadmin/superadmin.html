@@ -15,10 +15,12 @@
         <button ion-button (click)="getPairedDevices()">Scanner</button>
       </div>
 
-      <ion-item detail-push *ngFor="let device of connectedDevices">
-        <p><b>{{device.name}} </b> </p>
-        <p>{{device.address}} </p>
-      </ion-item>
+      <div *ngFor="let device of connectedDevices">
+        <ion-item detail-push (click="connectPairedDevice(device.address)")>
+          <p><b>{{device.name}} </b> </p>
+          <p>{{device.address}} </p>
+        </ion-item>
+      </div>
     </div>
 
     <ion-item-divider style="font-size: 18px; color: brown">
