@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the SuperadminPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { DeviceProvider } from '../../providers/device/device';
 
 @IonicPage()
 @Component({
@@ -15,11 +9,34 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SuperadminPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  isMenuConnectDevices = false
+  connectedDevices = []
+
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private deviceProv: DeviceProvider,
+
+  ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SuperadminPage');
   }
+
+  getPairedDevices() {
+    if (this.deviceProv.isCordova) {
+      bluetooth.startScan().then(devices => {
+        console.log(devices)
+
+        for (let deviceKey in devices) {
+          this.connectedDevices.push(devices[deviceKey])
+        }
+
+        console.log(this.connectedDevices)
+      })
+    }
+  }
+
 
 }

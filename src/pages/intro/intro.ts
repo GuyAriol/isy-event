@@ -22,15 +22,4 @@ export class IntroPage {
     console.log('ionViewDidLoad IntroPage');
   }
 
-  sc() {
-
-    //  this.ble.statScan()
-    bluetooth.Test({id: '123', name: 'Ariol'})
-
-  }
-
-  stc() {
-    this.ble.stopScan()
-  }
-
 }
