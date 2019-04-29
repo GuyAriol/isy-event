@@ -25,7 +25,12 @@ export class SuperadminPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SuperadminPage');
-    this.nativeBroadcast.addEventListener('device-connected').subscribe(res => {
+    this.nativeBroadcast.addEventListener('iE-device-connected').subscribe(res => {
+      console.log(res.data)
+    })
+
+
+    this.nativeBroadcast.addEventListener('iE-msg-read').subscribe(res => {
       console.log(res.data)
     })
   }

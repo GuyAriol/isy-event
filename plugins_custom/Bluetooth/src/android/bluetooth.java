@@ -217,7 +217,7 @@ public class bluetooth extends CordovaPlugin {
         Log.i(TAG, "socket connect PASS");
       } catch (IOException e) {
         Log.i(TAG, "socket connect FAIL 1");
-        Log.i(TAG, e);
+        Log.i(TAG, e.getMessage());
         try {
           socket.close();
         } catch (IOException e2) {
@@ -483,7 +483,7 @@ public class bluetooth extends CordovaPlugin {
         case STATE_CONNECTED:
           setStatus("Connected to: " + connectingDevice.getName());
 
-          notifyIonic("device-connected", connectingDevice.getName());
+          notifyIonic("IE-device-connected", connectingDevice.getName());
           break;
         case STATE_CONNECTING:
           setStatus("Connecting...");
@@ -511,9 +511,7 @@ public class bluetooth extends CordovaPlugin {
 
         String readMessage = new String(readBuf, 0, msg.arg1);
 
-        // toDo: enable
-        // chatMessages.add(connectingDevice.getName() + ": " + readMessage);
-        // chatAdapter.notifyDataSetChanged();
+        notifyIonic("iE-msg-read", "sender:" + connectingDevice.getName() + "message:" + readMessage);
         break;
       case MESSAGE_DEVICE_OBJECT:
         connectingDevice = msg.getData().getParcelable(DEVICE_OBJECT);
