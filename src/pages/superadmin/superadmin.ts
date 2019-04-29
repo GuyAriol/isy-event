@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DeviceProvider } from '../../providers/device/device';
+import { Broadcaster } from '@ionic-native/broadcaster';
 
 @IonicPage()
 @Component({
@@ -11,17 +12,22 @@ export class SuperadminPage {
 
   isMenuConnectDevices = false
   connectedDevices = []
+  connectedDevice = ''
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private deviceProv: DeviceProvider,
+    private nativeBroadcast: Broadcaster
 
   ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SuperadminPage');
+    this.nativeBroadcast.addEventListener('device-connected').subscribe(res => {
+      console.log(res.data)
+    })
   }
 
   getPairedDevices() {
@@ -41,7 +47,7 @@ export class SuperadminPage {
   connectPairedDevice(deviceAddress){
     bluetooth.stopScan()
     bluetooth.connect({address: deviceAddress}).then(res => {
-
+      console.log(res)
     })
   }
 

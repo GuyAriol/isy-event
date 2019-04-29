@@ -9,6 +9,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { Broadcaster } from '@ionic-native/broadcaster';
 
 import { MyApp } from './app.component';
 import { DeviceProvider } from '../providers/device/device';
@@ -57,6 +58,7 @@ const firebaseConfig = {
     SubscriptionProvider,
     UserProvider,
     BleProvider,
+    Broadcaster
   ]
 })
 export class AppModule {}
