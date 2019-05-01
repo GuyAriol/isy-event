@@ -9,7 +9,7 @@ export class SubscriptionProvider {
 
 
   ) {
-    console.log('Hello SubscriptionProvider Provider');
+
   }
 
   defaultSubscription(): Promise<any> {

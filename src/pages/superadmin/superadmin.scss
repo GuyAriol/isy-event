@@ -1,3 +1,59 @@
 page-superadmin {
+  .sub-menu {
+    border-style: solid;
+    border-width: 1px;
+    border-color: gray;
+    border-radius: 15px;
+    min-height: 200px;
+    min-width: 250px;
+    max-width: 250px;
+    width: 100%;
+    margin: 20px;
 
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    border: 1px solid #DDDDDD;
+
+  }
+
+  .sub-menu1 {
+    border-style: solid;
+    border-width: 1px;
+    border-color: gray;
+    border-radius: 15px;
+    min-height: 200px;
+    min-width: 300px;
+    margin: 20px;
+
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    border: 1px solid #DDDDDD;
+
+  }
+
+  .card {
+    color: grey;
+
+  }
+
+  ion-item-divider {
+    height: 30px;
+    padding-bottom: 35px;
+    margin-bottom: 10px;
+  }
+
+  .box-shadow {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+  }
+
+  ion-select {
+    max-width: 70%;
+  }
 }

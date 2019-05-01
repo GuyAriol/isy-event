@@ -1,12 +1,12 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { global, encription } from '../global';
 import { NFC, Ndef } from '@ionic-native/nfc';
 import { DialogProvider } from '../dialog/dialog';
-import { Events } from 'ionic-angular';
+import { Events, AlertController } from 'ionic-angular';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AES256 } from '@ionic-native/aes-256';
+import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
@@ -43,10 +43,12 @@ export class NfcProvider {
     private ndef: Ndef,
     private afdb: AngularFireDatabase,
     private encrypt: AES256,
+    private alertCtrl: AlertController,
+    private openNativeSettings: OpenNativeSettings
 
 
   ) {
-    console.log('Hello NfcProvider Provider');
+
   }
 
 
@@ -74,9 +76,27 @@ export class NfcProvider {
             this.handleNFCread(event.tag)
           })
         }
+        else {
+
+        }
       })
       .catch(error => {
         console.log(error)
+
+        let alert = this.alertCtrl.create({
+          title: 'Attention',
+          subTitle: '',
+          message: 'Vous devez activer le NFC pour le bon fonctionement de ce logiciel !!',
+          buttons: [
+            {
+              text: 'Activer',
+              handler: () => {
+                this.openNativeSettings.open("nfc_settings")
+              }
+            }
+          ]
+        });
+        alert.present();
       })
   }
 

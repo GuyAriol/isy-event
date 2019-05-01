@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { DialogProvider } from '../../providers/dialog/dialog';
 import { UserProvider } from '../../providers/user/user';
-import { NfcProvider } from '../../providers/nfc/nfc';
 import { DeviceProvider } from '../../providers/device/device';
 
 
