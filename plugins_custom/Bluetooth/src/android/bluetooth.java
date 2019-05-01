@@ -180,12 +180,12 @@ public class bluetooth extends CordovaPlugin {
   public void write(byte[] out) {
     ReadWriteThread r;
     synchronized (this) {
-        if (state != STATE_CONNECTED)
-            return;
-        r = connectedThread;
+      if (state != STATE_CONNECTED)
+        return;
+      r = connectedThread;
     }
     r.write(out);
-}
+  }
 
   private void connectionLost() {
     Message msg = handler.obtainMessage(MESSAGE_TOAST);
@@ -466,7 +466,7 @@ public class bluetooth extends CordovaPlugin {
       connect(device);
     }
 
-    else if("send".equals(action)){
+    else if ("send".equals(action)) {
       String message = args.getJSONObject(0).getString("msg");
 
       byte[] send = message.getBytes();
@@ -498,8 +498,19 @@ public class bluetooth extends CordovaPlugin {
         switch (msg.arg1) {
         case STATE_CONNECTED:
           setStatus("Connected to: " + connectingDevice.getName());
-          notifyIonic("iE-device-connected", connectingDevice.getName());
+
+          JSONObject result = new JSONObject();
+          try {
+            result.put("name", connectingDevice.getName());
+            result.put("address", connectingDevice.getAddress());
+            result.put("isConnected", true);
+          } catch (JSONException e) {
+
+          }
+
+          notifyIonic("iE-device-connected", result.toString());
           break;
+
         case STATE_CONNECTING:
           setStatus("Connecting...");
           break;
@@ -509,6 +520,7 @@ public class bluetooth extends CordovaPlugin {
           break;
         }
         break;
+
       case MESSAGE_WRITE:
         byte[] writeBuf = (byte[]) msg.obj;
 
@@ -518,6 +530,7 @@ public class bluetooth extends CordovaPlugin {
         // chatMessages.add("Me: " + writeMessage);
         // chatAdapter.notifyDataSetChanged();
         break;
+
       case MESSAGE_READ:
         byte[] readBuf = (byte[]) msg.obj;
 
@@ -525,14 +538,27 @@ public class bluetooth extends CordovaPlugin {
 
         notifyIonic("iE-msg-read", "sender:" + connectingDevice.getName() + "message:" + readMessage);
         break;
+
       case MESSAGE_DEVICE_OBJECT:
         connectingDevice = msg.getData().getParcelable(DEVICE_OBJECT);
         Toast.makeText(cordova.getActivity().getApplicationContext(), "Connected to " + connectingDevice.getName(),
             Toast.LENGTH_SHORT).show();
         break;
+
       case MESSAGE_TOAST:
         Toast.makeText(cordova.getActivity().getApplicationContext(), msg.getData().getString("toast"),
             Toast.LENGTH_SHORT).show();
+
+        JSONObject result = new JSONObject();
+        try {
+          result.put("name", "");
+          result.put("address", "");
+          result.put("isConnected", false);
+        } catch (JSONException e) {
+
+        }
+
+        notifyIonic("iE-device-connected", result.toString());
         break;
       }
       return false;

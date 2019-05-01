@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { DeviceProvider } from '../../providers/device/device';
+import { DeviceProvider, bluetoothDeviceType } from '../../providers/device/device';
 import { Broadcaster } from '@ionic-native/broadcaster';
+import { DialogProvider } from '../../providers/dialog/dialog';
 
 @IonicPage()
 @Component({
@@ -11,15 +12,16 @@ import { Broadcaster } from '@ionic-native/broadcaster';
 export class SuperadminPage {
 
   isMenuConnectDevices = false
-  connectedDevices = []
-  connectedDevice = ''
+  pairedDevices = []
+  connectedDevice = {} as bluetoothDeviceType
   input = ''
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private deviceProv: DeviceProvider,
-    private nativeBroadcast: Broadcaster
+    private nativeBroadcast: Broadcaster,
+    private dialogProv: DialogProvider
 
   ) {
   }
@@ -27,12 +29,11 @@ export class SuperadminPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad SuperadminPage');
 
-    if(this.deviceProv.isCordova){
+    if (this.deviceProv.isCordova) {
       this.nativeBroadcast.addEventListener('iE-device-connected').subscribe(res => {
-        console.log(res.data)
-        this.connectedDevice = res.data
+        this.connectedDevice = JSON.parse(res.data)
+        this.dialogProv.dismissLoading()
       })
-
 
       this.nativeBroadcast.addEventListener('iE-msg-read').subscribe(res => {
         console.log(res.data)
@@ -47,24 +48,26 @@ export class SuperadminPage {
         console.log(devices)
 
         for (let deviceKey in devices) {
-          this.connectedDevices.push(devices[deviceKey])
+          this.pairedDevices.push(devices[deviceKey])
         }
 
-        console.log(this.connectedDevices)
+        console.log(this.pairedDevices)
       })
     }
   }
 
-  connectPairedDevice(deviceAddress){
+  connectPairedDevice(deviceAddress) {
+    this.dialogProv.showLoading('scanning', 10000)
+
     bluetooth.stopScan()
-    bluetooth.connect({address: deviceAddress}).then(res => {
+    bluetooth.connect({ address: deviceAddress }).then(res => {
       console.log(res)
     })
   }
 
-  send(){
+  send() {
     console.log('yess', this.input)
-    bluetooth.send({msg: this.input})
+    bluetooth.send({ msg: this.input })
   }
 
 

@@ -15,8 +15,8 @@
         <button ion-button (click)="getPairedDevices()">Scanner</button>
       </div>
 
-      <div *ngIf="!connectedDevice">
-        <div *ngFor="let device of connectedDevices">
+      <div *ngIf="!connectedDevice.isConnected">
+        <div *ngFor="let device of pairedDevices">
           <ion-item detail-push (click)="connectPairedDevice(device.address)">
             <p><b>{{device.name}} </b> </p>
             <p>{{device.address}} </p>
@@ -24,8 +24,8 @@
         </div>
       </div>
 
-      <div *ngIf="connectedDevice">
-        <p>Connected to {{connectedDevice}}</p>
+      <div *ngIf="connectedDevice.isConnected">
+        <p>Connected to {{connectedDevice.name}}</p>
       </div>
 
 

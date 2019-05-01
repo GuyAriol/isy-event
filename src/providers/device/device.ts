@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { global } from '../global';
 import { Platform } from 'ionic-angular';
 
+export interface bluetoothDeviceType {
+  name: string,
+  address: string
+  isConnected: boolean
+}
+
 @Injectable()
 export class DeviceProvider {
 
