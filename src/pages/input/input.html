@@ -20,7 +20,7 @@
 
 <ion-content>
 
-  <div padding *ngIf="isMenuDevice">
+  <div padding *ngIf="isMenuDevice" style="padding-top: 20px">
     <div *ngIf="bluetoothProv.connectedDevice.isConnected" text-center>
       <h2>Connected to {{bluetoothProv.connectedDevice.name}}</h2>
     </div>

@@ -4,6 +4,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/take'
 import { Observable } from 'rxjs/Observable';
+import { global } from '../global';
 
 export interface userType {
   name: string,
@@ -34,8 +35,11 @@ export class UserProvider {
   }
 
   getCurrentUser(): Promise<any> {
+    if (global.isDebug) {
+      console.log('--UserProvider-getCurrentUser')
+    }
     return new Promise((resolve, reject) => {
-      this.localStorage.getFromLocalStorage('isyevent_user')
+      this.localStorage.getFromLocalStorage('iE_user')
         .then(user => {
           if (user) this.currentUser = user
           else this.currentUser = null
@@ -101,5 +105,26 @@ export class UserProvider {
 
   getEvents(userID) {
     return <Observable<eventType[]>>this.afd.list(`events/${userID}`).valueChanges()
+  }
+
+  /** Log out from the APP
+   *
+   * @memberof UserProvider
+   */
+  logOut(): Promise<any> {
+    if (global.isDebug) {
+      console.log('--UserProvider-logOut')
+    }
+
+    return new Promise((resolve, reject) => {
+      this.auth.auth.signOut()
+        .then(() => {
+          this.currentUser = null
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
 }

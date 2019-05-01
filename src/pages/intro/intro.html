@@ -1,22 +1,104 @@
-<!--
-  Generated template for the IntroPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-  <ion-navbar>
-    <ion-title>intro</ion-title>
+  <ion-navbar color="header">
+    <ion-title>Welcome</ion-title>
+
+    <ion-buttons end padding-right>
+      <button ion-button icon-only (click)="login()">
+        <ion-icon name="person"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <button ion-button (click)="sc()">Start scan</button>
-  <button ion-button (click)="stc()">Stop scan</button>
+  <ion-row padding *ngIf="showLogin" class="animated jackInTheBox fadeOutUp" justify-content-center>
+    <!-- <ion-col *ngIf="deviceProv.screenWidth > 400"></ion-col> -->
 
-  <div *ngFor="let device of ble.scannedDevices" >
-    <p>{{device.id}}</p>
-  </div>
+    <ion-col col-8>
+      <div *ngIf="userProv?.currentUser">
+        <ion-item>
+          <h1 text-center>Connecté</h1><br>
+
+          <p padding-top><b>Name:</b> {{userProv.currentUser.name}} </p><br>
+          <p><b>Email:</b> {{userProv.currentUser.email}} </p><br>
+
+          <div padding-top text-center>
+            <button ion-button color=light (click)="cancel()">Fermer</button>
+            <button ion-button (click)="signOut()">Déconnexion</button>
+          </div><br>
+        </ion-item>
+      </div>
+
+      <div *ngIf="!userProv?.currentUser">
+        <ion-item>
+          <ion-label stacked>Email</ion-label>
+          <ion-input [(ngModel)]="credentials.email" type=email></ion-input>
+        </ion-item>
+
+        <ion-item padding-bottom>
+          <ion-label stacked>Mot de passe</ion-label>
+          <ion-input [(ngModel)]="credentials.password" type="password"></ion-input>
+        </ion-item>
+
+        <div text-right padding style="background: white">
+          <button ion-button small color=light (click)="cancel()">Fermer</button>
+          <button ion-button small (click)="signin()">Connexion</button>
+        </div>
+      </div>
 
 
+    </ion-col>
+
+  </ion-row>
+
+  <ion-row *ngIf="!showLogin" style="min-height: 90%;" justify-content-center>
+    <ion-col col-6>
+      <ion-slides pager loop autoplay="2500" slidesPerView="1">
+        <ion-slide>
+          <h1>Page pub 1</h1>
+          <h2>Event xx in xx when xx </h2>
+        </ion-slide>
+
+        <ion-slide>
+          <h1>Page pub 3</h1>
+          <h2>Event xx in xx when xx </h2>
+        </ion-slide>
+
+        <ion-slide>
+          <h1>Page pub 3</h1>
+          <h2>Event xx in xx when xx </h2>
+        </ion-slide>
+      </ion-slides>
+    </ion-col>
+
+    <ion-col padding-left>
+      <div>
+        <h1 text-center>Abend Ablauf</h1>
+        <p>
+          <span>21:00</span>
+          <span>Arrivée des invités</span>
+        </p>
+
+        <p>
+          <span>22:30</span>
+          <span>Arrivée des invités STAR</span>
+        </p>
+
+        <p>
+          <span>.</span>
+          <span>.</span>
+        </p>
+
+        <p>
+          <span>.</span>
+          <span>.</span>
+        </p>
+      </div>
+
+    </ion-col>
+  </ion-row>
 </ion-content>
+
+<ion-footer no-border style="height: 22px; background: white">
+  <p padding-right float-right style="font-size: 9px">Powered by Vihautech.net</p>
+</ion-footer>

@@ -10,6 +10,8 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Broadcaster } from '@ionic-native/broadcaster';
+import { NFC, Ndef } from '@ionic-native/nfc';
+import { AES256 } from '@ionic-native/aes-256';
 
 import { MyApp } from './app.component';
 import { DeviceProvider } from '../providers/device/device';
@@ -58,7 +60,10 @@ const firebaseConfig = {
     SubscriptionProvider,
     UserProvider,
     BluetoothProvider,
-    Broadcaster
+    Broadcaster,
+    NFC,
+    Ndef,
+    AES256
   ]
 })
 export class AppModule {}
