@@ -2,11 +2,7 @@ import { Injectable } from '@angular/core';
 import { global } from '../global';
 import { Platform } from 'ionic-angular';
 
-export interface bluetoothDeviceType {
-  name: string,
-  address: string
-  isConnected: boolean
-}
+export enum terminalEnum {terminal, display}
 
 @Injectable()
 export class DeviceProvider {
@@ -16,6 +12,8 @@ export class DeviceProvider {
 
   screenWidth = null; sreenHeight = null
   isAppBooting = 0
+
+  terminalType = null
 
   constructor(
     private platform: Platform,

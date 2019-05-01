@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { BleProvider } from '../../providers/ble/ble';
 
 
 @IonicPage()
@@ -11,8 +10,10 @@ import { BleProvider } from '../../providers/ble/ble';
 export class IntroPage {
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    public ble: BleProvider
+  constructor(
+    public navCtrl: NavController,
+     public navParams: NavParams,
+
 
   ) {
 

@@ -493,13 +493,15 @@ public class bluetooth extends CordovaPlugin {
   private Handler handler = new Handler(new Handler.Callback() {
     @Override
     public boolean handleMessage(Message msg) {
+      JSONObject result;
+
       switch (msg.what) {
       case MESSAGE_STATE_CHANGE:
         switch (msg.arg1) {
         case STATE_CONNECTED:
           setStatus("Connected to: " + connectingDevice.getName());
 
-          JSONObject result = new JSONObject();
+          result = new JSONObject();
           try {
             result.put("name", connectingDevice.getName());
             result.put("address", connectingDevice.getAddress());
@@ -536,7 +538,16 @@ public class bluetooth extends CordovaPlugin {
 
         String readMessage = new String(readBuf, 0, msg.arg1);
 
-        notifyIonic("iE-msg-read", "sender:" + connectingDevice.getName() + "message:" + readMessage);
+        result = new JSONObject();
+        try {
+          result.put("from", connectingDevice.getName());
+          result.put("msg", readMessage);
+          result.put("cmd", "");
+        } catch (JSONException e) {
+
+        }
+
+        notifyIonic("iE-msg-read", result.toString());
         break;
 
       case MESSAGE_DEVICE_OBJECT:
@@ -549,7 +560,7 @@ public class bluetooth extends CordovaPlugin {
         Toast.makeText(cordova.getActivity().getApplicationContext(), msg.getData().getString("toast"),
             Toast.LENGTH_SHORT).show();
 
-        JSONObject result = new JSONObject();
+        result = new JSONObject();
         try {
           result.put("name", "");
           result.put("address", "");

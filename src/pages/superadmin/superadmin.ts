@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { DeviceProvider, bluetoothDeviceType } from '../../providers/device/device';
-import { Broadcaster } from '@ionic-native/broadcaster';
+import { DeviceProvider, terminalEnum } from '../../providers/device/device';
 import { DialogProvider } from '../../providers/dialog/dialog';
+import { BluetoothProvider } from '../../providers/ble/bluetooth';
 
 @IonicPage()
 @Component({
@@ -12,33 +12,21 @@ import { DialogProvider } from '../../providers/dialog/dialog';
 export class SuperadminPage {
 
   isMenuConnectDevices = false
-  pairedDevices = []
-  connectedDevice = {} as bluetoothDeviceType
-  input = ''
+  input = ''    // terminal || display
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private deviceProv: DeviceProvider,
-    private nativeBroadcast: Broadcaster,
-    private dialogProv: DialogProvider
+    public deviceProv: DeviceProvider,
+    private dialogProv: DialogProvider,
+    public bluetoothProv: BluetoothProvider
 
   ) {
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SuperadminPage');
-
-    if (this.deviceProv.isCordova) {
-      this.nativeBroadcast.addEventListener('iE-device-connected').subscribe(res => {
-        this.connectedDevice = JSON.parse(res.data)
-        this.dialogProv.dismissLoading()
-      })
-
-      this.nativeBroadcast.addEventListener('iE-msg-read').subscribe(res => {
-        console.log(res.data)
-      })
-    }
 
   }
 
@@ -48,10 +36,10 @@ export class SuperadminPage {
         console.log(devices)
 
         for (let deviceKey in devices) {
-          this.pairedDevices.push(devices[deviceKey])
+          this.bluetoothProv.pairedDevices.push(devices[deviceKey])
         }
 
-        console.log(this.pairedDevices)
+        console.log(this.bluetoothProv.pairedDevices)
       })
     }
   }
@@ -70,5 +58,13 @@ export class SuperadminPage {
     bluetooth.send({ msg: this.input })
   }
 
+  toogleDeviceType(arg) {
+    if (arg == 'terminal') this.deviceProv.terminalType = terminalEnum.terminal
+    else if (arg == 'display') this.deviceProv.terminalType = terminalEnum.display
 
+  }
+
+  close() {
+    this.navCtrl.setRoot("InputPage", terminalEnum[this.deviceProv.terminalType])
+  }
 }

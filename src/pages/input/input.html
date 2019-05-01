@@ -14,11 +14,11 @@
 
 <ion-content>
 
-  <div padding *ngIf="terminalType=='terminal'">
+  <div padding *ngIf="deviceProv.terminalType=='terminal'">
     sdgd fd63313
   </div>
 
-  <div *ngIf="terminalType=='display'">
+  <div *ngIf="deviceProv.terminalType=='display'">
     <ion-row>
       <ion-col>
         <ion-scroll padding scrollY="true" style="height: 250px; font-size: 10px; color: white; padding: 0px">
@@ -30,13 +30,14 @@
 
       <ion-col padding>
         <div class="balance">
-
+          <p>{{bluetoothProv.display.msg}} </p>
         </div>
       </ion-col>
     </ion-row>
 
 
   </div>
+
 </ion-content>
 
 <ion-footer no-border style="height: 22px; background: white">

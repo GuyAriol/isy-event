@@ -6,6 +6,14 @@
 
 <ion-content padding>
   <ion-list>
+    <div text-right>
+      <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 0)"
+        (click)="toogleDeviceType('terminal')">Terminal</button>
+      <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 1)"
+        (click)="toogleDeviceType('display')">Monitor</button>
+      <hr>
+    </div>
+
     <ion-item-divider style="font-size: 18px; color: brown" (click)="isMenuConnectDevices=!isMenuConnectDevices">
       Coupler des appareils
     </ion-item-divider>
@@ -15,8 +23,8 @@
         <button ion-button (click)="getPairedDevices()">Scanner</button>
       </div>
 
-      <div *ngIf="!connectedDevice.isConnected">
-        <div *ngFor="let device of pairedDevices">
+      <div *ngIf="!bluetoothProv.connectedDevice?.isConnected">
+        <div *ngFor="let device of bluetoothProv.pairedDevices">
           <ion-item detail-push (click)="connectPairedDevice(device.address)">
             <p><b>{{device.name}} </b> </p>
             <p>{{device.address}} </p>
@@ -24,8 +32,8 @@
         </div>
       </div>
 
-      <div *ngIf="connectedDevice.isConnected">
-        <p>Connected to {{connectedDevice.name}}</p>
+      <div *ngIf="bluetoothProv.connectedDevice.isConnected">
+        <p>Connected to {{bluetoothProv.connectedDevice.name}}</p>
       </div>
 
 
@@ -35,12 +43,14 @@
       Géger les clients
     </ion-item-divider>
 
+    <button ion-button (click)="close()" >Terminer</button>
   </ion-list>
 </ion-content>
 
 <ion-footer padding>
-  <ion-item>
-    <ion-input [(ngModel)]="input" ></ion-input>
-<button ion-button item-right (click)="send()">send</button>
-  </ion-item>
-</ion-footer>
+    <ion-item>
+      <ion-input [(ngModel)]="input" ></ion-input>
+  <button ion-button item-right (click)="send()">send</button>
+    </ion-item>
+  </ion-footer>
+

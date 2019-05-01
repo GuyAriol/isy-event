@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { DeviceProvider } from '../../providers/device/device';
+import { BluetoothProvider } from '../../providers/ble/bluetooth';
+import { Broadcaster } from '@ionic-native/broadcaster';
+
 
 
 @IonicPage()
@@ -9,19 +13,22 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class InputPage {
 
-  terminalType = 'display'   // terminal || display
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public deviceProv: DeviceProvider,
+    public bluetoothProv: BluetoothProvider,
+    private nativeBroadcast: Broadcaster,
+
 
   ) {
-    if (Object.keys(navParams.data).length) this.terminalType = navParams.data
+    if (Object.keys(navParams.data).length) this.deviceProv.terminalType = navParams.data
 
   }
 
   ionViewDidLoad() {
-    console.log(this.terminalType);
+
+
   }
 
 }

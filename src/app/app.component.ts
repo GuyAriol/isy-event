@@ -3,6 +3,7 @@ import { Platform } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { DeviceProvider } from '../providers/device/device';
+import { BluetoothProvider } from '../providers/ble/bluetooth';
 
 @Component({
   templateUrl: 'app.html'
@@ -14,11 +15,14 @@ export class MyApp {
     platform: Platform,
     splashScreen: SplashScreen,
     status: StatusBar,
-    deviceProv: DeviceProvider
+    deviceProv: DeviceProvider,
+    bluetoothProv: BluetoothProvider,
+
 
   ) {
 
     deviceProv.getCurrentPlatform()
+    bluetoothProv.subscribeNativeEvent()
 
     platform.ready().then(() => {
       if (platform.is('cordova')) {

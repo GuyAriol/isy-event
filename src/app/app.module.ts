@@ -19,7 +19,7 @@ import { NfcProvider } from '../providers/nfc/nfc';
 import { StorageProvider } from '../providers/storage/storage';
 import { SubscriptionProvider } from '../providers/subscription/subscription';
 import { UserProvider } from '../providers/user/user';
-import { BleProvider } from '../providers/ble/ble';
+import { BluetoothProvider } from '../providers/ble/bluetooth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfhQIXhUXY1FQOov_pQk63G4frcZe5HBk",
@@ -57,7 +57,7 @@ const firebaseConfig = {
     StorageProvider,
     SubscriptionProvider,
     UserProvider,
-    BleProvider,
+    BluetoothProvider,
     Broadcaster
   ]
 })
