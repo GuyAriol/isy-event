@@ -196,6 +196,13 @@ public class bluetooth extends CordovaPlugin {
 
     // Start the service over to restart listening mode
     start();
+
+    Intent i = new Intent("iE-device-disconnected");
+    Bundle b = new Bundle();
+    b.putString("data", "");
+    i.putExtras(b);
+
+    LocalBroadcastManager.getInstance(context).sendBroadcastSync(i);
   }
 
   // runs while attempting to make an outgoing connection

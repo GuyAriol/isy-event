@@ -14,33 +14,6 @@
       <hr>
     </div>
 
-    <ion-item-divider style="font-size: 18px; color: brown" (click)="isMenuConnectDevices=!isMenuConnectDevices">
-      Coupler des appareils
-    </ion-item-divider>
-
-    <div padding-left *ngIf="isMenuConnectDevices">
-      <div text-right padding-top>
-        <button ion-button (click)="connection()">
-          {{bluetoothProv.connectedDevice.isConnected? 'Disconnect' : 'Scanner'}}
-        </button>
-      </div>
-
-      <div *ngIf="!bluetoothProv.connectedDevice?.isConnected">
-        <div *ngFor="let device of bluetoothProv.pairedDevices">
-          <ion-item detail-push (click)="connectPairedDevice(device.address)">
-            <p><b>{{device.name}} </b> </p>
-            <p>{{device.address}} </p>
-          </ion-item>
-        </div>
-      </div>
-
-      <div *ngIf="bluetoothProv.connectedDevice.isConnected">
-        <p>Connected to {{bluetoothProv.connectedDevice.name}}</p>
-      </div>
-
-
-    </div>
-
     <ion-item-divider style="font-size: 18px; color: brown">
       Géger les clients
     </ion-item-divider>

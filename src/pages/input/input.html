@@ -2,8 +2,14 @@
   <ion-navbar color="header">
     <ion-title>Diaspo Night</ion-title>
 
-    <ion-buttons end>
-      <button ion-button text-capitalize style="font-family: 'MontSerrat'">Kasse 1</button>
+    <ion-buttons end (click)="isMenuDevice=!isMenuDevice">
+      <button ion-button text-capitalize style="font-family: 'MontSerrat'">Kasse 1 </button>
+      <button ion-button icon-only>
+        <img src="assets/imgs/arrow.png" alt="" width="20">
+      </button>
+      <button ion-button text-capitalize
+        style="font-family: 'MontSerrat'">{{bluetoothProv.connectedDevice.name || '???' }} </button>
+
     </ion-buttons>
   </ion-navbar>
 
@@ -13,28 +19,51 @@
 </ion-header>
 
 <ion-content>
-  <div padding *ngIf="deviceProv.terminalType==0">
-    sdgd fd63313
+
+  <div padding *ngIf="isMenuDevice">
+    <div *ngIf="bluetoothProv.connectedDevice.isConnected" text-center>
+      <h2>Connected to {{bluetoothProv.connectedDevice.name}}</h2>
+    </div>
+
+    <div text-center padding-top>
+      <button mode="ios" ion-button (click)="connection()">
+        {{bluetoothProv.connectedDevice.isConnected? 'Disconnect' : 'Scanner'}}
+      </button>
+    </div>
+
+    <div padding *ngIf="!bluetoothProv.connectedDevice?.isConnected">
+      <div *ngFor="let device of bluetoothProv.pairedDevices">
+        <ion-item detail-push (click)="connectPairedDevice(device.address)">
+          <p><b>{{device.name}} </b> </p>
+          <p>{{device.address}} </p>
+        </ion-item>
+      </div>
+    </div>
+
   </div>
 
-  <div *ngIf="deviceProv.terminalType==1">
-    <ion-row>
-      <ion-col>
-        <ion-scroll padding scrollY="true" style="height: 250px; font-size: 10px; color: white; padding: 0px">
-          <p>Dernières conso:</p>
-          <p>26.04.19 19:26 XS</p>
-          <p>26.04.19 19:58 L</p>
-        </ion-scroll>
-      </ion-col>
+  <div *ngIf="!isMenuDevice">
+    <div padding *ngIf="deviceProv.terminalType==0">
+      sdgd fd63313
+    </div>
 
-      <ion-col padding>
-        <div class="balance">
-          <p>{{bluetoothProv.display.msg}} </p>
-        </div>
-      </ion-col>
-    </ion-row>
+    <div *ngIf="deviceProv.terminalType==1">
+      <ion-row>
+        <ion-col>
+          <ion-scroll padding scrollY="true" style="height: 250px; font-size: 10px; color: white; padding: 0px">
+            <p>Dernières conso:</p>
+            <p>26.04.19 19:26 XS</p>
+            <p>26.04.19 19:58 L</p>
+          </ion-scroll>
+        </ion-col>
 
-
+        <ion-col padding>
+          <div class="balance">
+            <p>{{bluetoothProv.display.msg}} </p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
   </div>
 
 </ion-content>

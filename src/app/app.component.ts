@@ -3,7 +3,7 @@ import { Platform } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { DeviceProvider } from '../providers/device/device';
-import { BluetoothProvider } from '../providers/ble/bluetooth';
+import { BluetoothProvider } from '../providers/bluetooth/bluetooth';
 
 @Component({
   templateUrl: 'app.html'

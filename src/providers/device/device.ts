@@ -20,7 +20,7 @@ export class DeviceProvider {
   screenWidth = null; sreenHeight = null
   isAppBooting = 0
 
-  terminalType: terminalEnum = null
+  terminalType: terminalEnum = 0
 
   constructor(
     private platform: Platform,

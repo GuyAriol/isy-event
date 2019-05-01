@@ -31,14 +31,24 @@ export class BluetoothProvider {
   subscribeNativeEvent() {
     if (this.deviceProv.isCordova) {
       this.nativeBroadcast.addEventListener('iE-device-connected').subscribe(res => {
-        this.connectedDevice = JSON.parse(res.data)
         this.dialogProv.dismissLoading()
+
+        this.ngZone.run(() => {
+          this.connectedDevice = JSON.parse(res.data)
+        })
+
       })
 
       this.nativeBroadcast.addEventListener('iE-msg-read').subscribe(res => {
         this.ngZone.run(() => {
           this.display = JSON.parse(res.data)
           console.log(this.display)
+        })
+      })
+
+      this.nativeBroadcast.addEventListener('iE-device-disconnected').subscribe(res => {
+        this.ngZone.run(() => {
+          this.connectedDevice = { isConnected: false, address: '', name: '' }
         })
       })
     }
