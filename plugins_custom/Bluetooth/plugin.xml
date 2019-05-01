@@ -31,6 +31,5 @@
 
     <!-- To use this plugin replace target-dir with your own package's name-->
     <source-file src="src/android/bluetooth.java" target-dir="app/src/main/java/cm/vihautech/isyevent" />
-    <source-file src="src/android/ChatController.java" target-dir="app/src/main/java/cm/vihautech/isyevent" />
   </platform>
 </plugin>
