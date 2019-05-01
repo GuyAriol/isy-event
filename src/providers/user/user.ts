@@ -58,7 +58,7 @@ export class UserProvider {
             events: []
           }
 
-          this.localStorage.setToLocalStorage('isyevent_user', this.currentUser)
+          this.localStorage.setToLocalStorage('iE_user', this.currentUser)
 
           this.afd.object(`users/${res.uid}`).set(this.currentUser)
             .then(() => resolve(this.currentUser))
@@ -76,7 +76,7 @@ export class UserProvider {
         .then(res => {
           this.afd.object(`users/${res.uid}`).valueChanges().take(1).subscribe((user: userType) => {
             this.currentUser = user
-            this.localStorage.setToLocalStorage('isyevent_user', this.currentUser)
+            this.localStorage.setToLocalStorage('iE_user', this.currentUser)
 
             resolve()
           })

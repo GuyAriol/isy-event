@@ -13,12 +13,11 @@
 </ion-header>
 
 <ion-content>
-
-  <div padding *ngIf="deviceProv.terminalType=='terminal'">
+  <div padding *ngIf="deviceProv.terminalType==0">
     sdgd fd63313
   </div>
 
-  <div *ngIf="deviceProv.terminalType=='display'">
+  <div *ngIf="deviceProv.terminalType==1">
     <ion-row>
       <ion-col>
         <ion-scroll padding scrollY="true" style="height: 250px; font-size: 10px; color: white; padding: 0px">

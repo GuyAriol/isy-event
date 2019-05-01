@@ -30,18 +30,27 @@ export class SuperadminPage {
 
   }
 
-  getPairedDevices() {
-    if (this.deviceProv.isCordova) {
-      bluetooth.startScan().then(devices => {
-        console.log(devices)
-
-        for (let deviceKey in devices) {
-          this.bluetoothProv.pairedDevices.push(devices[deviceKey])
-        }
-
-        console.log(this.bluetoothProv.pairedDevices)
-      })
+  connection() {
+    if (this.bluetoothProv.connectedDevice.isConnected) {
+      bluetooth.disconnect()
+      this.bluetoothProv.connectedDevice = { isConnected: false, address: '', name: '' }
     }
+    else {
+      this.bluetoothProv.pairedDevices = []
+
+      if (this.deviceProv.isCordova) {
+        bluetooth.startScan().then(devices => {
+          console.log(devices)
+
+          for (let deviceKey in devices) {
+            this.bluetoothProv.pairedDevices.push(devices[deviceKey])
+          }
+
+          console.log(this.bluetoothProv.pairedDevices)
+        })
+      }
+    }
+
   }
 
   connectPairedDevice(deviceAddress) {
@@ -58,13 +67,7 @@ export class SuperadminPage {
     bluetooth.send({ msg: this.input })
   }
 
-  toogleDeviceType(arg) {
-    if (arg == 'terminal') this.deviceProv.terminalType = terminalEnum.terminal
-    else if (arg == 'display') this.deviceProv.terminalType = terminalEnum.display
-
-  }
-
   close() {
-    this.navCtrl.setRoot("InputPage", terminalEnum[this.deviceProv.terminalType])
+    this.navCtrl.setRoot("InputPage", this.deviceProv.terminalType)
   }
 }

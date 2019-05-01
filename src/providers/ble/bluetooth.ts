@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { DeviceProvider } from '../device/device';
+import { DeviceProvider, bluetoothDeviceType } from '../device/device';
 import { Broadcaster } from '@ionic-native/broadcaster';
 import { DialogProvider } from '../dialog/dialog';
 
@@ -7,12 +7,6 @@ export interface bluetoothMsgType {
   cmd: string,
   from: string,
   msg: string
-}
-
-export interface bluetoothDeviceType {
-  name: string,
-  address: string
-  isConnected: boolean
 }
 
 @Injectable()
@@ -49,5 +43,6 @@ export class BluetoothProvider {
       })
     }
   }
+
 }
 

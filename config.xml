@@ -40,6 +40,7 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
         <hook src="scripts/beforeBuild.bat" type="before_build" />
+        <hook src="scripts/beforeBuild.bat" type="before_run" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

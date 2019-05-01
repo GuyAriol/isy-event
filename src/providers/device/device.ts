@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import { global } from '../global';
 import { Platform } from 'ionic-angular';
+import { StorageProvider } from '../storage/storage';
 
-export enum terminalEnum {terminal, display}
+export interface bluetoothDeviceType {
+  name: string,
+  address: string
+  isConnected: boolean
+}
+
+export enum terminalEnum { terminal, display }
 
 @Injectable()
 export class DeviceProvider {
@@ -13,10 +20,12 @@ export class DeviceProvider {
   screenWidth = null; sreenHeight = null
   isAppBooting = 0
 
-  terminalType = null
+  terminalType: terminalEnum = null
 
   constructor(
     private platform: Platform,
+    private storageProv: StorageProvider,
+
 
   ) {
 
@@ -52,5 +61,15 @@ export class DeviceProvider {
     this.sreenHeight = this.platform.height()
     this.screenWidth = this.platform.width()
 
+    this.storageProv.getFromLocalStorage('iE_deviceType').then(res => {
+      if (res) this.terminalType = res
+    })
+
+  }
+
+  setDeviceType(arg) {
+    console.log(arg)
+    this.terminalType = arg
+    this.storageProv.setToLocalStorage('iE_deviceType', this.terminalType)
   }
 }

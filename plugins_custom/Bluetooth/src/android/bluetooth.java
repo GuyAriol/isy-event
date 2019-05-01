@@ -290,7 +290,7 @@ public class bluetooth extends CordovaPlugin {
         } catch (IOException e) {
           connectionLost();
           // Start the service over to restart listening mode
-          start();
+          // start();
           break;
         }
       }
@@ -471,6 +471,12 @@ public class bluetooth extends CordovaPlugin {
 
       byte[] send = message.getBytes();
       write(send);
+    }
+
+    else if ("disconnect".equals(action)) {
+      // connectThread.cancel();
+      connectedThread.cancel();
+      // acceptThread.cancel();
     }
 
     return true;
