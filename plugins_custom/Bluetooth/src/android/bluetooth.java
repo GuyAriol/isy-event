@@ -177,6 +177,16 @@ public class bluetooth extends CordovaPlugin {
     setState(STATE_CONNECTED);
   }
 
+  public void write(byte[] out) {
+    ReadWriteThread r;
+    synchronized (this) {
+        if (state != STATE_CONNECTED)
+            return;
+        r = connectedThread;
+    }
+    r.write(out);
+}
+
   private void connectionLost() {
     Message msg = handler.obtainMessage(MESSAGE_TOAST);
     Bundle bundle = new Bundle();
@@ -456,6 +466,13 @@ public class bluetooth extends CordovaPlugin {
       connect(device);
     }
 
+    else if("send".equals(action)){
+      String message = args.getJSONObject(0).getString("msg");
+
+      byte[] send = message.getBytes();
+      write(send);
+    }
+
     return true;
   }
 
@@ -474,7 +491,6 @@ public class bluetooth extends CordovaPlugin {
   }
 
   private Handler handler = new Handler(new Handler.Callback() {
-
     @Override
     public boolean handleMessage(Message msg) {
       switch (msg.what) {
@@ -482,14 +498,10 @@ public class bluetooth extends CordovaPlugin {
         switch (msg.arg1) {
         case STATE_CONNECTED:
           setStatus("Connected to: " + connectingDevice.getName());
-
-          notifyIonic("IE-device-connected", connectingDevice.getName());
+          notifyIonic("iE-device-connected", connectingDevice.getName());
           break;
         case STATE_CONNECTING:
           setStatus("Connecting...");
-
-          // toDo: feedback to ionic
-          // btnConnect.setEnabled(false);
           break;
         case STATE_LISTEN:
         case STATE_NONE:

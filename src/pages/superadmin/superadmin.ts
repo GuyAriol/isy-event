@@ -13,6 +13,7 @@ export class SuperadminPage {
   isMenuConnectDevices = false
   connectedDevices = []
   connectedDevice = ''
+  input = ''
 
   constructor(
     public navCtrl: NavController,
@@ -25,14 +26,19 @@ export class SuperadminPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SuperadminPage');
-    this.nativeBroadcast.addEventListener('iE-device-connected').subscribe(res => {
-      console.log(res.data)
-    })
+
+    if(this.deviceProv.isCordova){
+      this.nativeBroadcast.addEventListener('iE-device-connected').subscribe(res => {
+        console.log(res.data)
+        this.connectedDevice = res.data
+      })
 
 
-    this.nativeBroadcast.addEventListener('iE-msg-read').subscribe(res => {
-      console.log(res.data)
-    })
+      this.nativeBroadcast.addEventListener('iE-msg-read').subscribe(res => {
+        console.log(res.data)
+      })
+    }
+
   }
 
   getPairedDevices() {
@@ -54,6 +60,11 @@ export class SuperadminPage {
     bluetooth.connect({address: deviceAddress}).then(res => {
       console.log(res)
     })
+  }
+
+  send(){
+    console.log('yess', this.input)
+    bluetooth.send({msg: this.input})
   }
 
 
