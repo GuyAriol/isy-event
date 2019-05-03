@@ -13,6 +13,7 @@ import { DialogProvider } from '../../providers/dialog/dialog';
 export class InputPage {
 
   isMenuDevice = false
+  input = ''
 
   constructor(
     public navCtrl: NavController,
@@ -64,7 +65,19 @@ export class InputPage {
     })
   }
 
-  superAdmin(){
+  superAdmin() {
     this.navCtrl.setRoot('SuperadminPage')
+  }
+
+  numPad(input) {
+    this.input += input
+  }
+
+  backscape() {
+    this.input = this.input.substr(0, this.input.length - 1)
+  }
+
+  putMoney(){
+    bluetooth.send({msg: this.input})
   }
 }

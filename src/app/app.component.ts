@@ -11,7 +11,7 @@ import { UserProvider } from '../providers/user/user';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = 'SuperadminPage';
+  rootPage: any = 'IntroPage';
 
   constructor(
     platform: Platform,

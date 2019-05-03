@@ -15,7 +15,9 @@ export interface nfcCardType {
   maxsize: string,
   type: string,
   role: userRoleEnum       // 2 characters,
-  cardOk: boolean
+  cardOk: boolean,
+  eventId: string,
+  eventName: string
 }
 
 export enum nfcCmdEnum { none, login, }
@@ -229,6 +231,10 @@ export class NfcProvider {
               let id = this.afdb.createPushId()
               this.afdb.object(`activated-card/${userID}/${id}`).set({ cardId: card.id, eventId: eventID, id: id })
                 .then(res => resolve())
+                .catch(error => {
+                  console.log('ERROR########')
+                  console.log(error)
+                })
             })
             .catch(error => reject(error))
 
@@ -260,8 +266,11 @@ export class NfcProvider {
       // 0-1 -> cmd
       // 2-3 -> role
       // 4-9 -> balance
+      // 10- && -> nfc card id
+      // &&-&&  -> eventname
+      // &&-&&  -> eventId
 
-      //cmdType + role + balance + id
+      //cmdType + role + balance + id + eventName + eventId
 
       let cmdType = ''
       let payload = ''
@@ -270,7 +279,7 @@ export class NfcProvider {
       if (data.cmdType <= 9) cmdType = `0${data.cmdType}`
       if (data.role <= 9) role = `0${data.role}`
 
-      payload = cmdType + role + data.balance + this.currentCard.id
+      payload = cmdType + role + data.balance + this.currentCard.id+ '&&' + data.eventName +'&&' +data.eventId
       console.log(payload)
 
       this.encrypt.encrypt(encription.key, encription.IV, payload)
@@ -295,19 +304,26 @@ export class NfcProvider {
       // 0-1 -> cmd
       // 2-3 -> role
       // 4-9 -> balance
+       // 10- && -> nfc card id
+      // &&-&&  -> eventname
+      // &&-&&  -> eventId
 
-      //cmdType + role + balance + id
+      //cmdType + role + balance + id + eventName + eventId
 
       this.encrypt.decrypt(encription.key, encription.IV, payload)
         .then(res => {
+          let temp = res.substr(10).split('&&')
+
           let cardData: nfcCardType = {
             cmdType: parseInt(res.substr(0, 2)),
             role: parseInt(res.substr(2, 2)),
             balance: res.substr(4, 6),
-            id: res.substr(10),
+            id: temp[0],
             maxsize: '',
             type: '',
-            cardOk: false
+            cardOk: false,
+            eventId: temp[2],
+            eventName: temp[1]
           }
 
           console.log(cardData)
@@ -318,5 +334,9 @@ export class NfcProvider {
           reject(error)
         })
     });
+  }
+
+  resetCurrentCard(){
+    this.currentCard = {} as nfcCardType
   }
 }

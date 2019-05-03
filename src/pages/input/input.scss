@@ -4,18 +4,31 @@ page-input {
     color: goldenrod;
   }
 
-  .balance{
+  .balance {
     border-style: solid;
     border-color: white;
     border-width: 2px;
     border-radius: 20px;
-    height: 75%;
-    margin-top: 15px;
     margin-right: 15px;
+    margin-left: 15px;
     background: goldenrod;
     color: white;
+    height: 35vh;
+    font-family: 'BalooBhai';
+    font-size: 25px;
+    line-height: 5px;
   }
 
+  .numpad {
+    margin: 10px;
+    font-size: 14px;
+  }
 
+  .amount{
+    letter-spacing: 10px;
+  }
 
+  ion-slides{
+    height: 60vh;
+  }
 }

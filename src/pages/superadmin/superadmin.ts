@@ -73,6 +73,7 @@ export class SuperadminPage {
   }
 
   clientSelected(arg) {
+    console.log(arg)
     this.selectedUser = arg
     this.isSearch = false
     this.nfcProv.isAdminPage = true
@@ -103,7 +104,9 @@ export class SuperadminPage {
       maxsize: '',
       type: '',
       role: this.nfcCard.role,
-      cardOk: false
+      cardOk: false,
+      eventId: this.selectedUserEventId,
+      eventName: this.selectedUser.events[this.selectedUserEventId].title
     }
 
     this.nfcProv.activateCard(this.selectedUser.id, this.selectedUserEventId, card)

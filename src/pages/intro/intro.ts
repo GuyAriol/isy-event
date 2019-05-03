@@ -61,4 +61,7 @@ export class IntroPage {
     this.userProv.logOut()
   }
 
+  superAdmin(){
+    this.navCtrl.setRoot('SuperadminPage')
+  }
 }

@@ -7,14 +7,13 @@ export class SubscriptionProvider {
   constructor(
     private nfcProv: NfcProvider,
 
-
   ) {
 
   }
 
   defaultSubscription(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.nfcProv.subscribeNFC()
+     this.nfcProv.subscribeNFC()
 
       resolve()
     });

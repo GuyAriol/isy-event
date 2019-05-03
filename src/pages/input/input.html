@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar color="header">
+  <ion-navbar color="header" style="min-height: 30px">
     <ion-title>Diaspo Night</ion-title>
 
     <ion-buttons end (click)="isMenuDevice=!isMenuDevice">
@@ -8,14 +8,15 @@
         <img src="assets/imgs/arrow.png" alt="" width="20">
       </button>
       <button ion-button text-capitalize
-        style="font-family: 'MontSerrat'">{{bluetoothProv.connectedDevice.name || '???' }} </button>
-
+        style="font-family: 'MontSerrat'">{{bluetoothProv.connectedDevice.name || '???' }}
+      </button>
+      <button ion-button text-capitalize style="font-family: 'MontSerrat'">
+        <ion-icon name="person"></ion-icon>
+        &nbsp; Mrs Sandra
+      </button>
     </ion-buttons>
   </ion-navbar>
 
-  <ion-item>
-    <p item-right style="color: goldenrod; font-family: MontSerrat">Mrs Sandra</p>
-  </ion-item>
 </ion-header>
 
 <ion-content>
@@ -29,6 +30,8 @@
       <button mode="ios" ion-button (click)="connection()">
         {{bluetoothProv.connectedDevice.isConnected? 'Disconnect' : 'Scanner'}}
       </button>
+
+      <button ion-button mode="ios" color=light (click)="isMenuDevice = !isMenuDevice">Annuler</button>
     </div>
 
     <div padding *ngIf="!bluetoothProv.connectedDevice?.isConnected">
@@ -44,22 +47,64 @@
 
   <div *ngIf="!isMenuDevice">
     <div padding *ngIf="deviceProv.terminalType==0">
-      sdgd fd63313
+      <ion-row justify-content-center>
+        <ion-col text-center>
+          <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
+          <button ion-button margin-left color=danger>Sortie</button>
+          <div class="balance" style="margin-top: 25px;">
+            <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg}}</p>
+            <p>euro</p>
+          </div>
+        </ion-col>
+
+        <ion-col col-7>
+          <div text-right>
+            <h2><span style="letter-spacing: 10px; font-weight: bold">{{input}} </span> euro</h2>
+          </div>
+
+          <ion-row justify-content-center padding-top>
+            <div *ngFor="let num of [7,8,9,4,5,6,1,2,3,0]">
+              <button ion-button round class="numpad" (click)="numPad(num)">{{num}}</button>
+            </div>
+
+            <button ion-button round class="numpad" color=light (click)="numPad(',')">,</button>
+            <button ion-button round class="numpad" color=danger (click)="backscape()">c</button>
+          </ion-row>
+        </ion-col>
+      </ion-row>
     </div>
 
     <div *ngIf="deviceProv.terminalType==1">
       <ion-row>
-        <ion-col>
-          <ion-scroll padding scrollY="true" style="height: 250px; font-size: 10px; color: white; padding: 0px">
+        <ion-col col-7 padding>
+          <!-- <ion-scroll padding scrollY="true" style="height: 250px; font-size: 10px; color: white; padding: 0px">
             <p>Dernières conso:</p>
             <p>26.04.19 19:26 XS</p>
             <p>26.04.19 19:58 L</p>
-          </ion-scroll>
+          </ion-scroll> -->
+
+          <ion-slides margin pager loop autoplay="2500" slidesPerView="1" style="background: white">
+            <ion-slide>
+              <h1>Page pub 1</h1>
+              <h2>Event xx in xx when xx </h2>
+            </ion-slide>
+
+            <ion-slide>
+              <h1>Page pub 2</h1>
+              <h2>Event xx in xx when xx </h2>
+            </ion-slide>
+
+            <ion-slide>
+              <h1>Page pub 3</h1>
+              <h2>Event xx in xx when xx </h2>
+            </ion-slide>
+          </ion-slides>
         </ion-col>
 
-        <ion-col padding>
-          <div class="balance">
-            <p>{{bluetoothProv.display.msg}} </p>
+        <ion-col align-self-center>
+          <div text-center class="balance">
+            <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg}} </p>
+            <p>euro</p>
           </div>
         </ion-col>
       </ion-row>
