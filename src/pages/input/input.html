@@ -2,15 +2,17 @@
   <ion-navbar color="header" style="min-height: 30px">
     <ion-title>Diaspo Night</ion-title>
 
-    <ion-buttons end (click)="isMenuDevice=!isMenuDevice">
-      <button ion-button text-capitalize style="font-family: 'MontSerrat'">Kasse 1 </button>
+    <ion-buttons end>
+      <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="isMenuDevice=!isMenuDevice">Kasse 1 </button>
       <button ion-button icon-only>
         <img src="assets/imgs/arrow.png" alt="" width="20">
       </button>
-      <button ion-button text-capitalize
+
+      <button ion-button text-capitalize (click)="isMenuDevice=!isMenuDevice"
         style="font-family: 'MontSerrat'">{{bluetoothProv.connectedDevice.name || '???' }}
       </button>
-      <button ion-button text-capitalize style="font-family: 'MontSerrat'">
+
+      <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="logOff($event)">
         <ion-icon name="person"></ion-icon>
         &nbsp; Mrs Sandra
       </button>
@@ -48,11 +50,11 @@
   <div *ngIf="!isMenuDevice">
     <div padding *ngIf="deviceProv.terminalType==0">
       <ion-row justify-content-center>
-        <ion-col text-center>
+        <ion-col text-center col-5>
           <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
           <button ion-button margin-left color=danger>Sortie</button>
           <div class="balance" style="margin-top: 25px;">
-            <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg}}</p>
+            <p style="letter-spacing: 5px; font-size: 45px">{{nfcProv.currentCard.balance}}</p>
             <p>euro</p>
           </div>
         </ion-col>

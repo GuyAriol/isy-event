@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, PopoverController, ViewController } from 'ionic-angular';
 import { DeviceProvider } from '../../providers/device/device';
 import { BluetoothProvider } from '../../providers/bluetooth/bluetooth';
 import { DialogProvider } from '../../providers/dialog/dialog';
+import { NfcProvider } from '../../providers/nfc/nfc';
 
 
 @IonicPage()
@@ -20,7 +21,9 @@ export class InputPage {
     public navParams: NavParams,
     public deviceProv: DeviceProvider,
     public bluetoothProv: BluetoothProvider,
-    private dialogProv: DialogProvider
+    private dialogProv: DialogProvider,
+    public nfcProv: NfcProvider,
+    public popoverCtrl: PopoverController
 
 
   ) {
@@ -77,7 +80,33 @@ export class InputPage {
     this.input = this.input.substr(0, this.input.length - 1)
   }
 
-  putMoney(){
-    bluetooth.send({msg: this.input})
+  putMoney() {
+    bluetooth.send({ msg: this.input })
+  }
+
+  logOff(event) {
+    let popover = this.popoverCtrl.create(PopoverPage)
+    popover.present({ ev: event })
+  }
+}
+
+@Component({
+  template: `
+    <ion-list>
+      <ion-list-header>Mrs Sandra</ion-list-header>
+      <button ion-item (click)="close()">Verouiller l'écran</button>
+    </ion-list>
+  `
+})
+
+export class PopoverPage {
+  constructor(
+    public viewCtrl: ViewController,
+    public navCtrl: NavController,
+  ) { }
+
+  close() {
+    this.viewCtrl.dismiss();
+    this.navCtrl.setRoot('IntroPage')
   }
 }

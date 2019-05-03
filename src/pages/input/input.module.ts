@@ -5,6 +5,7 @@ import { InputPage } from './input';
 @NgModule({
   declarations: [
     InputPage,
+
   ],
   imports: [
     IonicPageModule.forChild(InputPage),

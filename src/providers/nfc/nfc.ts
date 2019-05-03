@@ -326,6 +326,7 @@ export class NfcProvider {
             eventName: temp[1]
           }
 
+          if(cardData.balance == '000000') cardData.balance = '0'
           console.log(cardData)
 
           resolve(cardData)
