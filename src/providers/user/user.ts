@@ -24,6 +24,7 @@ export interface eventType {
 export class UserProvider {
 
   currentUser: userType = null
+  currentEventID = ''
 
   constructor(
     private localStorage: StorageProvider,
@@ -38,6 +39,7 @@ export class UserProvider {
     if (global.isDebug) {
       console.log('--UserProvider-getCurrentUser')
     }
+
     return new Promise((resolve, reject) => {
       this.localStorage.getFromLocalStorage('iE_user')
         .then(user => {
@@ -51,6 +53,10 @@ export class UserProvider {
   }
 
   signUp(credentials): Promise<any> {
+    if (global.isDebug) {
+      console.log('--UserProvider-signUp')
+    }
+
     return new Promise((resolve, reject) => {
       this.auth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password)
         .then(res => {
@@ -75,6 +81,10 @@ export class UserProvider {
   }
 
   signIn(credentials): Promise<any> {
+    if (global.isDebug) {
+      console.log('--UserProvider-signIn')
+    }
+
     return new Promise((resolve, reject) => {
       this.auth.auth.signInWithEmailAndPassword(credentials.email, credentials.password)
         .then(res => {
@@ -90,10 +100,18 @@ export class UserProvider {
   }
 
   getAllUsersObsvr() {
+    if (global.isDebug) {
+      console.log('--UserProvider-getAllUsersObsvr')
+    }
+
     return <Observable<userType[]>>this.afd.list('users').valueChanges()
   }
 
   createNewEvent(event: eventType, userID): Promise<any> {
+    if (global.isDebug) {
+      console.log('--UserProvider-createNewEvent')
+    }
+
     return new Promise((resolve, reject) => {
       event.id = this.afd.createPushId()
 
@@ -103,9 +121,9 @@ export class UserProvider {
     });
   }
 
-  getEvents(userID) {
-    return <Observable<eventType[]>>this.afd.list(`events/${userID}`).valueChanges()
-  }
+  // getEvents(userID) {
+  //   return <Observable<eventType[]>>this.afd.list(`events/${userID}`).valueChanges()
+  // }
 
   /** Log out from the APP
    *
@@ -126,5 +144,38 @@ export class UserProvider {
           reject(error)
         })
     })
+  }
+
+  seCurrentEvent(eventId): Promise<any> {
+    if (global.isDebug) {
+      console.log('--UserProvider-seCurrentEvent')
+    }
+
+    return new Promise((resolve, reject) => {
+      this.currentEventID = eventId
+
+      this.localStorage.setToLocalStorage('iE_currentEvent', eventId)
+        .then(res => {
+          resolve()
+        })
+        .catch(error => {
+          console.log(error)
+          reject()
+        })
+    });
+  }
+
+  getCurrentEvent() {
+    if (global.isDebug) {
+      console.log('--UserProvider-getCurrentEvent')
+    }
+
+    this.localStorage.getFromLocalStorage('iE_currentEvent')
+      .then(event => {
+        if (event) this.currentEventID = event
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 }

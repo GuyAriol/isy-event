@@ -100,7 +100,7 @@ export class SuperadminPage {
     let card: nfcCardType = {
       id: '',
       cmdType: this.nfcCard.role == userRoleEnum.client ? nfcCmdEnum.none : nfcCmdEnum.login,
-      balance: '000000',
+      balance: 0,
       maxsize: '',
       type: '',
       role: this.nfcCard.role,
@@ -215,5 +215,11 @@ export class SuperadminPage {
 
   close() {
     this.navCtrl.setRoot("InputPage", this.deviceProv.terminalType)
+  }
+
+  saveEventonDevice(){
+    this.userProv.seCurrentEvent(this.selectedUserEventId).then(res => {
+      this.dialogProv.showToast('Success, Done!')
+    })
   }
 }

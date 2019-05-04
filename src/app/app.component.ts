@@ -30,6 +30,7 @@ export class MyApp {
   ) {
 
     deviceProv.getCurrentPlatform()
+
     bluetoothProv.subscribeNativeEvent()
 
     // app events handler

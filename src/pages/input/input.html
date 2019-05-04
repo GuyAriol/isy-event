@@ -3,7 +3,8 @@
     <ion-title>Diaspo Night</ion-title>
 
     <ion-buttons end>
-      <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="isMenuDevice=!isMenuDevice">Kasse 1 </button>
+      <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="isMenuDevice=!isMenuDevice">Kasse 1
+      </button>
       <button ion-button icon-only>
         <img src="assets/imgs/arrow.png" alt="" width="20">
       </button>
@@ -33,7 +34,7 @@
         {{bluetoothProv.connectedDevice.isConnected? 'Disconnect' : 'Scanner'}}
       </button>
 
-      <button ion-button mode="ios" color=light (click)="isMenuDevice = !isMenuDevice">Annuler</button>
+      <button ion-button mode="ios" color=light (click)="isMenuDevice = !isMenuDevice">Fermer</button>
     </div>
 
     <div padding *ngIf="!bluetoothProv.connectedDevice?.isConnected">
@@ -54,8 +55,15 @@
           <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
           <button ion-button margin-left color=danger>Sortie</button>
           <div class="balance" style="margin-top: 25px;">
-            <p style="letter-spacing: 5px; font-size: 45px">{{nfcProv.currentCard.balance}}</p>
-            <p>euro</p>
+            <div *ngIf="this.nfcProv.inProgress" style="padding-top: 30px">
+              <ion-spinner name="bubbles"></ion-spinner>
+            </div>
+
+            <div *ngIf="!this.nfcProv.inProgress">
+              <p style="letter-spacing: 5px; font-size: 45px">{{nfcProv.currentCard.balance}}</p>
+              <p>euro</p>
+            </div>
+
           </div>
         </ion-col>
 
@@ -105,7 +113,7 @@
 
         <ion-col align-self-center>
           <div text-center class="balance">
-            <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg}} </p>
+            <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg || 0}} </p>
             <p>euro</p>
           </div>
         </ion-col>

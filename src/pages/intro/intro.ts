@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { DialogProvider } from '../../providers/dialog/dialog';
 import { UserProvider } from '../../providers/user/user';
-import { DeviceProvider } from '../../providers/device/device';
+import { DeviceProvider, terminalEnum } from '../../providers/device/device';
+import { StorageProvider } from '../../providers/storage/storage';
 
 
 @IonicPage()
@@ -20,13 +21,16 @@ export class IntroPage {
     private dialogProv: DialogProvider,
     public userProv: UserProvider,
     public deviceProv: DeviceProvider,
+    private storageProv: StorageProvider
 
   ) {
 
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad IntroPage');
+    this.storageProv.getFromLocalStorage('iE_deviceType').then(res => {
+      if (res == terminalEnum.display) this.navCtrl.setRoot('InputPage', terminalEnum.display)
+    })
   }
 
   signin() {
@@ -61,7 +65,7 @@ export class IntroPage {
     this.userProv.logOut()
   }
 
-  superAdmin(){
+  superAdmin() {
     this.navCtrl.setRoot('SuperadminPage')
   }
 }

@@ -3,7 +3,8 @@ import { IonicPage, NavController, NavParams, PopoverController, ViewController 
 import { DeviceProvider } from '../../providers/device/device';
 import { BluetoothProvider } from '../../providers/bluetooth/bluetooth';
 import { DialogProvider } from '../../providers/dialog/dialog';
-import { NfcProvider } from '../../providers/nfc/nfc';
+import { NfcProvider, nfcCardType, nfcCmdEnum, userRoleEnum } from '../../providers/nfc/nfc';
+import { UserProvider } from '../../providers/user/user';
 
 
 @IonicPage()
@@ -23,7 +24,8 @@ export class InputPage {
     public bluetoothProv: BluetoothProvider,
     private dialogProv: DialogProvider,
     public nfcProv: NfcProvider,
-    public popoverCtrl: PopoverController
+    public popoverCtrl: PopoverController,
+    private userProv: UserProvider
 
 
   ) {
@@ -81,7 +83,28 @@ export class InputPage {
   }
 
   putMoney() {
-    bluetooth.send({ msg: this.input })
+    if (this.input) {
+      let card: nfcCardType = {
+        id: '',
+        cmdType: nfcCmdEnum.none,
+        balance: parseFloat(this.input),
+        maxsize: '',
+        type: '',
+        role: userRoleEnum.client,
+        cardOk: false,
+        eventId: this.userProv.currentEventID,
+        eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title
+      }
+
+      this.nfcProv.updateBalance(card).then(() => {
+
+        bluetooth.send({ msg: this.nfcProv.currentCard.balance })
+      })
+    }
+    else {
+      this.dialogProv.showToast('Vérifiez le mountant')
+    }
+
   }
 
   logOff(event) {

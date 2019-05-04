@@ -31,4 +31,9 @@ page-input {
   ion-slides{
     height: 60vh;
   }
+
+  ion-spinner * {
+    width: 32px;
+    height: 32px;
+  }
 }

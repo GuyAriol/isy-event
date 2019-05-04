@@ -1,5 +1,5 @@
-<ion-header >
-  <ion-navbar no-padding color=header >
+<ion-header>
+  <ion-navbar no-padding color=header>
     <ion-item no-lines>
       <p style="font-size: 18px">Super admin</p>
       <div item-right>
@@ -27,7 +27,7 @@
 
   <div *ngIf="!selectedUser && !isNewUser && !isSearch">
     <ion-item padding-top no-lines style="padding-left: 60px">
-      <ion-spinner item-left name="bubbles" ></ion-spinner>
+      <ion-spinner item-left name="bubbles"></ion-spinner>
       <ion-label>Déposer une carte</ion-label>
     </ion-item>
 
@@ -116,6 +116,9 @@
           <p padding-left>Cartes: {{getCard(selectedUserEventId)}}</p>
         </ion-item>
 
+        <div text-center padding-top>
+          <button ion-button [disabled]="!selectedUserEventId" (click)="saveEventonDevice()" >Active event on this device</button>
+        </div>
       </ion-list>
     </div>
 
@@ -199,8 +202,6 @@
 
   </ion-row>
 
-
-
 </ion-content>
 
 <ion-footer no-border>
@@ -210,7 +211,7 @@
   </ion-item> -->
 
   <div text-center padding-bottom>
-      <button ion-button (click)="close()">Terminer</button>
-    </div>
+    <button ion-button (click)="close()">Terminer</button>
+  </div>
 
 </ion-footer>

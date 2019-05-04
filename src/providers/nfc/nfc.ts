@@ -11,7 +11,7 @@ import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
   id: string,
-  balance: string,      // 6 characters
+  balance: number,      // 6 characters
   maxsize: string,
   type: string,
   role: userRoleEnum       // 2 characters,
@@ -37,6 +37,8 @@ export class NfcProvider {
 
   isAdminPage = false
   isCardPresent = false
+
+  inProgress = false
 
   constructor(
     private nfc: NFC,
@@ -174,6 +176,7 @@ export class NfcProvider {
     if (this.currentCard.cmdType == nfcCmdEnum.login) this.event.publish('login', this.currentCard.role)
     else {
       this.isCardPresent = true
+      bluetooth.send({ msg: this.currentCard.balance })
     }
 
     this.dialogProv.dismissLoading()
@@ -210,11 +213,19 @@ export class NfcProvider {
   }
 
   getActivatedCardsObsvr(userID, eventID?) {
+    if (global.isDebug) {
+      console.log('--NfcProvider-getActivatedCardsObsvr')
+    }
+
     if (eventID) return this.afdb.list(`activated-card/${userID}/${eventID}`).valueChanges()
     else return this.afdb.list(`activated-card/${userID}`).valueChanges()
   }
 
   activateCard(userID, eventID, card: nfcCardType): Promise<any> {
+    if (global.isDebug) {
+      console.log('--NfcProvider-activateCard')
+    }
+
     return new Promise((resolve, reject) => {
       card.id = this.currentCard.id
       card.cardOk = this.currentCard.cardOk
@@ -245,6 +256,10 @@ export class NfcProvider {
   }
 
   deactivateCard(userID, id): Promise<any> {
+    if (global.isDebug) {
+      console.log('--NfcProvider-deactivateCard')
+    }
+
     return new Promise((resolve, reject) => {
       this.afdb.object(`activated-card/${userID}/${id}`).remove()
         .then(res => {
@@ -257,7 +272,7 @@ export class NfcProvider {
     });
   }
 
-  buildNfcPayload(data: nfcCardType): Promise<any> {
+  private buildNfcPayload(data: nfcCardType): Promise<any> {
     if (global.isDebug) {
       console.log('--NfcProvider-buildNfcPayload')
     }
@@ -279,12 +294,11 @@ export class NfcProvider {
       if (data.cmdType <= 9) cmdType = `0${data.cmdType}`
       if (data.role <= 9) role = `0${data.role}`
 
-      payload = cmdType + role + data.balance + this.currentCard.id+ '&&' + data.eventName +'&&' +data.eventId
+      payload = cmdType + role + this.formatBalance(data.balance) + this.currentCard.id + '&&' + data.eventName + '&&' + data.eventId
       console.log(payload)
 
       this.encrypt.encrypt(encription.key, encription.IV, payload)
         .then(res => {
-          console.log(res)
           resolve(res)
         })
         .catch(error => {
@@ -295,7 +309,7 @@ export class NfcProvider {
     });
   }
 
-  unbuildNfcPayload(payload): Promise<any> {
+  private unbuildNfcPayload(payload): Promise<any> {
     if (global.isDebug) {
       console.log('--NfcProvider-unbuildNfcPayload')
     }
@@ -304,7 +318,7 @@ export class NfcProvider {
       // 0-1 -> cmd
       // 2-3 -> role
       // 4-9 -> balance
-       // 10- && -> nfc card id
+      // 10- && -> nfc card id
       // &&-&&  -> eventname
       // &&-&&  -> eventId
 
@@ -317,7 +331,7 @@ export class NfcProvider {
           let cardData: nfcCardType = {
             cmdType: parseInt(res.substr(0, 2)),
             role: parseInt(res.substr(2, 2)),
-            balance: res.substr(4, 6),
+            balance: parseFloat(res.substr(4, 6)),
             id: temp[0],
             maxsize: '',
             type: '',
@@ -326,7 +340,6 @@ export class NfcProvider {
             eventName: temp[1]
           }
 
-          if(cardData.balance == '000000') cardData.balance = '0'
           console.log(cardData)
 
           resolve(cardData)
@@ -337,7 +350,73 @@ export class NfcProvider {
     });
   }
 
-  resetCurrentCard(){
+  resetCurrentCard() {
+    if (global.isDebug) {
+      console.log('--NfcProvider-resetCurrentCard')
+    }
+
     this.currentCard = {} as nfcCardType
   }
+
+  updateBalance(card: nfcCardType): Promise<any> {
+    if (global.isDebug) {
+      console.log('--NfcProvider-updateBalance')
+    }
+
+    return new Promise((resolve, reject) => {
+      card.id = this.currentCard.id
+      card.cardOk = this.currentCard.cardOk
+      card.maxsize = this.currentCard.maxsize
+      card.type = this.currentCard.type
+
+      this.buildNfcPayload(card)
+        .then(data => {
+          this.writeNFC(data)
+            .then(() => {
+              this.currentCard = card
+              this.currentCard.cardOk = true
+
+              resolve()
+              // toDo: local logging
+            })
+            .catch(error => {
+              console.log(error)
+              reject(error)
+            })
+
+        })
+        .catch(error => {
+          console.log(error)
+          reject('build nfc payload failed')
+        })
+
+    });
+  }
+
+  formatBalance(balance: number) {
+    if (global.isDebug) {
+      console.log('--NfcProvider-formatBalance')
+    }
+
+    let out = ''
+    let input = balance.toString()
+
+    for (let i = 0; i < 6 - input.length; i++) {
+      out += '0'
+    }
+
+    return out + balance.toString()
+  }
 }
+
+// let card: nfcCardType = {
+//   id: '',
+//   cmdType: this.nfcCard.role == userRoleEnum.client ? nfcCmdEnum.none : nfcCmdEnum.login,
+//   balance: '000000',
+//   maxsize: '',
+//   type: '',
+//   role: this.nfcCard.role,
+//   cardOk: false,
+//   eventId: this.selectedUserEventId,
+//   eventName: this.selectedUser.events[this.selectedUserEventId].title
+// }
