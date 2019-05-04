@@ -49,6 +49,7 @@ export class BluetoothProvider {
       this.nativeBroadcast.addEventListener('iE-device-disconnected').subscribe(res => {
         this.ngZone.run(() => {
           this.connectedDevice = { isConnected: false, address: '', name: '' }
+          this.dialogProv.showSimpleDialog('Attention', '', "Le moniteur n'est plus connecté", 'Ok')
         })
       })
     }

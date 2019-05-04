@@ -19,6 +19,7 @@ export class SubscriptionProvider {
     return new Promise((resolve, reject) => {
       this.nfcProv.subscribeNFC()
       this.userProv.getCurrentEvent()
+      this.nfcProv.getAllTransactions()
       resolve()
     });
   }

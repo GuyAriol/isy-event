@@ -22,4 +22,7 @@ export class AdminPage {
     console.log('ionViewDidLoad AdminPage');
   }
 
+  test(){
+    this.navCtrl.setRoot('InputPage')
+  }
 }

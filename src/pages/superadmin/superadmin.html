@@ -14,6 +14,7 @@
 </ion-header>
 
 <ion-content padding>
+  <!-- toDo: prepare event: reset local storage -->
 
   <div text-center>
     <button ion-button icon-start (click)="isSearch=true; isNewUser=false; selectedUser=null">
@@ -117,7 +118,8 @@
         </ion-item>
 
         <div text-center padding-top>
-          <button ion-button [disabled]="!selectedUserEventId" (click)="saveEventonDevice()" >Active event on this device</button>
+          <button ion-button [disabled]="!selectedUserEventId" (click)="saveEventonDevice()">Active event on this
+            device</button>
         </div>
       </ion-list>
     </div>

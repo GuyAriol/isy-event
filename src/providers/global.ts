@@ -1,12 +1,23 @@
+import { terminalEnum } from "./device/device";
+
 export var global = {
   isDebug: true,
   reportError: true,
 }
 
 export var encription = {
-  key : '73f0aa401a863e7672324ec953f3c423',
-  IV : '4ebd3c6ee24a1cd3'
+  key: '73f0aa401a863e7672324ec953f3c423',
+  IV: '4ebd3c6ee24a1cd3'
 }
+
+export interface logType {
+  timeStamp: number,
+  deviceType: terminalEnum,
+  worker: string,
+  amount: number,
+  note: string
+}
+
 
 export interface langExprType {
   wrongInput: string

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { global, encription } from '../global';
+import { global, encription, logType } from '../global';
 import { NFC, Ndef } from '@ionic-native/nfc';
 import { DialogProvider } from '../dialog/dialog';
 import { Events, AlertController } from 'ionic-angular';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AES256 } from '@ionic-native/aes-256';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings';
+import { StorageProvider } from '../storage/storage';
 
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
@@ -38,7 +39,8 @@ export class NfcProvider {
   isAdminPage = false
   isCardPresent = false
 
-  inProgress = false
+  allNFCtransactions: logType[] = []
+
 
   constructor(
     private nfc: NFC,
@@ -48,7 +50,8 @@ export class NfcProvider {
     private afdb: AngularFireDatabase,
     private encrypt: AES256,
     private alertCtrl: AlertController,
-    private openNativeSettings: OpenNativeSettings
+    private openNativeSettings: OpenNativeSettings,
+    private storageProv: StorageProvider
 
 
   ) {
@@ -406,6 +409,25 @@ export class NfcProvider {
     }
 
     return out + balance.toString()
+  }
+
+  saveTransaction(transaction: logType) {
+    if (global.isDebug) {
+      console.log('--NfcProvider-saveTransaction')
+    }
+
+    this.allNFCtransactions.push(transaction)
+    this.storageProv.setToLocalStorage('iE_eventLog', this.allNFCtransactions)
+  }
+
+  getAllTransactions() {
+    if (global.isDebug) {
+      console.log('--NfcProvider-getAllTransactions')
+    }
+
+    this.storageProv.getFromLocalStorage('iE_eventLog').then(res => {
+      if (res) this.allNFCtransactions = res
+    })
   }
 }
 

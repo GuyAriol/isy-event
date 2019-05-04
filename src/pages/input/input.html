@@ -53,13 +53,13 @@
       <ion-row justify-content-center>
         <ion-col text-center col-5>
           <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
-          <button ion-button margin-left color=danger>Sortie</button>
-          <div class="balance" style="margin-top: 25px;">
-            <div *ngIf="this.nfcProv.inProgress" style="padding-top: 30px">
+          <button ion-button margin-left color=danger (click)="removeMoney()">Sortie</button>
+          <div class="balance" style="margin-top: 25px;" [style.background]="color">
+            <div *ngIf="state==0" style="padding-top: 30px">
               <ion-spinner name="bubbles"></ion-spinner>
             </div>
 
-            <div *ngIf="!this.nfcProv.inProgress">
+            <div *ngIf="state!=0">
               <p style="letter-spacing: 5px; font-size: 45px">{{nfcProv.currentCard.balance}}</p>
               <p>euro</p>
             </div>
@@ -93,7 +93,14 @@
             <p>26.04.19 19:58 L</p>
           </ion-scroll> -->
 
-          <ion-slides margin pager loop autoplay="2500" slidesPerView="1" style="background: white">
+          <ion-slides margin pager loop autoplay="3500" slidesPerView="1" style="background: white">
+            <ion-slide>
+              <h1 padding>Bienvenue chers invités</h1>
+              <div padding style="color:blue">
+                <p>Nous vous souhaitons une très belle soirée. </p>
+              </div>
+            </ion-slide>
+
             <ion-slide>
               <h1>Page pub 1</h1>
               <h2>Event xx in xx when xx </h2>
@@ -112,7 +119,8 @@
         </ion-col>
 
         <ion-col align-self-center>
-          <div text-center class="balance">
+          <p text-center>Votre solde</p>
+          <div text-center class="balance" [style.background]="color">
             <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg || 0}} </p>
             <p>euro</p>
           </div>
