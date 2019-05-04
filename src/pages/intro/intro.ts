@@ -86,7 +86,6 @@ export class IntroPage {
         {
           text: 'Ok',
           handler: data => {
-            console.log(data)
             if (data.pass == this.userProv.currentUser.adminPass) this.navCtrl.setRoot('AdminPage')
             else {
               this.dialogProv.showToast('Mot de passe incorrect')

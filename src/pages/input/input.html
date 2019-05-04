@@ -30,11 +30,11 @@
     </div>
 
     <div text-center padding-top>
+      <button ion-button mode="ios" color=light (click)="isMenuDevice = !isMenuDevice">Fermer</button>
+
       <button mode="ios" ion-button (click)="connection()">
         {{bluetoothProv.connectedDevice.isConnected? 'Disconnect' : 'Scanner'}}
       </button>
-
-      <button ion-button mode="ios" color=light (click)="isMenuDevice = !isMenuDevice">Fermer</button>
     </div>
 
     <div padding *ngIf="!bluetoothProv.connectedDevice?.isConnected">

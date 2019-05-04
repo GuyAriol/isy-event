@@ -5,6 +5,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/take'
 import { Observable } from 'rxjs/Observable';
 import { global } from '../global';
+import { Subscription } from 'rxjs/Subscription';
 
 export interface userType {
   name: string,
@@ -26,6 +27,8 @@ export class UserProvider {
 
   currentUser: userType = null
   currentEventID = ''
+
+  userSubscription: Subscription
 
   constructor(
     private localStorage: StorageProvider,
@@ -123,10 +126,6 @@ export class UserProvider {
     });
   }
 
-  // getEvents(userID) {
-  //   return <Observable<eventType[]>>this.afd.list(`events/${userID}`).valueChanges()
-  // }
-
   /** Log out from the APP
    *
    * @memberof UserProvider
@@ -179,5 +178,32 @@ export class UserProvider {
       .catch(error => {
         console.log(error)
       })
+  }
+
+  subscribeUser(userId) {
+    if (global.isDebug) {
+      console.log('--UserProvider-subscribeUser')
+    }
+
+    this.userSubscription = this.afd.object(`users/${userId}`).valueChanges().subscribe((user: userType) => {
+      if (user && Object.keys(user)) {
+        this.currentUser = user
+
+        this.localStorage.setToLocalStorage('iE_user', this.currentUser)
+          .catch(error => console.log(error))
+      }
+    })
+  }
+
+  unsubscribeUser() {
+    if (global.isDebug) {
+      console.log('--UserProvider-unsubscribeUser')
+    }
+
+    try {
+      this.userSubscription.unsubscribe()
+    } catch (error) {
+
+    }
   }
 }

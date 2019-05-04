@@ -49,7 +49,7 @@ export class MyApp {
       subscribeProv.defaultSubscription().then(res => {
 
         userProv.getCurrentUser().then(user => {
-          if (user) subscribeProv.userSubscription().then(() => {
+          if (user) subscribeProv.userSubscription(user.id).then(() => {
 
           })
         })

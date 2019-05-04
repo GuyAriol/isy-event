@@ -23,8 +23,9 @@
 
           <div padding-top text-center>
             <button ion-button full (click)="openAdminPage()">Manager mes events</button><br><br>
-            <button ion-button color=danger (click)="signOut()">Déconnexion</button>
             <button ion-button color=light (click)="cancel()">Fermer</button>
+            <button ion-button color=danger (click)="signOut()">Déconnexion</button>
+
           </div><br>
       </div>
 
@@ -40,8 +41,9 @@
         </ion-item>
 
         <div text-right padding style="background: white">
+            <button ion-button small color=light (click)="cancel()">Fermer</button>
+
           <button ion-button small (click)="signin()">Connexion</button>
-          <button ion-button small color=light (click)="cancel()">Fermer</button>
         </div>
       </div>
 

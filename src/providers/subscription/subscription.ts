@@ -24,15 +24,17 @@ export class SubscriptionProvider {
     });
   }
 
-  userSubscription(): Promise<any> {
+  userSubscription(userId): Promise<any> {
     return new Promise((resolve, reject) => {
+      this.userProv.subscribeUser(userId)
 
+      resolve()
     });
   }
 
   defaultUnscription() {
     this.nfcProv.unsubscribeNFC()
     this.event.unsubscribe('login')
-
+    this.userProv.unsubscribeUser()
   }
 }
