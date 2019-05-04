@@ -29,7 +29,7 @@ export class SuperadminPage {
   isNewEvent = false
   isSearch = false
 
-  credentials = {} as { email: string, password: string, name }
+  credentials = {} as { email: string, password: string, name: string, adminPass: string }
   newEvent = {} as eventType
 
   searchList: userType[] = []
@@ -106,7 +106,8 @@ export class SuperadminPage {
       role: this.nfcCard.role,
       cardOk: false,
       eventId: this.selectedUserEventId,
-      eventName: this.selectedUser.events[this.selectedUserEventId].title
+      eventName: this.selectedUser.events[this.selectedUserEventId].title,
+      workerName: ' '
     }
 
     this.nfcProv.activateCard(this.selectedUser.id, this.selectedUserEventId, card)
@@ -165,7 +166,7 @@ export class SuperadminPage {
       this.userProv.signUp(this.credentials)
         .then(res => {
           this.dialogProv.dismissLoading()
-          this.credentials = { name: '', email: '', password: '' }
+          this.credentials = { name: '', email: '', password: '', adminPass: '' }
           this.isNewUser = false
           this.dialogProv.showToast('Done')
         })
@@ -217,7 +218,7 @@ export class SuperadminPage {
     this.navCtrl.setRoot("InputPage", this.deviceProv.terminalType)
   }
 
-  saveEventonDevice(){
+  saveEventonDevice() {
     this.userProv.seCurrentEvent(this.selectedUserEventId).then(res => {
       this.dialogProv.showToast('Success, Done!')
     })

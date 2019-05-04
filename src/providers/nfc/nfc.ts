@@ -18,7 +18,8 @@ export interface nfcCardType {
   role: userRoleEnum       // 2 characters,
   cardOk: boolean,
   eventId: string,
-  eventName: string
+  eventName: string,
+  workerName?: string
 }
 
 export enum nfcCmdEnum { none, login, }
@@ -185,7 +186,7 @@ export class NfcProvider {
     this.dialogProv.dismissLoading()
   }
 
-  writeNFC(msg): Promise<any> {
+  private writeNFC(msg): Promise<any> {
     if (global.isDebug) {
       console.log('--NfcProvider-writeNFC')
     }
@@ -287,6 +288,7 @@ export class NfcProvider {
       // 10- && -> nfc card id
       // &&-&&  -> eventname
       // &&-&&  -> eventId
+      // &&-&&  -> worker's name
 
       //cmdType + role + balance + id + eventName + eventId
 
@@ -297,7 +299,7 @@ export class NfcProvider {
       if (data.cmdType <= 9) cmdType = `0${data.cmdType}`
       if (data.role <= 9) role = `0${data.role}`
 
-      payload = cmdType + role + this.formatBalance(data.balance) + this.currentCard.id + '&&' + data.eventName + '&&' + data.eventId
+      payload = cmdType + role + this.formatBalance(data.balance) + this.currentCard.id + '&&' + data.eventName + '&&' + data.eventId + '&&' + data.workerName
       console.log(payload)
 
       this.encrypt.encrypt(encription.key, encription.IV, payload)
@@ -324,8 +326,9 @@ export class NfcProvider {
       // 10- && -> nfc card id
       // &&-&&  -> eventname
       // &&-&&  -> eventId
+      // &&-&&  -> worker's name
 
-      //cmdType + role + balance + id + eventName + eventId
+      //cmdType + role + balance + id + eventName + eventId + workerName
 
       this.encrypt.decrypt(encription.key, encription.IV, payload)
         .then(res => {
@@ -340,7 +343,8 @@ export class NfcProvider {
             type: '',
             cardOk: false,
             eventId: temp[2],
-            eventName: temp[1]
+            eventName: temp[1],
+            workerName: temp[3]
           }
 
           console.log(cardData)

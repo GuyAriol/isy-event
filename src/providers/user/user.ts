@@ -10,7 +10,8 @@ export interface userType {
   name: string,
   email: string,
   id: string,
-  events: Array<eventType>
+  events: Array<eventType>,
+  adminPass: string
 }
 
 export interface eventType {
@@ -65,7 +66,8 @@ export class UserProvider {
             name: credentials.name,
             email: credentials.email,
             id: res.uid,
-            events: []
+            events: [],
+            adminPass: credentials.adminPass
           }
 
           this.localStorage.setToLocalStorage('iE_user', this.currentUser)

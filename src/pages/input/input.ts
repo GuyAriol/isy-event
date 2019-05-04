@@ -102,7 +102,8 @@ export class InputPage {
         role: userRoleEnum.client,
         cardOk: false,
         eventId: this.userProv.currentEventID,
-        eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title
+        eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
+        workerName: ' '
       }
 
       this.nfcProv.updateBalance(card)
@@ -151,7 +152,8 @@ export class InputPage {
           role: userRoleEnum.client,
           cardOk: false,
           eventId: this.userProv.currentEventID,
-          eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title
+          eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
+          workerName: ' '
         }
 
         this.nfcProv.updateBalance(card)

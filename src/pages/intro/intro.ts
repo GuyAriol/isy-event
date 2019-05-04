@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController } from 'ionic-angular';
 import { DialogProvider } from '../../providers/dialog/dialog';
 import { UserProvider } from '../../providers/user/user';
 import { DeviceProvider, terminalEnum } from '../../providers/device/device';
@@ -21,7 +21,8 @@ export class IntroPage {
     private dialogProv: DialogProvider,
     public userProv: UserProvider,
     public deviceProv: DeviceProvider,
-    private storageProv: StorageProvider
+    private storageProv: StorageProvider,
+    private alertCtrl: AlertController
 
   ) {
 
@@ -67,5 +68,36 @@ export class IntroPage {
 
   superAdmin() {
     this.navCtrl.setRoot('SuperadminPage')
+  }
+
+  openAdminPage() {
+    this.alertCtrl.create({
+      title: 'Mot de passe',
+      inputs: [
+        {
+          name: 'pass',
+          type: 'password'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Annuler'
+        },
+        {
+          text: 'Ok',
+          handler: data => {
+            console.log(data)
+            if (data.pass == this.userProv.currentUser.adminPass) this.navCtrl.setRoot('AdminPage')
+            else {
+              this.dialogProv.showToast('Mot de passe incorrect')
+              this.openAdminPage()
+            }
+          }
+        }
+      ]
+    }).present()
+
+
+
   }
 }

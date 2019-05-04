@@ -14,19 +14,18 @@
   <ion-row padding *ngIf="showLogin" class="animated jackInTheBox fadeOutUp" justify-content-center>
     <!-- <ion-col *ngIf="deviceProv.screenWidth > 400"></ion-col> -->
 
-    <ion-col col-8>
-      <div *ngIf="userProv?.currentUser">
-        <ion-item>
+    <ion-col col-sm-8>
+      <div padding *ngIf="userProv?.currentUser" style="background: white">
           <h1 text-center>Connecté</h1><br>
 
-          <p padding-top><b>Name:</b> {{userProv.currentUser.name}} </p><br>
+          <p padding-top><b>Name:</b> {{userProv.currentUser.name}} </p>
           <p><b>Email:</b> {{userProv.currentUser.email}} </p><br>
 
           <div padding-top text-center>
+            <button ion-button full (click)="openAdminPage()">Manager mes events</button><br><br>
+            <button ion-button color=danger (click)="signOut()">Déconnexion</button>
             <button ion-button color=light (click)="cancel()">Fermer</button>
-            <button ion-button (click)="signOut()">Déconnexion</button>
           </div><br>
-        </ion-item>
       </div>
 
       <div *ngIf="!userProv?.currentUser">
@@ -41,8 +40,8 @@
         </ion-item>
 
         <div text-right padding style="background: white">
-          <button ion-button small color=light (click)="cancel()">Fermer</button>
           <button ion-button small (click)="signin()">Connexion</button>
+          <button ion-button small color=light (click)="cancel()">Fermer</button>
         </div>
       </div>
 
@@ -52,7 +51,7 @@
   </ion-row>
 
   <ion-row *ngIf="!showLogin" style="min-height: 90%;" justify-content-center>
-    <ion-col col-6>
+    <ion-col col-sm-6>
       <ion-slides pager loop autoplay="2500" slidesPerView="1">
         <ion-slide>
           <h1>Page pub 1</h1>
@@ -73,7 +72,7 @@
 
     <ion-col padding-left>
       <div>
-        <h1 text-center>Abend Ablauf</h1>
+        <h1 text-center [style.paddingTop]="deviceProv.screenWidth < 400 ? '35px' : '0px'">Abend Ablauf</h1>
         <p>
           <span>21:00</span>
           <span>Arrivée des invités</span>

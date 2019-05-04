@@ -1,7 +1,6 @@
 page-intro {
   .border {
     border-style: solid;
-    // min-width: 320px;
     margin: 25px;
     margin-bottom: 25px;
     background: white;
@@ -10,7 +9,7 @@ page-intro {
   }
 
   .content {
-    background: gainsboro;
+    background: rgb(220, 220, 220);
   }
 
   ion-slide {
