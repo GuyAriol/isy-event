@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DeviceProvider } from '../../providers/device/device';
 import { BluetoothProvider } from '../../providers/bluetooth/bluetooth';
-import { userRoleEnum, NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
+import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
 import { DialogProvider } from '../../providers/dialog/dialog';
-import { UserProvider, eventType, userType } from '../../providers/user/user';
+import { UserProvider, eventType, userType, userRoleEnum } from '../../providers/user/user';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
@@ -91,7 +91,6 @@ export class SuperadminPage {
 
   eventSelected(arg) {
     this.selectedUserEventId = arg
-    console.log(arg)
   }
 
   activateCard() {
@@ -215,7 +214,7 @@ export class SuperadminPage {
   }
 
   close() {
-    this.navCtrl.setRoot("InputPage", this.deviceProv.terminalType)
+    this.navCtrl.setRoot("IntroPage")
   }
 
   saveEventonDevice() {

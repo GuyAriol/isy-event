@@ -2,12 +2,65 @@
   <ion-navbar color=header>
     <ion-title>Admin</ion-title>
 
-
+    <ion-buttons end>
+      <button ion-button (click)="close()" text-capitalize class="close-btn">Fermer</button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+  <ion-list>
+    <ion-item no-lines style="background: rgb(235, 171, 171); color: black">
+      <ion-label style="color: black">Choisir un event</ion-label>
+      <ion-select (ionChange)="eventSelected($event)">
+        <ion-option *ngFor="let eventId of selectedUserEventIds" [value]="eventId">
+          {{userProv?.currentUser.events[eventId].title}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
 
+    <div padding-top *ngIf="selectedUserEventId">
+      <ion-item-divider style="font-size: 18px; color: blue">Crew members
+        <ion-icon item-right name="add-circle" (click)="isNewCrew=!isNewCrew"></ion-icon>
+      </ion-item-divider>
+
+      <div *ngIf="isNewCrew" >
+        <ion-item style="background: rgba(187, 241, 241, 0.541)">
+          <ion-label>Name</ion-label>
+          <ion-input [(ngModel)]="newCrew.name"></ion-input>
+        </ion-item>
+
+        <ion-item style="background: rgba(187, 241, 241, 0.541)">
+          <ion-label>Role</ion-label>
+          <ion-select [(ngModel)]="newCrew.role" style="max-width: 65%">
+            <ion-option [value]="2">Caissier boisson</ion-option>
+            <ion-option [value]="1">Caissier entrée</ion-option>
+            <ion-option [value]="3">Barman</ion-option>
+            <ion-option [value]="0">Admin</ion-option>
+            <ion-option [value]="6">Client</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item text-center no-lines style="background: rgba(187, 241, 241, 0.541)">
+          <button ion-button color=light (click)="isNewCrew=false">Annuler</button>
+          <button ion-button margin-left (click)="newCrewMember()">Valider</button>
+        </ion-item>
+      </div>
+
+      <div *ngFor="let crewMember of userProv.currentUser.events[selectedUserEventId]?.crew; let index=index">
+        <ion-item>
+          <p><b>{{crewMember.name}} </b></p>
+          <p>{{userProv.getRoleString(crewMember.role)}} </p>
+          <ion-icon item-right padding-right name="create" style="font-size: 22px" (click)="ongoing()"></ion-icon>
+          <ion-icon item-right padding-right name="card" color=primary style="font-size: 24px" (click)="writeCard(crewMember)"></ion-icon>
+          <ion-icon item-right padding-right name="trash" color=danger style="font-size: 24px" (click)="deleteCrewMember(index)"></ion-icon>
+        </ion-item>
+      </div>
+
+    </div>
+
+
+  </ion-list>
 </ion-content>
 
 <ion-footer no-border style="height: 22px; background: white" (click)="superAdmin()">

@@ -3,8 +3,8 @@ import { IonicPage, NavController, NavParams, PopoverController, ViewController 
 import { DeviceProvider } from '../../providers/device/device';
 import { BluetoothProvider } from '../../providers/bluetooth/bluetooth';
 import { DialogProvider } from '../../providers/dialog/dialog';
-import { NfcProvider, nfcCardType, nfcCmdEnum, userRoleEnum } from '../../providers/nfc/nfc';
-import { UserProvider } from '../../providers/user/user';
+import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
+import { UserProvider, userRoleEnum } from '../../providers/user/user';
 import { StorageProvider } from '../../providers/storage/storage';
 import { logType } from '../../providers/global';
 
@@ -31,7 +31,7 @@ export class InputPage {
     private dialogProv: DialogProvider,
     public nfcProv: NfcProvider,
     public popoverCtrl: PopoverController,
-    private userProv: UserProvider
+    public userProv: UserProvider
 
 
   ) {
@@ -96,7 +96,7 @@ export class InputPage {
       let card: nfcCardType = {
         id: '',
         cmdType: nfcCmdEnum.none,
-        balance: parseFloat(this.input)+this.nfcProv.currentCard.balance,
+        balance: parseFloat(this.input) + this.nfcProv.currentCard.balance,
         maxsize: '',
         type: '',
         role: userRoleEnum.client,
@@ -106,14 +106,24 @@ export class InputPage {
         workerName: ' '
       }
 
-      this.nfcProv.updateBalance(card)
+      this.nfcProv.writeCard(card)
         .then(pass => {
 
           bluetooth.send({ msg: this.nfcProv.currentCard.balance })
 
-          this.input = ''
           this.state = stateEnum.pass
           this.color = 'green'
+
+          let log: logType = {
+            timeStamp: Date.now(),
+            deviceType: this.deviceProv.terminalType,
+            worker: this.userProv.currentWorker,
+            amount: parseFloat(this.input),
+            note: ''
+          }
+          this.nfcProv.saveTransaction(log)
+
+          this.input = ''
 
           console.log('pass', pass)
         },
@@ -132,7 +142,6 @@ export class InputPage {
     else {
       this.dialogProv.showToast('Vérifiez le mountant')
     }
-
   }
 
   removeMoney() {
@@ -156,16 +165,25 @@ export class InputPage {
           workerName: ' '
         }
 
-        this.nfcProv.updateBalance(card)
+        this.nfcProv.writeCard(card)
           .then(pass => {
 
             bluetooth.send({ msg: this.nfcProv.currentCard.balance })
 
-            this.input = ''
             this.state = stateEnum.pass
             this.color = 'green'
 
-            console.log('pass', pass)
+            let log: logType = {
+              timeStamp: Date.now(),
+              deviceType: this.deviceProv.terminalType,
+              worker: this.userProv.currentWorker,
+              amount: -parseFloat(this.input),
+              note: ''
+            }
+            this.nfcProv.saveTransaction(log)
+
+            this.input = ''
+
           },
             fail => {
               this.state = stateEnum.fail
@@ -185,7 +203,6 @@ export class InputPage {
     }
   }
 
-
   logOff(event) {
     let popover = this.popoverCtrl.create(PopoverPage)
     popover.present({ ev: event })
@@ -195,7 +212,7 @@ export class InputPage {
 @Component({
   template: `
     <ion-list>
-      <ion-list-header>Mrs Sandra</ion-list-header>
+      <ion-list-header>{{userProv.currentWorker}}</ion-list-header>
       <ion-item>
         <ion-label>Total caise: {{total}} euro</ion-label>
       </ion-item>
@@ -203,7 +220,7 @@ export class InputPage {
       <div *ngFor="let worker of workerList">
         <ion-item>
           <p><b>{{worker.name}}</b></p>
-          <p>{{worker.total}} </p>
+          <p>{{worker.total}} euro</p>
         </ion-item>
       </div>
 
@@ -223,12 +240,13 @@ export class PopoverPage {
     public viewCtrl: ViewController,
     public navCtrl: NavController,
     private storageProv: StorageProvider,
+    public nfcProv: NfcProvider,
+    public userProv: UserProvider
 
   ) {
     this.storageProv.getFromLocalStorage('iE_eventLog').then((logs: logType[]) => {
       if (logs) {
 
-        // toDO: get total money
         logs.forEach(log => {
           this.total += log.amount
 
@@ -242,7 +260,7 @@ export class PopoverPage {
           }
 
           if (!found) {
-            this.workerLogs[log.worker] = { name: log.worker, total: 0 }
+            this.workerLogs[log.worker] = { name: log.worker, total: log.amount }
           }
         })
 
@@ -259,7 +277,7 @@ export class PopoverPage {
     this.navCtrl.setRoot('IntroPage')
   }
 
-  openAdmin(){
+  openAdmin() {
     this.viewCtrl.dismiss();
     this.navCtrl.setRoot('AdminPage')
   }

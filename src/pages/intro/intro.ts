@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, Events } from 'ionic-angular';
 import { DialogProvider } from '../../providers/dialog/dialog';
-import { UserProvider } from '../../providers/user/user';
+import { UserProvider, userRoleEnum } from '../../providers/user/user';
 import { DeviceProvider, terminalEnum } from '../../providers/device/device';
 import { StorageProvider } from '../../providers/storage/storage';
+import { SubscriptionProvider } from '../../providers/subscription/subscription';
+import { NfcProvider } from '../../providers/nfc/nfc';
 
 
 @IonicPage()
@@ -22,7 +24,10 @@ export class IntroPage {
     public userProv: UserProvider,
     public deviceProv: DeviceProvider,
     private storageProv: StorageProvider,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private subscriptionProv: SubscriptionProvider,
+    private event: Events,
+    private nfcProv: NfcProvider
 
   ) {
 
@@ -32,6 +37,44 @@ export class IntroPage {
     this.storageProv.getFromLocalStorage('iE_deviceType').then(res => {
       if (res == terminalEnum.display) this.navCtrl.setRoot('InputPage', terminalEnum.display)
     })
+
+    // app events handler
+    this.event.subscribe('login', data => {
+      if (this.userProv.currentUser) {
+        this.userProv.currentWorker = this.nfcProv.currentCard.workerName
+
+        if (data == userRoleEnum.superadmin) {
+          this.navCtrl.setRoot('SuperadminPage');
+        }
+        else if (data == userRoleEnum.admin || data == userRoleEnum.owner) {
+          this.navCtrl.setRoot('AdminPage');
+        }
+        else {
+          this.navCtrl.setRoot('InputPage', terminalEnum.terminal)
+        }
+      }
+      else {
+        this.alertCtrl.create({
+          title: 'Attention',
+          message: "Vous n'êtes pas connecté !",
+          buttons: [
+            {
+              text: 'Connexion',
+              handler: () => {
+                this.showLogin = true
+              }
+            }
+          ]
+        }).present()
+      }
+
+    })
+  }
+
+  ionViewDidEnter() {
+    setTimeout(() => {
+      if (!this.userProv.currentEventID) this.dialogProv.showSimpleDialog('Attention', '', 'Flag for target event is missing !', 'Ok')
+    }, 5000);
   }
 
   signin() {
@@ -64,6 +107,7 @@ export class IntroPage {
 
   signOut() {
     this.userProv.logOut()
+    this.subscriptionProv.defaultUnscription()
   }
 
   superAdmin() {

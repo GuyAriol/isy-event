@@ -13,9 +13,9 @@
         style="font-family: 'MontSerrat'">{{bluetoothProv.connectedDevice.name || '???' }}
       </button>
 
-      <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="logOff($event)">
+      <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="logOff($event)" class="vert-bar">
         <ion-icon name="person"></ion-icon>
-        &nbsp; Mrs Sandra
+        &nbsp; {{userProv.currentWorker}}
       </button>
     </ion-buttons>
   </ion-navbar>

@@ -8,6 +8,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AES256 } from '@ionic-native/aes-256';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 import { StorageProvider } from '../storage/storage';
+import { userRoleEnum } from '../user/user';
 
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
@@ -24,9 +25,6 @@ export interface nfcCardType {
 
 export enum nfcCmdEnum { none, login, }
 
-export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, owner, client }
-
-
 @Injectable()
 export class NfcProvider {
 
@@ -35,7 +33,6 @@ export class NfcProvider {
   nfcSubscription: Subscription
 
   currentCard = {} as nfcCardType
-  currentUser = {} as nfcCardType
 
   isAdminPage = false
   isCardPresent = false
@@ -150,6 +147,7 @@ export class NfcProvider {
               this.currentCard.cmdType = res.cmdType
               this.currentCard.role = res.role
               this.currentCard.balance = res.balance
+              this.currentCard.workerName = res.workerName
 
               console.log(this.currentCard)
               this.nfcReadPostAction()
@@ -365,7 +363,7 @@ export class NfcProvider {
     this.currentCard = {} as nfcCardType
   }
 
-  updateBalance(card: nfcCardType): Promise<any> {
+  writeCard(card: nfcCardType): Promise<any> {
     if (global.isDebug) {
       console.log('--NfcProvider-updateBalance')
     }

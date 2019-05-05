@@ -19,8 +19,12 @@ export interface eventType {
   title: string,
   date: string,
   location: string,
-  id: string
+  id: string,
+  crew?: [{ name: string, role: userRoleEnum }]
 }
+
+export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, owner, client }
+
 
 @Injectable()
 export class UserProvider {
@@ -29,6 +33,7 @@ export class UserProvider {
   currentEventID = ''
 
   userSubscription: Subscription
+  currentWorker = ''
 
   constructor(
     private localStorage: StorageProvider,
@@ -205,5 +210,27 @@ export class UserProvider {
     } catch (error) {
 
     }
+  }
+
+  updateUser(user: userType) {
+    if (global.isDebug) {
+      console.log('--UserProvider-createEventUser')
+    }
+
+    this.localStorage.setToLocalStorage('iE_user', user)
+
+    this.afd.object(`users/${this.currentUser.id}`).update(this.currentUser)
+      .then(res => {
+        console.log(res)
+      }, fail => {
+        console.log(fail)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  getRoleString(role: number) {
+    return userRoleEnum[role]
   }
 }
