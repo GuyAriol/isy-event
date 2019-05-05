@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { global, encription, logType } from '../global';
 import { NFC, Ndef } from '@ionic-native/nfc';
@@ -9,6 +9,9 @@ import { AES256 } from '@ionic-native/aes-256';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 import { StorageProvider } from '../storage/storage';
 import { userRoleEnum } from '../user/user';
+import { Broadcaster } from '@ionic-native/broadcaster';
+import { BluetoothProvider } from '../bluetooth/bluetooth';
+import { DeviceProvider } from '../device/device';
 
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
@@ -49,13 +52,16 @@ export class NfcProvider {
     private encrypt: AES256,
     private alertCtrl: AlertController,
     private openNativeSettings: OpenNativeSettings,
-    private storageProv: StorageProvider
+    private storageProv: StorageProvider,
+    private nativeBroadcast: Broadcaster,
+    private ngZone: NgZone,
+    private bluetoothProv: BluetoothProvider,
+    private deviceProv: DeviceProvider
 
 
   ) {
 
   }
-
 
   subscribeNFC() {
     if (global.isDebug) {
@@ -103,6 +109,24 @@ export class NfcProvider {
         });
         alert.present();
       })
+
+    if (this.deviceProv.isCordova) {
+
+      nfcCust.onTagRemoved()
+
+      this.nativeBroadcast.addEventListener('iE_TagRemoved').subscribe(res => {
+        console.log('tag removed ####')
+
+        this.ngZone.run(() => {
+          bluetooth.send({ msg: '----' })
+          this.currentCard = {} as nfcCardType
+          this.bluetoothProv.display.msg = '----'
+        })
+
+      })
+    }
+
+
   }
 
   unsubscribeNFC() {

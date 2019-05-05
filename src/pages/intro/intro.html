@@ -18,7 +18,7 @@
       <div padding *ngIf="userProv?.currentUser" style="background: white">
           <h1 text-center>Connecté</h1><br>
 
-          <p padding-top><b>Name:</b> {{userProv.currentUser.name}} </p>
+          <p><b>Name:</b> {{userProv.currentUser.name}} </p>
           <p><b>Email:</b> {{userProv.currentUser.email}} </p><br>
 
           <div padding-top text-center>
@@ -46,10 +46,7 @@
           <button ion-button small (click)="signin()">Connexion</button>
         </div>
       </div>
-
-
     </ion-col>
-
   </ion-row>
 
   <ion-row *ngIf="!showLogin" style="min-height: 90%;" justify-content-center>

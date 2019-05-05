@@ -1,3 +1,32 @@
 page-output {
+  .temp {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    margin: 5px;
+    line-height: 15px;
+  }
+  .temp:active{
+    background: goldenrod;
+    color: white;
+    // border-color: white;
+    // border-width: 2px;
+    // border-style: solid;
+  }
 
+  .cat{
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+  }
+
+  .status-bar-pending{
+    background: goldenrod;
+    color: white;
+  }
+
+  .status-bar-ok{
+    background: green;
+    color: white;
+
+  }
 }

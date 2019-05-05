@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android" id="vihautech-plugin-nfcCust" version="1.0.0">
+  <name>nfcCust</name>
+  <description>nfc on disconnect detection</description>
+  <license>Copyright Vihautech</license>
+  <keywords>cordova,vihautech, nfc</keywords>
+  <repo></repo>
+  <issue></issue>
+
+  <js-module src="www/nfcCust.js" name="nfcCust">
+    <clobbers target="nfcCust" />
+  </js-module>
+
+  <!-- android -->
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="nfcCust">
+        <param name="android-package" value="cm.vihautech.isyevent.nfcCust"/>
+        <!-- To use this plugin replace value with your own package's name-->
+      </feature>
+    </config-file>
+
+    <config-file target="app\src\main\AndroidManifest.xml" parent="/manifest/application">
+    </config-file>
+
+    <!-- To use this plugin replace target-dir with your own package's name-->
+    <source-file src="src/android/nfcCust.java" target-dir="app/src/main/java/cm/vihautech/isyevent" />
+  </platform>
+</plugin>

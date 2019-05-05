@@ -48,6 +48,7 @@
     "rxjs": "5.5.11",
     "sw-toolbox": "3.6.0",
     "vihautech-plugin-bluetooth": "file:plugins_custom/Bluetooth",
+    "vihautech-plugin-nfcCust": "file:plugins_custom/nfcCust",
     "zone.js": "0.8.29"
   },
   "devDependencies": {
@@ -70,9 +71,10 @@
       "cordova-plugin-ionic-keyboard": {},
       "vihautech-plugin-bluetooth": {},
       "cordova-plugin-broadcaster": {},
-      "phonegap-nfc": {},
       "cordova-plugin-aes256-encryption": {},
-      "cordova-open-native-settings": {}
+      "cordova-open-native-settings": {},
+      "phonegap-nfc": {},
+      "vihautech-plugin-nfcCust": {}
     },
     "platforms": [
       "android"

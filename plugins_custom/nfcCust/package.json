@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "name": "vihautech-plugin-nfcCust",
+  "cordova_name": "NFC features",
+  "description": "nfc on disconnect detection",
+  "license": "Copyright Vihautech",
+  "repo": "",
+  "issue": "",
+  "keywords": [
+      "cordova",
+      "device",
+      "vihautech"
+  ],
+  "platforms": [
+      "android"
+  ],
+  "engines": [],
+  "englishdoc": ""
+}

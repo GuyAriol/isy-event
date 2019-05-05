@@ -1,1 +1,2 @@
 ionic cordova plugin rm vihautech-plugin-bluetooth --nosave
+ionic cordova plugin rm vihautech-plugin-nfc --nosave

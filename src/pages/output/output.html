@@ -1,15 +1,65 @@
-<!--
-  Generated template for the OutputPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-  <ion-navbar>
+  <ion-navbar style="min-height: 30px" color=header>
     <ion-title>output</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <p text-center no-padding no-margin
+    [class]="statusMsg!='Ok' ? 'animated shake infinite slower status-bar-pending' : 'status-bar-ok'">{{statusMsg}}
+  </p>
 
+  <ion-grid>
+    <ion-row>
+      <ion-col text-center class="temp" (click)="book(2)">
+        <p><b>XS - 2 euro</b></p>
+
+        <p>Wasser </p>
+      </ion-col>
+
+      <ion-col text-center class="temp" (click)="book(3)">
+        <p><b>S - 3 euro</b></p>
+        <p>Bier</p>
+      </ion-col>
+
+      <ion-col text-center class="temp" (click)="book(5)">
+        <p><b>M - 5 euro</b></p>
+        <p>Coca, Fanta, Sprite</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col text-center class="temp" (click)="book(20)">
+        <p><b>L - 20 euro</b></p>
+        <p>Sekt, Baileys</p>
+      </ion-col>
+
+      <ion-col text-center class="temp" (click)="book(40)">
+        <p><b>XL - 40 euro</b></p>
+        <p>Jack Daniels, Hennesy</p>
+      </ion-col>
+
+      <ion-col text-center class="temp" (click)="book(60)">
+        <p><b>XXL - 60 euro</b></p>
+        <p>Black</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col class="temp" (click)="book(80)">
+        <p text-center><b>VIP 1 - 80 euro</b></p>
+
+      </ion-col>
+
+      <ion-col text-center class="temp" (click)="book(150)">
+        <p><b>VIP 2 - 150 euro</b></p>
+        <p>Ruinart blanc</p>
+      </ion-col>
+
+      <ion-col class="temp" (click)="book(250)">
+        <p text-center><b>VIP 3 - 250 euro</b></p>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -89,6 +89,8 @@ export class InputPage {
   }
 
   putMoney() {
+    console.log(this.input)
+
     if (this.input) {
       this.state = stateEnum.ongoing
       this.color = 'grey'

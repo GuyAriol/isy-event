@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the OutputPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { IonicPage, NavController } from 'ionic-angular';
+import { NfcProvider } from '../../providers/nfc/nfc';
+import { BluetoothProvider } from '../../providers/bluetooth/bluetooth';
 
 @IonicPage()
 @Component({
@@ -15,11 +10,29 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class OutputPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  onGoing = false
+  statusMsg = 'Ready'
+
+  constructor(
+    public navCtrl: NavController,
+    private nfcProv: NfcProvider,
+    private bluetoothProv: BluetoothProvider
+
+    ) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad OutputPage');
+  ionViewDidEnter() {
+    if(!Object.keys(this.bluetoothProv.connectedDevice).length) this.statusMsg = 'Le moniteur est déconnecté !!'
   }
 
+  book(price) {
+    this.onGoing = true
+
+    if(this.nfcProv.currentCard){
+
+    }
+    else{
+
+    }
+  }
 }

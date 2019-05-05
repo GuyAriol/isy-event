@@ -49,6 +49,7 @@
   </div>
 
   <div *ngIf="!isMenuDevice">
+
     <div padding *ngIf="deviceProv.terminalType==0">
       <ion-row justify-content-center>
         <ion-col text-center col-5>
@@ -60,7 +61,9 @@
             </div>
 
             <div *ngIf="state!=0">
-              <p style="letter-spacing: 5px; font-size: 45px">{{nfcProv.currentCard.balance}}</p>
+              <p style="letter-spacing: 5px; font-size: 45px">{{nfcProv.currentCard.balance || '----'}}
+                <!-- <span style="font-size: 18px; letter-spacing: 1px; font-family: montserrat">Saldo insuffisant</span> -->
+              </p>
               <p>euro</p>
             </div>
 
@@ -121,7 +124,7 @@
         <ion-col align-self-center>
           <p text-center>Votre solde</p>
           <div text-center class="balance" [style.background]="color">
-            <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg || 0}} </p>
+            <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg || '----'}} </p>
             <p>euro</p>
           </div>
         </ion-col>
