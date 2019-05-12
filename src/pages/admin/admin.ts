@@ -23,7 +23,7 @@ export class AdminPage {
     public userProv: UserProvider,
     private dialogProv: DialogProvider,
     private alertCtrl: AlertController,
-    private nfcProv: NfcProvider
+    public nfcProv: NfcProvider
 
 
   ) {
@@ -122,7 +122,32 @@ export class AdminPage {
     }).present();
   }
 
-  ongoing(){
+  ongoing() {
     this.dialogProv.showToast('En développement ...')
+  }
+
+  write_test(arg) {
+    let card: nfcCardType = {
+      id: '',
+      cmdType: nfcCmdEnum.none,
+      balance: parseFloat(arg) + this.nfcProv.currentCard.balance,
+      maxsize: '',
+      type: '',
+      role: userRoleEnum.client,
+      cardOk: false,
+      eventId: this.userProv.currentEventID,
+      eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
+      workerName: ' '
+    }
+
+    this.nfcProv.writeCard(card)
+      .then(res => {
+        console.log('res')
+      }, fail => {
+        console.log(fail)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 }

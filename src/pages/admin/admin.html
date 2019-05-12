@@ -9,6 +9,15 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-item>
+    <ion-label>text to write</ion-label>
+    <ion-input #in></ion-input>
+  </ion-item>
+
+  <button ion-button (click)="write_test(in.value)">Write nfc</button>
+
+  <p>{{this.nfcProv.currentCard.balance}}</p>
+
   <ion-list>
     <ion-item no-lines style="background: rgb(235, 171, 171); color: black">
       <ion-label style="color: black">Choisir un event</ion-label>

@@ -55,7 +55,8 @@
         <ion-col text-center col-5>
           <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
           <button ion-button margin-left color=danger (click)="removeMoney()">Sortie</button>
-          <div class="balance" style="margin-top: 25px;" [style.background]="color">
+
+          <div class="balance" style="margin-top: 25px;" [style.background]="nfcProv.isCardPresent ? color : 'goldenrod'">
             <div *ngIf="state==0" style="padding-top: 30px">
               <ion-spinner name="bubbles"></ion-spinner>
             </div>
@@ -90,17 +91,11 @@
     <div *ngIf="deviceProv.terminalType==1">
       <ion-row>
         <ion-col col-7 padding>
-          <!-- <ion-scroll padding scrollY="true" style="height: 250px; font-size: 10px; color: white; padding: 0px">
-            <p>Dernières conso:</p>
-            <p>26.04.19 19:26 XS</p>
-            <p>26.04.19 19:58 L</p>
-          </ion-scroll> -->
-
-          <ion-slides margin pager loop autoplay="3500" slidesPerView="1" style="background: white">
+          <ion-slides margin pager loop autoplay="3500" slidesPerView="1" >
             <ion-slide>
-              <h1 padding>Bienvenue chers invités</h1>
-              <div padding style="color:blue">
-                <p>Nous vous souhaitons une très belle soirée. </p>
+              <h1 style="padding: 5px 15px">Bienvenue chers invités</h1>
+              <div style="color:#488aff">
+                <p padding-right padding-left>Nous vous souhaitons une très belle soirée. </p>
               </div>
             </ion-slide>
 
@@ -134,6 +129,6 @@
 
 </ion-content>
 
-<ion-footer no-border style="height: 22px; background: white" (click)="superAdmin()">
-  <p padding-right float-right style="font-size: 9px">Powered by Vihautech.net</p>
+<ion-footer no-border style="height: 22px; background: white; background: gainsboro" (click)="superAdmin()">
+  <p padding-right float-right style="font-size: 9px; font-style: italic">Powered by Vihautech.net</p>
 </ion-footer>

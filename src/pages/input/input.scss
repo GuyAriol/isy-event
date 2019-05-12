@@ -1,7 +1,7 @@
 page-input {
   .content {
-    background-image: url("../../assets/imgs/bg_app.png");
-    color: goldenrod;
+    // background-image: url("../../assets/imgs/bg_app.png");
+    color: brown;
   }
 
   .balance {
@@ -30,6 +30,9 @@ page-input {
 
   ion-slides{
     height: 60vh;
+    border-style: solid;
+    border-color: gainsboro;
+    color: #488aff;
   }
 
   ion-spinner * {

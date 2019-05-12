@@ -110,21 +110,7 @@ export class NfcProvider {
         alert.present();
       })
 
-    if (this.deviceProv.isCordova) {
 
-      nfcCust.onTagRemoved()
-
-      this.nativeBroadcast.addEventListener('iE_TagRemoved').subscribe(res => {
-        console.log('tag removed ####')
-
-        this.ngZone.run(() => {
-          bluetooth.send({ msg: '----' })
-          this.currentCard = {} as nfcCardType
-          this.bluetoothProv.display.msg = '----'
-        })
-
-      })
-    }
 
 
   }
@@ -198,10 +184,11 @@ export class NfcProvider {
       console.log('--NfcProvider-nfcReadPostAction')
     }
 
-
     if (this.currentCard.cmdType == nfcCmdEnum.login) this.event.publish('login', this.currentCard.role)
     else {
       this.isCardPresent = true
+      this.event.publish('nfc card connected')
+
       bluetooth.send({ msg: this.currentCard.balance })
     }
 
@@ -226,9 +213,9 @@ export class NfcProvider {
           this.isNFCwriting = false
 
           resolve()
-        }, error => {
+        }, fail => {
           this.isNFCwriting = false
-          console.log(error)
+          console.log(fail)
           reject()
         })
         .catch(error => {
@@ -325,8 +312,12 @@ export class NfcProvider {
       console.log(payload)
 
       this.encrypt.encrypt(encription.key, encription.IV, payload)
-        .then(res => {
-          resolve(res)
+        .then(pass => {
+          console.log('encription passed')
+          resolve(pass)
+        }, fail => {
+          console.log('enccription failed', fail)
+          reject(fail)
         })
         .catch(error => {
           console.log(error)
@@ -389,7 +380,7 @@ export class NfcProvider {
 
   writeCard(card: nfcCardType): Promise<any> {
     if (global.isDebug) {
-      console.log('--NfcProvider-updateBalance')
+      console.log('--NfcProvider-writeCard')
     }
 
     return new Promise((resolve, reject) => {
@@ -401,12 +392,16 @@ export class NfcProvider {
       this.buildNfcPayload(card)
         .then(data => {
           this.writeNFC(data)
-            .then(() => {
+            .then(pass => {
               this.currentCard = card
               this.currentCard.cardOk = true
 
+              console.log('paylaod written', pass)
               resolve()
-              // toDo: local logging
+
+            }, fail => {
+              console.log('payload not written', fail)
+              reject()
             })
             .catch(error => {
               console.log(error)

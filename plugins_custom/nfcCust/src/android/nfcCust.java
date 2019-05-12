@@ -31,7 +31,7 @@ public class nfcCust extends CordovaPlugin {
   public static final String TAG = "nfc";
 
   NfcAdapter nfcAdapter;
-  PendingIntent pendingIntent;
+  // PendingIntent pendingIntent;
   Context context;
 
   public nfcCust() {
@@ -41,21 +41,22 @@ public class nfcCust extends CordovaPlugin {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
 
-    Context context = cordova.getActivity().getApplicationContext();
+    context = cordova.getActivity().getApplicationContext();
     nfcAdapter = NfcAdapter.getDefaultAdapter(context);
 
-    Activity activity = getActivity();
-    Intent intent = new Intent(activity, activity.getClass());
-    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
+    // Activity activity = getActivity();
+    // Intent intent = new Intent(activity, activity.getClass());
+
+    // intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    // pendingIntent = PendingIntent.getActivity(activity, 0, intent, 0);
   }
 
   @Override
   public boolean execute(final String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-    if ("Test".equals(action)) {
+    if ("tagRemoved".equals(action)) {
 
       // set callback to success
-      callbackContext.success("Result from native Test");
+      callbackContext.success("Result from native tagRemoved");
       return true;
     }
 
@@ -65,7 +66,6 @@ public class nfcCust extends CordovaPlugin {
   @Override
   public void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    // setIntent(intent);
     resolveIntent(intent);
   }
 
@@ -73,27 +73,17 @@ public class nfcCust extends CordovaPlugin {
     String action = intent.getAction();
     Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-    if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action) || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
-        || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-      Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-      NdefMessage[] msgs;
-
-    }
-
     // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      nfcAdapter.ignore(tag, 1000, new NfcAdapter.OnTagRemovedListener() {
+      nfcAdapter.ignore(tag, 1000,
+      new NfcAdapter.OnTagRemovedListener() {
         @Override
         public void onTagRemoved() {
 
           Intent i = new Intent("iE_TagRemoved");
-          // Bundle b = new Bundle();
-          // b.putString("data", data);
-          // i.putExtras(b);
-
           LocalBroadcastManager.getInstance(context).sendBroadcastSync(i);
         }
 
-      }, new Handler(Looper.getMainLooper()));
+      }, null);
     // }
   }
 

@@ -21,6 +21,11 @@
       </feature>
     </config-file>
 
+    <config-file target="app\src\main\AndroidManifest.xml" parent="/*">
+      <!-- <uses-permission android:name="android.permission.NFC" /> -->
+      <!-- <uses-feature android:name="android.hardware.nfc" android:required="true" /> -->
+    </config-file>
+
     <config-file target="app\src\main\AndroidManifest.xml" parent="/manifest/application">
     </config-file>
 
