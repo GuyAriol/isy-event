@@ -481,9 +481,16 @@ public class bluetooth extends CordovaPlugin {
     }
 
     else if ("disconnect".equals(action)) {
-      // connectThread.cancel();
       connectedThread.cancel();
-      // acceptThread.cancel();
+    }
+
+    else if ("getLocalBluetoothName".equals(action)) {
+      BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+      String name = mBluetoothAdapter.getName();
+      //String address = mBluetoothAdapter.getAddress();
+
+      callbackContext.success(name);
     }
 
     return true;

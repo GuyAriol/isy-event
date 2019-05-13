@@ -9,9 +9,9 @@ import { AES256 } from '@ionic-native/aes-256';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 import { StorageProvider } from '../storage/storage';
 import { userRoleEnum } from '../user/user';
-import { Broadcaster } from '@ionic-native/broadcaster';
-import { BluetoothProvider } from '../bluetooth/bluetooth';
-import { DeviceProvider } from '../device/device';
+// import { Broadcaster } from '@ionic-native/broadcaster';
+// import { BluetoothProvider } from '../bluetooth/bluetooth';
+// import { DeviceProvider } from '../device/device';
 
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
@@ -38,7 +38,7 @@ export class NfcProvider {
   currentCard = {} as nfcCardType
 
   isAdminPage = false
-  isCardPresent = false
+  // isCardPresent = false
 
   allNFCtransactions: logType[] = []
 
@@ -53,10 +53,10 @@ export class NfcProvider {
     private alertCtrl: AlertController,
     private openNativeSettings: OpenNativeSettings,
     private storageProv: StorageProvider,
-    private nativeBroadcast: Broadcaster,
-    private ngZone: NgZone,
-    private bluetoothProv: BluetoothProvider,
-    private deviceProv: DeviceProvider
+    // private nativeBroadcast: Broadcaster,
+    // private ngZone: NgZone,
+    // private bluetoothProv: BluetoothProvider,
+    // private deviceProv: DeviceProvider
 
 
   ) {
@@ -83,7 +83,9 @@ export class NfcProvider {
 
           this.nfcSubscription = observable.subscribe(event => {
             // console.log(event.tag)
-            this.dialogProv.showLoading('Loading', 10000)
+            // this.dialogProv.showLoading('Loading', 10000)
+            this.onTagDetected()
+
             this.handleNFCread(event.tag)
           })
         }
@@ -186,13 +188,10 @@ export class NfcProvider {
 
     if (this.currentCard.cmdType == nfcCmdEnum.login) this.event.publish('login', this.currentCard.role)
     else {
-      this.isCardPresent = true
       this.event.publish('nfc card connected')
-
       bluetooth.send({ msg: this.currentCard.balance })
     }
 
-    this.dialogProv.dismissLoading()
   }
 
   private writeNFC(msg): Promise<any> {
@@ -449,6 +448,23 @@ export class NfcProvider {
     this.storageProv.getFromLocalStorage('iE_eventLog').then(res => {
       if (res) this.allNFCtransactions = res
     })
+  }
+
+  onTagDetected() {
+    this.currentCard = {
+      id: '',
+      cmdType: null,
+      balance: null,
+      maxsize: '',
+      type: '',
+      role: null,
+      cardOk: false,
+      eventId: '',
+      eventName: ''
+    }
+
+    this.event.publish('nfc card detected')
+
   }
 }
 

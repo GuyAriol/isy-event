@@ -3,12 +3,6 @@ import { global } from '../global';
 import { Platform } from 'ionic-angular';
 import { StorageProvider } from '../storage/storage';
 
-export interface bluetoothDeviceType {
-  name: string,
-  address: string
-  isConnected: boolean
-}
-
 export enum terminalEnum { terminal, display }
 
 @Injectable()
@@ -21,6 +15,7 @@ export class DeviceProvider {
   isAppBooting = 0
 
   terminalType: terminalEnum = 0
+  bluetoothInfo = ''
 
   constructor(
     private platform: Platform,
@@ -65,11 +60,29 @@ export class DeviceProvider {
       if (res) this.terminalType = res
     })
 
+    this.getLocalBluetoothInfo()
   }
 
   setDeviceType(arg) {
     console.log(arg)
     this.terminalType = arg
     this.storageProv.setToLocalStorage('iE_deviceType', this.terminalType)
+  }
+
+  getLocalBluetoothInfo() {
+    if (global.isDebug) {
+      console.log('--DeviceProvider-getLocalBluetoothInfo')
+    }
+
+    if (this.platform.is('cordova')) {
+      bluetooth.getLocalBluetoothName()
+        .then(data => {
+          this.bluetoothInfo = data
+
+          console.log(this.bluetoothInfo)
+        })
+        .catch(error => console.log(error))
+    }
+
   }
 }

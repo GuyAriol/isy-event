@@ -3,7 +3,8 @@
     <ion-title>Diaspo Night</ion-title>
 
     <ion-buttons end>
-      <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="isMenuDevice=!isMenuDevice">Kasse 1
+      <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="isMenuDevice=!isMenuDevice">
+        {{deviceProv?.bluetoothInfo}}
       </button>
       <button ion-button icon-only>
         <img src="assets/imgs/arrow.png" alt="" width="20">
@@ -56,7 +57,8 @@
           <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
           <button ion-button margin-left color=danger (click)="removeMoney()">Sortie</button>
 
-          <div class="balance" style="margin-top: 25px;" [style.background]="nfcProv.isCardPresent ? color : 'goldenrod'">
+          <!-- [style.background]="nfcProv.isCardPresent ? color : 'goldenrod'" -->
+          <div class="balance" style="margin-top: 25px;" [style.background]="color">
             <div *ngIf="state==0" style="padding-top: 30px">
               <ion-spinner name="bubbles"></ion-spinner>
             </div>
@@ -73,7 +75,7 @@
 
         <ion-col col-7>
           <div text-right>
-            <h2><span style="letter-spacing: 10px; font-weight: bold">{{input}} </span> euro</h2>
+            <h2><span style="letter-spacing: 10px; font-weight: bold">{{input}} </span> {{state}}</h2>
           </div>
 
           <ion-row justify-content-center padding-top>
@@ -91,7 +93,7 @@
     <div *ngIf="deviceProv.terminalType==1">
       <ion-row>
         <ion-col col-7 padding>
-          <ion-slides margin pager loop autoplay="3500" slidesPerView="1" >
+          <ion-slides margin pager loop autoplay="3500" slidesPerView="1">
             <ion-slide>
               <h1 style="padding: 5px 15px">Bienvenue chers invités</h1>
               <div style="color:#488aff">
@@ -118,7 +120,7 @@
 
         <ion-col align-self-center>
           <p text-center>Votre solde</p>
-          <div text-center class="balance" [style.background]="color">
+          <div text-center class="balance" style.background="green">
             <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg || '----'}} </p>
             <p>euro</p>
           </div>

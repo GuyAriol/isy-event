@@ -27,11 +27,11 @@ export class MyApp {
 
   ) {
 
-    deviceProv.getCurrentPlatform()
-
-    bluetoothProv.subscribeNativeEvent()
-
     platform.ready().then(() => {
+
+      deviceProv.getCurrentPlatform()
+      bluetoothProv.subscribeNativeEvent()
+
       if (platform.is('cordova')) {
         splashScreen.hide(); status.hide()
         bluetooth.activateBluetooth()

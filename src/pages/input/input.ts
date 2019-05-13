@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams, PopoverController, ViewController, Events } from 'ionic-angular';
 import { DeviceProvider } from '../../providers/device/device';
 import { BluetoothProvider } from '../../providers/bluetooth/bluetooth';
@@ -8,7 +8,7 @@ import { UserProvider, userRoleEnum } from '../../providers/user/user';
 import { StorageProvider } from '../../providers/storage/storage';
 import { logType } from '../../providers/global';
 
-enum stateEnum { ongoing, pass, fail, error, idle }
+enum stateEnum { ongoing, pass, fail, error }
 
 @IonicPage()
 @Component({
@@ -20,8 +20,8 @@ export class InputPage {
   isMenuDevice = false
   input: string = ''
 
-  state: stateEnum = stateEnum.idle
-  color = 'goldenrod'
+  state: stateEnum = stateEnum.ongoing
+  color = 'grey'
 
   constructor(
     public navCtrl: NavController,
@@ -32,7 +32,8 @@ export class InputPage {
     public nfcProv: NfcProvider,
     public popoverCtrl: PopoverController,
     public userProv: UserProvider,
-    private event: Events
+    private event: Events,
+    private ngZone: NgZone,
 
 
   ) {
@@ -41,13 +42,25 @@ export class InputPage {
   }
 
   ionViewDidLoad() {
+    this.event.subscribe('nfc card detected', () => {
+
+      console.log('card detected')
+
+      this.ngZone.run(() => {
+        this.state = stateEnum.ongoing
+        this.color = 'grey'
+      })
+    })
+
     this.event.subscribe('nfc card connected', () => {
-      this.state = stateEnum.idle
-      this.color = 'goldenrod'
+      this.state = stateEnum.pass
+      this.color = 'green'
+      console.log('card connected')
     })
   }
 
   ionViewDidLeave() {
+    this.event.unsubscribe('nfc card detected')
     this.event.unsubscribe('nfc card connected')
   }
 
@@ -99,7 +112,7 @@ export class InputPage {
   putMoney() {
     console.log(this.input)
 
-    if (this.nfcProv.isCardPresent) {
+    // if (this.nfcProv.isCardPresent) {
       if (this.input) {
         this.state = stateEnum.ongoing
         this.color = 'grey'
@@ -149,16 +162,16 @@ export class InputPage {
             this.color = 'red'
             console.log(error)
           })
-      }
-      else {
-        this.dialogProv.showToast('Vérifiez le mountant')
-        this.state = stateEnum.idle
-        this.color = 'goldenrod'
-      }
+      // }
+      // else {
+      //   this.dialogProv.showToast('Vérifiez le mountant')
+      //   this.state = stateEnum.idle
+      //   this.color = 'goldenrod'
+      // }
     }
     else {
       this.dialogProv.showToast('Vérifiez la carte')
-      this.state = stateEnum.idle
+      this.state = stateEnum.fail
       this.color = 'goldenrod'
     }
 
