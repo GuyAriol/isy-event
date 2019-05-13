@@ -37,12 +37,12 @@ export class InputPage {
 
 
   ) {
-    if (Object.keys(navParams.data).length) this.deviceProv.terminalType = navParams.data
+    // if (Object.keys(navParams.data).length) this.deviceProv.terminalType = navParams.data
 
   }
 
   ionViewDidLoad() {
-    this.event.subscribe('nfc card detected', () => {
+    this.event.subscribe('iE-nfc card detected', () => {
 
       console.log('card detected')
 
@@ -52,7 +52,7 @@ export class InputPage {
       })
     })
 
-    this.event.subscribe('nfc card connected', () => {
+    this.event.subscribe('iE-nfc card connected', () => {
       this.state = stateEnum.pass
       this.color = 'green'
       console.log('card connected')
@@ -60,10 +60,11 @@ export class InputPage {
   }
 
   ionViewDidLeave() {
-    this.event.unsubscribe('nfc card detected')
-    this.event.unsubscribe('nfc card connected')
+    this.event.unsubscribe('iE-nfc card detected')
+    this.event.unsubscribe('iE-nfc card connected')
   }
 
+  // toDo: move to bluetooth provider
   connection() {
     this.isMenuDevice = true
 
@@ -88,6 +89,7 @@ export class InputPage {
     }
   }
 
+  // toDo: move to bluetooth provider
   connectPairedDevice(deviceAddress) {
     this.dialogProv.showLoading('scanning', 10000)
 
@@ -112,68 +114,67 @@ export class InputPage {
   putMoney() {
     console.log(this.input)
 
-    // if (this.nfcProv.isCardPresent) {
-      if (this.input) {
-        this.state = stateEnum.ongoing
-        this.color = 'grey'
+    // if (this.nfcProv.currentCard) {
+    if (this.input) {
+      this.state = stateEnum.ongoing
+      this.color = 'grey'
 
-        let card: nfcCardType = {
-          id: '',
-          cmdType: nfcCmdEnum.none,
-          balance: parseFloat(this.input) + this.nfcProv.currentCard.balance,
-          maxsize: '',
-          type: '',
-          role: userRoleEnum.client,
-          cardOk: false,
-          eventId: this.userProv.currentEventID,
-          eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
-          workerName: ' '
-        }
+      let card: nfcCardType = {
+        id: '',
+        cmdType: nfcCmdEnum.none,
+        balance: parseFloat(this.input) + this.nfcProv.currentCard.balance,
+        maxsize: '',
+        type: '',
+        role: userRoleEnum.client,
+        cardOk: false,
+        eventId: this.userProv.currentEventID,
+        eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
+        workerName: ' '
+      }
 
-        this.nfcProv.writeCard(card)
-          .then(pass => {
+      this.nfcProv.writeCard(card)
+        .then(pass => {
 
-            bluetooth.send({ msg: this.nfcProv.currentCard.balance })
+          bluetooth.send({ msg: this.nfcProv.currentCard.balance })
 
-            this.state = stateEnum.pass
-            this.color = 'green'
+          this.state = stateEnum.pass
+          this.color = 'green'
 
-            let log: logType = {
-              timeStamp: Date.now(),
-              deviceType: this.deviceProv.terminalType,
-              worker: this.userProv.currentWorker,
-              amount: parseFloat(this.input),
-              note: ''
-            }
-            this.nfcProv.saveTransaction(log)
+          let log: logType = {
+            timeStamp: Date.now(),
+            deviceType: this.deviceProv.terminalType,
+            worker: this.userProv.currentWorker,
+            amount: parseFloat(this.input),
+            note: ''
+          }
+          this.nfcProv.saveTransaction(log)
 
-            this.input = ''
+          this.input = ''
 
-            console.log('pass', pass)
-          },
-            fail => {
-              this.state = stateEnum.fail
-              this.color = 'red'
-
-              this.dialogProv.showToast('Vérifiez la carte')
-            })
-          .catch(error => {
-            this.state = stateEnum.error
+        },
+          fail => {
+            this.state = stateEnum.fail
             this.color = 'red'
-            console.log(error)
+
+            this.dialogProv.showToast('Vérifiez la carte')
           })
-      // }
-      // else {
-      //   this.dialogProv.showToast('Vérifiez le mountant')
-      //   this.state = stateEnum.idle
-      //   this.color = 'goldenrod'
-      // }
+        .catch(error => {
+          this.state = stateEnum.error
+          this.color = 'red'
+          console.log(error)
+        })
     }
     else {
-      this.dialogProv.showToast('Vérifiez la carte')
-      this.state = stateEnum.fail
+      this.dialogProv.showToast('Vérifiez le mountant')
+      this.state = stateEnum.ongoing
       this.color = 'goldenrod'
     }
+    // }
+    // else {
+    //   this.dialogProv.showToast('Vérifiez la carte')
+    //   this.state = stateEnum.fail
+    //   this.color = 'red'
+    // }
 
   }
 

@@ -6,7 +6,7 @@
       <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="isMenuDevice=!isMenuDevice">
         {{deviceProv?.bluetoothInfo}}
       </button>
-      <button ion-button icon-only>
+      <button ion-button icon-only (click)="isMenuDevice=!isMenuDevice">
         <img src="assets/imgs/arrow.png" alt="" width="20">
       </button>
 

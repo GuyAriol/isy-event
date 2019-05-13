@@ -9,9 +9,6 @@ import { AES256 } from '@ionic-native/aes-256';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 import { StorageProvider } from '../storage/storage';
 import { userRoleEnum } from '../user/user';
-// import { Broadcaster } from '@ionic-native/broadcaster';
-// import { BluetoothProvider } from '../bluetooth/bluetooth';
-// import { DeviceProvider } from '../device/device';
 
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
@@ -38,7 +35,6 @@ export class NfcProvider {
   currentCard = {} as nfcCardType
 
   isAdminPage = false
-  // isCardPresent = false
 
   allNFCtransactions: logType[] = []
 
@@ -53,10 +49,6 @@ export class NfcProvider {
     private alertCtrl: AlertController,
     private openNativeSettings: OpenNativeSettings,
     private storageProv: StorageProvider,
-    // private nativeBroadcast: Broadcaster,
-    // private ngZone: NgZone,
-    // private bluetoothProv: BluetoothProvider,
-    // private deviceProv: DeviceProvider
 
 
   ) {
@@ -186,9 +178,9 @@ export class NfcProvider {
       console.log('--NfcProvider-nfcReadPostAction')
     }
 
-    if (this.currentCard.cmdType == nfcCmdEnum.login) this.event.publish('login', this.currentCard.role)
+    if (this.currentCard.cmdType == nfcCmdEnum.login) this.event.publish('iE-login', this.currentCard.role)
     else {
-      this.event.publish('nfc card connected')
+      this.event.publish('iE-nfc card connected')
       bluetooth.send({ msg: this.currentCard.balance })
     }
 
@@ -463,7 +455,7 @@ export class NfcProvider {
       eventName: ''
     }
 
-    this.event.publish('nfc card detected')
+    this.event.publish('iE-nfc card detected')
 
   }
 }

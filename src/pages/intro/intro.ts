@@ -39,7 +39,7 @@ export class IntroPage {
     })
 
     // app events handler
-    this.event.subscribe('login', data => {
+    this.event.subscribe('iE-login', data => {
       if (this.userProv.currentUser) {
         this.userProv.currentWorker = this.nfcProv.currentCard.workerName
 
@@ -49,8 +49,11 @@ export class IntroPage {
         else if (data == userRoleEnum.admin || data == userRoleEnum.owner) {
           this.navCtrl.setRoot('AdminPage');
         }
-        else {
-          this.navCtrl.setRoot('InputPage', terminalEnum.terminal)
+        else if(data == userRoleEnum.barman){
+          this.navCtrl.setRoot('OutputPage')
+        }
+        else{
+          this.navCtrl.setRoot('InputPage')
         }
       }
       else {
