@@ -54,8 +54,8 @@
     <div padding *ngIf="deviceProv.terminalType==0">
       <ion-row justify-content-center>
         <ion-col text-center col-5>
-          <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
           <button ion-button margin-left color=danger (click)="removeMoney()">Sortie</button>
+          <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
 
           <!-- [style.background]="nfcProv.isCardPresent ? color : 'goldenrod'" -->
           <div class="balance" style="margin-top: 25px;" [style.background]="color">
@@ -73,14 +73,14 @@
           </div>
         </ion-col>
 
-        <ion-col col-7>
-          <div text-right>
-            <h2><span style="letter-spacing: 10px; font-weight: bold">{{input}} </span> {{state}}</h2>
+        <ion-col col-7 no-padding-top>
+          <div text-right class="input-amount">
+            <h2><span style="letter-spacing: 10px; font-weight: bold">{{input}} </span> euro</h2>
           </div>
 
-          <ion-row justify-content-center padding-top>
+          <ion-row justify-content-center>
             <div *ngFor="let num of [7,8,9,4,5,6,1,2,3,0]">
-              <button ion-button round class="numpad" (click)="numPad(num)">{{num}}</button>
+              <button ion-button round class="numpad" (click)="input=input+num">{{num}}</button>
             </div>
 
             <button ion-button round class="numpad" color=light (click)="numPad(',')">,</button>
@@ -131,6 +131,6 @@
 
 </ion-content>
 
-<ion-footer no-border style="height: 22px; background: white; background: gainsboro" (click)="superAdmin()">
+<ion-footer no-border style="height: 22px; background: gainsboro;" (click)="superAdmin()">
   <p padding-right float-right style="font-size: 9px; font-style: italic">Powered by Vihautech.net</p>
 </ion-footer>

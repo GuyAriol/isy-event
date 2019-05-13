@@ -16,17 +16,17 @@
 
     <ion-col col-sm-8>
       <div padding *ngIf="userProv?.currentUser" style="background: white">
-          <h1 text-center>Connecté</h1><br>
+        <h1 text-center>Connecté</h1><br>
 
-          <p><b>Name:</b> {{userProv.currentUser.name}} </p>
-          <p><b>Email:</b> {{userProv.currentUser.email}} </p><br>
+        <p><b>Name:</b> {{userProv.currentUser.name}} </p>
+        <p><b>Email:</b> {{userProv.currentUser.email}} </p><br>
 
-          <div padding-top text-center>
-            <button ion-button full (click)="openAdminPage()">Manager mes events</button><br><br>
-            <button ion-button color=light (click)="cancel()">Fermer</button>
-            <button ion-button color=danger (click)="signOut()">Déconnexion</button>
+        <div padding-top text-center>
+          <button ion-button full (click)="openAdminPage()">Manager mes events</button><br><br>
+          <button ion-button color=light (click)="cancel()">Fermer</button>
+          <button ion-button color=danger (click)="signOut()">Déconnexion</button>
 
-          </div><br>
+        </div><br>
       </div>
 
       <div *ngIf="!userProv?.currentUser">
@@ -41,7 +41,7 @@
         </ion-item>
 
         <div text-right padding style="background: white">
-            <button ion-button small color=light (click)="cancel()">Fermer</button>
+          <button ion-button small color=light (click)="cancel()">Fermer</button>
 
           <button ion-button small (click)="signin()">Connexion</button>
         </div>
@@ -51,7 +51,14 @@
 
   <ion-row *ngIf="!showLogin" style="min-height: 90%;" justify-content-center>
     <ion-col col-sm-6>
-      <ion-slides pager loop autoplay="2500" slidesPerView="1">
+      <ion-slides pager loop autoplay="3500" slidesPerView="1">
+        <ion-slide>
+          <h1 style="padding: 5px 15px">Bienvenue chers invités</h1>
+          <div style="color:#488aff">
+            <p padding-right padding-left>Nous vous souhaitons une très belle soirée. </p>
+          </div>
+        </ion-slide>
+
         <ion-slide>
           <h1>Page pub 1</h1>
           <h2>Event xx in xx when xx </h2>
@@ -97,6 +104,6 @@
   </ion-row>
 </ion-content>
 
-<ion-footer no-border style="height: 22px; background: white" (click)="superAdmin()">
-  <p padding-right float-right style="font-size: 9px">Powered by Vihautech.net</p>
+<ion-footer no-border style="height: 22px; background: gainsboro" (click)="superAdmin()">
+  <p padding-right float-right style="font-size: 9px; font-style: italic">Powered by Vihautech.net</p>
 </ion-footer>

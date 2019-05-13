@@ -8,11 +8,9 @@ page-intro {
     border-width: 1px;
   }
 
-  .content {
-    background: rgb(220, 220, 220);
-  }
-
   ion-slide {
-    background: white;
+    border-style: solid;
+    border-color: gainsboro;
+    color: #488aff;
   }
 }

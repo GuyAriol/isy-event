@@ -1,224 +1,233 @@
 <ion-header>
   <ion-navbar no-padding color=header>
-    <ion-item no-lines>
-      <p style="font-size: 18px">Super admin</p>
-      <div item-right>
-        <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 0)"
-          (click)="deviceProv.setDeviceType(0)">Terminal</button>
-        <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 1)"
-          (click)="deviceProv.setDeviceType(1)">Monitor</button>
-      </div>
-    </ion-item>
-
+    <ion-title>Super admin</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <!-- toDo: prepare event: reset local storage -->
 
-  <div text-center>
-    <button ion-button icon-start (click)="isSearch=true; isNewUser=false; selectedUser=null">
-      <ion-icon name="search">&nbsp;&nbsp; Client</ion-icon>
-    </button>
+  <ion-list>
+    <ion-item-divider style="font-size: 18px; color: brown" (click)="isPreparemenu=!isPreparemenu">Prepare device
+    </ion-item-divider>
 
-    <button ion-button icon-start (click)="isNewUser = true; isNewEvent = false; isSearch=false">
-      <ion-icon name="person-add">&nbsp;&nbsp; Client</ion-icon>
-    </button>
-  </div>
+    <div *ngIf="isPreparemenu">
+      <ion-item>
+        <p>Device type</p>
 
-  <div *ngIf="!selectedUser && !isNewUser && !isSearch">
-    <ion-item padding-top no-lines style="padding-left: 60px">
-      <ion-spinner item-left name="bubbles"></ion-spinner>
-      <ion-label>Déposer une carte</ion-label>
-    </ion-item>
+        <div item-right>
+          <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 0)"
+            (click)="deviceProv.setDeviceType(0)">Terminal</button>
+          <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 1)"
+            (click)="deviceProv.setDeviceType(1)">Monitor</button>
+        </div>
+      </ion-item>
 
-    <div *ngIf="nfcProv?.isCardPresent" padding>
-      <p><b>Card info</b></p>
-      <ion-item no-lines>
-        <p>ID: {{nfcProv.currentCard.id}} </p>
-        <p>Type: {{nfcProv.currentCard.type}} </p>
-        <p>Size: {{nfcProv.currentCard.maxsize}} </p>
-        <p>Is OK ? {{nfcProv.currentCard.cardOk}} </p>
-        <br>
-        <p>Credit: {{nfcProv.currentCard.balance}} </p>
-        <p>Role: {{getRole()}} </p>
-        <p>Cmd: {{getCmd()}} </p>
+      <ion-item (click)="resetDevice()">
+        <p>Reset local storage</p>
       </ion-item>
     </div>
+  </ion-list>
 
-  </div>
+  <ion-item-divider style="font-size: 18px; color: brown" (click)="isManageClient=!isManageClient">Manage clients</ion-item-divider>
+  <div *ngIf="isManageClient">
+    <div text-center>
+      <button ion-button icon-start (click)="isSearch=true; isNewUser=false; selectedUser=null">
+        <ion-icon name="search">&nbsp;&nbsp; Client</ion-icon>
+      </button>
 
-  <div *ngIf="isSearch" padding>
-    <ion-searchbar (ionChange)="searchUser($event.value)" placeholder="Taper nom ou email"></ion-searchbar>
+      <button ion-button icon-start (click)="isNewUser = true; isNewEvent = false; isSearch=false">
+        <ion-icon name="person-add">&nbsp;&nbsp; Client</ion-icon>
+      </button>
+    </div>
 
-    <ion-list>
-      <div *ngFor="let contact of searchList">
-        <button ion-item (click)="clientSelected(contact)">
-          <div>
-            <h2>{{contact.name}}</h2>
-            <p>{{contact.email}}</p>
-          </div>
-        </button>
-      </div>
-    </ion-list>
-  </div>
-
-  <div *ngIf="isNewUser" class="sub-menu1 box-shadow">
-    <ion-list padding>
-      <ion-item-divider>
-        <p style="font-size: 20px; color: black">Créer client</p>
-        <ion-icon item-right padding-right name="checkmark-circle" (click)="createNewUser()"></ion-icon>
-        <ion-icon item-right name="close-circle" (click)="isNewUser = false"></ion-icon>
-      </ion-item-divider>
-
-      <ion-item>
-        <ion-label stacked>Name</ion-label>
-        <ion-input [(ngModel)]="credentials.name" type=text></ion-input>
+    <div *ngIf="!selectedUser && !isNewUser && !isSearch">
+      <ion-item padding-top no-lines style="padding-left: 60px">
+        <ion-spinner item-left name="bubbles"></ion-spinner>
+        <ion-label>Déposer une carte</ion-label>
       </ion-item>
 
-      <ion-item>
-        <ion-label stacked>Email</ion-label>
-        <ion-input [(ngModel)]="credentials.email" type=email></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label stacked>Mot de passe</ion-label>
-        <ion-input [(ngModel)]="credentials.password" type="password"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label stacked>Mot de passe admin</ion-label>
-        <ion-input [(ngModel)]="credentials.adminPass" type="password"></ion-input>
-      </ion-item>
-
-    </ion-list>
-  </div>
-
-  <ion-row *ngIf="selectedUser" justify-content-center>
-    <div class="sub-menu1">
-      <ion-list padding>
-        <ion-item>
-          <p style="font-size: 20px; color: black">{{selectedUser.name}}</p>
-          <p style="font-size: 15px; color: black"><i>{{selectedUser.email}}</i></p>
-
-          <br>
-          <p>Total Events: {{selectedUserEventIds?.length}}</p>
-          <p>Toral Cartes: {{getCard()}}</p>
-        </ion-item>
-
-
+      <div *ngIf="nfcProv?.currentCard.balance" padding>
+        <p><b>Card info</b></p>
         <ion-item no-lines>
-          <ion-label>Event</ion-label>
-          <ion-select (ionChange)="eventSelected($event)">
-            <ion-option *ngFor="let eventId of selectedUserEventIds" [value]="eventId">
-              {{selectedUser?.events[eventId].title}}
-            </ion-option>
-          </ion-select>
+          <p>ID: {{nfcProv.currentCard.id}} </p>
+          <p>Type: {{nfcProv.currentCard.type}} </p>
+          <p>Size: {{nfcProv.currentCard.maxsize}} </p>
+          <p>Is OK ? {{nfcProv.currentCard.cardOk}} </p>
+          <br>
+          <p>Credit: {{nfcProv.currentCard.balance}} </p>
+          <p>Role: {{getRole()}} </p>
+          <p>Cmd: {{getCmd()}} </p>
         </ion-item>
+      </div>
 
-        <ion-item no-lines *ngIf="selectedUserEventId">
-          <p padding-left>Date: {{selectedUser?.events[selectedUserEventId]?.date}}</p><br>
-          <p padding-left>Lieu: {{selectedUser?.events[selectedUserEventId]?.location}}</p><br>
-          <p padding-left>Cartes: {{getCard(selectedUserEventId)}}</p>
-        </ion-item>
+    </div>
 
-        <div text-center padding-top>
-          <button ion-button [disabled]="!selectedUserEventId" (click)="saveEventonDevice()">Active event on this
-            device</button>
+    <div *ngIf="isSearch" padding>
+      <ion-searchbar (ionChange)="searchUser($event.value)" placeholder="Taper nom ou email"></ion-searchbar>
+
+      <ion-list>
+        <div *ngFor="let contact of searchList">
+          <button ion-item (click)="clientSelected(contact)">
+            <div>
+              <h2>{{contact.name}}</h2>
+              <p>{{contact.email}}</p>
+            </div>
+          </button>
         </div>
       </ion-list>
     </div>
 
-    <div *ngIf="isNewEvent" class="sub-menu box-shadow">
+    <div *ngIf="isNewUser" class="sub-menu1 box-shadow">
       <ion-list padding>
         <ion-item-divider>
-          <p style="font-size: 20px; color: black">Créer event</p>
-          <ion-icon item-right padding-right name="checkmark-circle" (click)="createNewEvent()"></ion-icon>
-          <ion-icon item-right name="close-circle" (click)="isNewEvent = false"></ion-icon>
+          <p style="font-size: 20px; color: black">Créer client</p>
+          <ion-icon item-right padding-right name="checkmark-circle" (click)="createNewUser()"></ion-icon>
+          <ion-icon item-right name="close-circle" (click)="isNewUser = false"></ion-icon>
         </ion-item-divider>
 
         <ion-item>
-          <ion-label stacked>Titre</ion-label>
-          <ion-input [(ngModel)]="newEvent.title" type=text></ion-input>
+          <ion-label stacked>Name</ion-label>
+          <ion-input [(ngModel)]="credentials.name" type=text></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label stacked>Lieu</ion-label>
-          <ion-input [(ngModel)]="newEvent.location" type=text></ion-input>
+          <ion-label stacked>Email</ion-label>
+          <ion-input [(ngModel)]="credentials.email" type=email></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label stacked>Date</ion-label>
-          <ion-input [(ngModel)]="newEvent.date" type=text></ion-input>
+          <ion-label stacked>Mot de passe</ion-label>
+          <ion-input [(ngModel)]="credentials.password" type="password"></ion-input>
         </ion-item>
+
+        <ion-item>
+          <ion-label stacked>Mot de passe admin</ion-label>
+          <ion-input [(ngModel)]="credentials.adminPass" type="password"></ion-input>
+        </ion-item>
+
       </ion-list>
     </div>
 
-    <div *ngIf="selectedUserEventId" class="sub-menu1">
-      <ion-list padding>
-        <ion-item padding-bottom>
-          <ion-spinner item-left name="bubbles"></ion-spinner>
-          <ion-label>Déposer une carte</ion-label>
-        </ion-item>
+    <ion-row *ngIf="selectedUser" justify-content-center>
+      <div class="sub-menu1">
+        <ion-list padding>
+          <ion-item>
+            <p style="font-size: 20px; color: black">{{selectedUser.name}}</p>
+            <p style="font-size: 15px; color: black"><i>{{selectedUser.email}}</i></p>
 
-        <div *ngIf="nfcProv?.isCardPresent">
+            <br>
+            <p>Total Events: {{selectedUserEventIds?.length}}</p>
+            <p>Toral Cartes: {{getCard()}}</p>
+          </ion-item>
 
-          <div>
-            <p><b>Card info</b></p>
-            <ion-item>
-              <p>ID: {{nfcProv.currentCard.id}} </p>
-              <p>Type: {{nfcProv.currentCard.type}} </p>
-              <p>Size: {{nfcProv.currentCard.maxsize}} </p>
-              <p>Is OK ? {{nfcProv.currentCard.cardOk}} </p>
-              <br>
-              <p>Credit: {{nfcProv.currentCard.balance}} </p>
-              <p>Role: {{getRole()}} </p>
-              <p>Cmd: {{getCmd()}} </p>
-            </ion-item>
 
-          </div>
-
-          <p><b>Activate card</b> </p>
           <ion-item no-lines>
-            <ion-label>Type</ion-label>
-            <ion-select [(ngModel)]="nfcCard.role">
-              <ion-option [value]="2">Caissier boisson</ion-option>
-              <ion-option [value]="1">Caissier entrée</ion-option>
-              <ion-option [value]="3">Barman</ion-option>
-              <ion-option [value]="0">Admin</ion-option>
-              <ion-option [value]="6">Client</ion-option>
-              <!-- <ion-option [value]=""></ion-option> -->
+            <ion-label>Event</ion-label>
+            <ion-select (ionChange)="eventSelected($event)">
+              <ion-option *ngFor="let eventId of selectedUserEventIds" [value]="eventId">
+                {{selectedUser?.events[eventId].title}}
+              </ion-option>
             </ion-select>
           </ion-item>
 
-          <div text-center padding>
-            <button ion-button full (click)="activateCard()">Valider</button>
+          <ion-item no-lines *ngIf="selectedUserEventId">
+            <p padding-left>Date: {{selectedUser?.events[selectedUserEventId]?.date}}</p><br>
+            <p padding-left>Lieu: {{selectedUser?.events[selectedUserEventId]?.location}}</p><br>
+            <p padding-left>Cartes: {{getCard(selectedUserEventId)}}</p>
+          </ion-item>
+
+          <div text-center padding-top>
+            <button ion-button [disabled]="!selectedUserEventId" (click)="saveEventonDevice()">Active event on this
+              device</button>
           </div>
-          <hr>
+        </ion-list>
+      </div>
 
-          <p><b>Deactivate card</b> </p>
-          <div text-center padding>
-            <button ion-button full color=danger (click)="deactivateCard()">Déactiver</button>
+      <div *ngIf="isNewEvent" class="sub-menu box-shadow">
+        <ion-list padding>
+          <ion-item-divider>
+            <p style="font-size: 20px; color: black">Créer event</p>
+            <ion-icon item-right padding-right name="checkmark-circle" (click)="createNewEvent()"></ion-icon>
+            <ion-icon item-right name="close-circle" (click)="isNewEvent = false"></ion-icon>
+          </ion-item-divider>
+
+          <ion-item>
+            <ion-label stacked>Titre</ion-label>
+            <ion-input [(ngModel)]="newEvent.title" type=text></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label stacked>Lieu</ion-label>
+            <ion-input [(ngModel)]="newEvent.location" type=text></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label stacked>Date</ion-label>
+            <ion-input [(ngModel)]="newEvent.date" type=text></ion-input>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <div *ngIf="selectedUserEventId" class="sub-menu1">
+        <ion-list padding>
+          <ion-item padding-bottom>
+            <ion-spinner item-left name="bubbles"></ion-spinner>
+            <ion-label>Déposer une carte</ion-label>
+          </ion-item>
+
+          <div *ngIf="nfcProv?.currentCard.balance">
+
+            <div>
+              <p><b>Card info</b></p>
+              <ion-item>
+                <p>ID: {{nfcProv.currentCard.id}} </p>
+                <p>Type: {{nfcProv.currentCard.type}} </p>
+                <p>Size: {{nfcProv.currentCard.maxsize}} </p>
+                <p>Is OK ? {{nfcProv.currentCard.cardOk}} </p>
+                <br>
+                <p>Credit: {{nfcProv.currentCard.balance}} </p>
+                <p>Role: {{getRole()}} </p>
+                <p>Cmd: {{getCmd()}} </p>
+              </ion-item>
+
+            </div>
+
+            <p><b>Activate card</b> </p>
+            <ion-item no-lines>
+              <ion-label>Type</ion-label>
+              <ion-select [(ngModel)]="nfcCard.role">
+                <ion-option [value]="2">Caissier boisson</ion-option>
+                <ion-option [value]="1">Caissier entrée</ion-option>
+                <ion-option [value]="3">Barman</ion-option>
+                <ion-option [value]="0">Admin</ion-option>
+                <ion-option [value]="6">Client</ion-option>
+                <!-- <ion-option [value]=""></ion-option> -->
+              </ion-select>
+            </ion-item>
+
+            <div text-center padding>
+              <button ion-button full (click)="activateCard()">Valider</button>
+            </div>
+            <hr>
+
+            <p><b>Deactivate card</b> </p>
+            <div text-center padding>
+              <button ion-button full color=danger (click)="deactivateCard()">Déactiver</button>
+            </div>
           </div>
-        </div>
 
 
-      </ion-list>
+        </ion-list>
 
-    </div>
+      </div>
 
-  </ion-row>
+    </ion-row>
+  </div>
 
 </ion-content>
 
 <ion-footer no-border>
-  <!-- <ion-item>
-    <ion-input [(ngModel)]="input"></ion-input>
-    <button ion-button item-right (click)="send()">send</button>
-  </ion-item> -->
-
   <div text-center padding-bottom>
     <button ion-button (click)="close()">Terminer</button>
   </div>
-
 </ion-footer>

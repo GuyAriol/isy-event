@@ -7,6 +7,7 @@ import { DialogProvider } from '../../providers/dialog/dialog';
 import { UserProvider, eventType, userType, userRoleEnum } from '../../providers/user/user';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { SubscriptionProvider } from '../../providers/subscription/subscription';
 
 @IonicPage()
 @Component({
@@ -36,6 +37,9 @@ export class SuperadminPage {
   userList: userType[] = []
   userCards: { cardId: string, eventId: string, id: string }[] = []
 
+  isPreparemenu = false
+  isManageClient = false
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -44,6 +48,7 @@ export class SuperadminPage {
     public userProv: UserProvider,
     public nfcProv: NfcProvider,
     private dialogProv: DialogProvider,
+    private subscriptionProv: SubscriptionProvider
 
   ) {
     this.nfcCard.role = userRoleEnum.superadmin
@@ -221,5 +226,10 @@ export class SuperadminPage {
     this.userProv.seCurrentEvent(this.selectedUserEventId).then(res => {
       this.dialogProv.showToast('Success, Done!')
     })
+  }
+
+  resetDevice() {
+    this.subscriptionProv.defaultUnscription()
+    this.dialogProv.showSimpleDialog('Important', '', "Rédemarrer l'application pour terminer l'initialisation", 'Ok')
   }
 }

@@ -73,7 +73,7 @@ export class IntroPage {
 
   ionViewDidEnter() {
     setTimeout(() => {
-      if (!this.userProv.currentEventID) this.dialogProv.showSimpleDialog('Attention', '', 'Flag for target event is missing !', 'Ok')
+      if (!this.userProv.currentEventID) this.dialogProv.showSimpleDialog('Attention', '', 'Flag for target event is missing. The admin should configure this device !', 'Ok')
     }, 5000);
   }
 
