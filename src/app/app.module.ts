@@ -12,6 +12,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Broadcaster } from '@ionic-native/broadcaster';
 import { NFC, Ndef } from '@ionic-native/nfc';
 import { AES256 } from '@ionic-native/aes-256';
+import { Network } from '@ionic-native/network';
 
 import { MyApp } from './app.component';
 import { DeviceProvider } from '../providers/device/device';
@@ -24,6 +25,7 @@ import { UserProvider } from '../providers/user/user';
 import { BluetoothProvider } from '../providers/bluetooth/bluetooth';
 import { PopoverPage } from '../pages/input/input';
 import { PricingProvider } from '../providers/pricing/pricing';
+import { NetworkProvider } from '../providers/network/network';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfhQIXhUXY1FQOov_pQk63G4frcZe5HBk",
@@ -68,7 +70,9 @@ const firebaseConfig = {
     NFC,
     Ndef,
     AES256,
-    PricingProvider
+    PricingProvider,
+    Network,
+    NetworkProvider
   ]
 })
 export class AppModule {}
