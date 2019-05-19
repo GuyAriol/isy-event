@@ -114,7 +114,8 @@ export class IntroPage {
   }
 
   superAdmin() {
-    this.navCtrl.setRoot('SuperadminPage')
+    if(this.userProv.currentUser)  this.navCtrl.setRoot('SuperadminPage')
+    else this.showLogin = true
   }
 
   openAdminPage() {

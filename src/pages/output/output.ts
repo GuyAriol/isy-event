@@ -7,6 +7,7 @@ import { logType } from '../../providers/global';
 import { DeviceProvider } from '../../providers/device/device';
 import { StorageProvider } from '../../providers/storage/storage';
 import { DialogProvider } from '../../providers/dialog/dialog';
+import { PricingProvider } from '../../providers/pricing/pricing';
 
 @IonicPage()
 @Component({
@@ -29,6 +30,7 @@ export class OutputPage {
     public popoverCtrl: PopoverController,
     private dialogProv: DialogProvider,
     private event: Events,
+    public pricingProv: PricingProvider,
 
 
   ) {

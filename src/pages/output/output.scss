@@ -5,13 +5,12 @@ page-output {
     border-radius: 10px;
     margin: 5px;
     line-height: 15px;
+    min-width: 170px;
+    min-height: 80px;
   }
   .temp:active{
     background: goldenrod;
     color: white;
-    // border-color: white;
-    // border-width: 2px;
-    // border-style: solid;
   }
 
   .cat{
