@@ -1,4 +1,5 @@
 import { terminalEnum } from "./device/device";
+import { userRoleEnum } from "./user/user";
 
 export var global = {
   isDebug: true,
@@ -12,10 +13,11 @@ export var encription = {
 
 export interface logType {
   timeStamp: number,
-  deviceType: terminalEnum,
   worker: string,
   amount: number,
-  note: string
+  note: string,
+  workerId: string
+
 }
 
 export interface langExprType {

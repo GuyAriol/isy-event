@@ -8,7 +8,7 @@ export class NetworkProvider {
 
   networkConnectSubscription: Subscription
   networkDisconnectSubscription: Subscription
-  isOnline = false
+  isOnline = true
 
   constructor(
     private network: Network,
@@ -21,6 +21,8 @@ export class NetworkProvider {
     if (global.isDebug) {
       console.log('--NetworkProvider-subscribeNetwork')
     }
+
+    this.isOnline = true
 
     this.networkConnectSubscription = this.network.onConnect().subscribe(() => {
       console.log('internet connection')
@@ -35,6 +37,8 @@ export class NetworkProvider {
     if (global.isDebug) {
       console.log('--NetworkProvider-unsubscribeNetwork')
     }
+
+    this.isOnline = false
 
     try {
       this.networkConnectSubscription.unsubscribe()

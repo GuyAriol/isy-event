@@ -7,7 +7,9 @@ import { Events, AlertController } from 'ionic-angular';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AES256 } from '@ionic-native/aes-256';
 import { StorageProvider } from '../storage/storage';
-import { userRoleEnum } from '../user/user';
+import { userRoleEnum, UserProvider } from '../user/user';
+import { NetworkProvider } from '../network/network';
+import { terminalEnum } from '../device/device';
 
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
@@ -47,7 +49,8 @@ export class NfcProvider {
     private encrypt: AES256,
     private alertCtrl: AlertController,
     private storageProv: StorageProvider,
-
+    private networkProv: NetworkProvider,
+    private userProv: UserProvider
 
   ) {
 
@@ -176,6 +179,7 @@ export class NfcProvider {
 
     if (this.currentCard.cmdType == nfcCmdEnum.login && currentPage.name != 'superadmin' && currentPage.name != 'admin') {
       this.event.publish('iE-login', this.currentCard.role)
+      this.userProv.currentWorkerCardId = this.currentCard.id
     }
     else {
       this.event.publish('iE-nfc card connected')
@@ -428,6 +432,16 @@ export class NfcProvider {
 
     this.allNFCtransactions.push(transaction)
     this.storageProv.setToLocalStorage('iE_eventLog', this.allNFCtransactions)
+
+    if (this.networkProv.isOnline) {
+      let statistics = this.getUserTotaltransaction()
+      this.afdb.object(`users/${this.userProv.currentUser.id}/events/${this.userProv.currentEventID}/crew/${statistics.workerIndex}`)
+        .update({ money: statistics.money, drinks: statistics.drinks })
+        .catch(error => {
+          this.networkProv.isOnline = false
+          console.log(error)
+        })
+    }
   }
 
   getAllTransactions() {
@@ -459,6 +473,42 @@ export class NfcProvider {
 
   openNFCsettings() {
     this.nfc.showSettings()
+  }
+
+  getUserTotaltransaction() {
+    let userIndex = null
+    this.userProv.currentUser.events[this.userProv.currentEventID].crew.find((worker, index) => {
+      userIndex = index
+      return worker.name == this.userProv.currentWorker
+    })
+
+    let moneyTotal = 0
+    let drinkTotal = {}
+
+    this.allNFCtransactions.forEach(log => {
+      if (log.worker == this.userProv.currentWorker) {
+
+        // Fall Kassierer
+        if (!log.note) {
+          moneyTotal = moneyTotal + log.amount
+        }
+        else {
+          if (Object.keys(drinkTotal).indexOf(log.note) > -1) {
+            drinkTotal[log.note]++
+          }
+          else {
+            drinkTotal[log.note] = 1
+          }
+        }
+      }
+    })
+
+    let drinks = []
+    for (let drink in drinkTotal) {
+      drinks.push({ type: drink, total: drinkTotal[drink] })
+    }
+
+    return { money: moneyTotal, drinks: drinkTotal, workerIndex: userIndex }
   }
 }
 

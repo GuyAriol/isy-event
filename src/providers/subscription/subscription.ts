@@ -49,6 +49,7 @@ export class SubscriptionProvider {
     this.storageProv.removeFromLocalStorage('iE_currentEvent')
     this.storageProv.removeFromLocalStorage('iE_user')
     this.storageProv.removeFromLocalStorage('iE_deviceType')
+    this.storageProv.removeFromLocalStorage('iE_eventLog')
 
     this.networkProv.unsubscribeNetwork()
   }

@@ -19,7 +19,8 @@ export class AdminPage {
   isNewCrew = false
   newCrew = { name: '', role: userRoleEnum.drinks }
 
-  isStats= false
+  isStats = false
+  drinksStatistics = {}
 
   constructor(
     public navCtrl: NavController,
@@ -40,11 +41,14 @@ export class AdminPage {
     setTimeout(() => {
       try {
         this.eventPlaceholder = this.userProv.currentUser.events[this.selectedUserEventId].title
+        this.getEventData()
 
       } catch (error) {
 
       }
     }, 1000);
+
+
   }
 
   ionViewDidLeave() {
@@ -152,33 +156,28 @@ export class AdminPage {
     this.dialogProv.showToast('En développement ...')
   }
 
-  write_test(arg) {
-    let card: nfcCardType = {
-      id: '',
-      cmdType: nfcCmdEnum.none,
-      balance: parseFloat(arg) + this.nfcProv.currentCard.balance,
-      maxsize: '',
-      type: '',
-      role: userRoleEnum.client,
-      cardOk: false,
-      eventId: this.userProv.currentEventID,
-      eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
-      workerName: ' '
+  // toDo get data from all terminals only one at time
+  getEventData() {
+    if (this.selectedUserEventId) {
+      try {
+        this.userProv.currentUser.events[this.selectedUserEventId].crew.forEach((worker, index) => {
+          if (worker.role == 3) {
+
+            this.drinksStatistics[index] = []
+
+            for (let drink in worker.drinks) {
+              this.drinksStatistics[index].push({ type: drink, total: worker.drinks[drink] })
+            }
+          }
+        })
+
+        this.drinksStatistics
+
+      } catch (error) {
+        console.log(error)
+      }
     }
 
-    this.nfcProv.writeCard(card)
-      .then(res => {
-        console.log('res')
-      }, fail => {
-        console.log(fail)
-      })
-      .catch(error => {
-        console.log(error)
-      })
   }
 
-  // toDo get data from all terminals only one at time
-  getEventData(){
-
-  }
 }

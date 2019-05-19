@@ -64,20 +64,17 @@
       </ion-item-divider>
 
       <div *ngIf="isStats" style="border-style: solid; border-color: #222; border-width: 1px">
-        <ion-item *ngFor="let worker of userProv.currentUser.events[selectedUserEventId]?.crew">
+        <ion-item *ngFor="let worker of userProv.currentUser.events[selectedUserEventId]?.crew; let index=index">
           <h2>{{worker.name}} </h2>
           <p *ngIf="worker.role == 2">Einkassiert: {{worker.money || 0}} euro</p>
           <div *ngIf="worker.role == 3">
-            <div *ngFor="let drink of worker.drinks">
+            <div *ngFor="let drink of drinksStatistics[index]">
               <p>{{drink.type}}: {{drink.total}} </p>
             </div>
           </div>
         </ion-item>
       </div>
-
-
     </ion-list>
-
 
   </ion-list>
 </ion-content>

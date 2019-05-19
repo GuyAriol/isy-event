@@ -89,6 +89,6 @@
     <plugin name="cordova-plugin-aes256-encryption" spec="1.2.1" />
     <plugin name="cordova-open-native-settings" spec="1.5.2" />
     <plugin name="phonegap-nfc" spec="1.0.3" />
-    <engine name="android" spec="7.1.4" />
     <plugin name="cordova-plugin-network-information" spec="2.0.1" />
+    <engine name="android" spec="7.1.4" />
 </widget>

@@ -24,7 +24,7 @@ export interface eventType {
     {
       name: string,
       role: userRoleEnum,
-      money?: number,
+      money: number,
       drinks: Array<{ type: string, total: number }>
     }]
 }
@@ -40,6 +40,7 @@ export class UserProvider {
 
   userSubscription: Subscription
   currentWorker = ''
+  currentWorkerCardId = ''
   userEventList: eventType[] = []
 
   constructor(

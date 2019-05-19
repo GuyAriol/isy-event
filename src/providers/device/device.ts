@@ -14,7 +14,7 @@ export class DeviceProvider {
   screenWidth = null; sreenHeight = null
   isAppBooting = 0
 
-  terminalType: terminalEnum = 2
+  terminalType: terminalEnum = 0
   bluetoothInfo = ''
 
   constructor(

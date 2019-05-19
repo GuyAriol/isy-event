@@ -83,10 +83,10 @@ export class OutputPage {
 
           let log: logType = {
             timeStamp: Date.now(),
-            deviceType: this.deviceProv.terminalType,
             worker: this.userProv.currentWorker,
             amount: priceN,
-            note: item
+            note: item,
+            workerId: this.userProv.currentWorkerCardId
           }
           this.nfcProv.saveTransaction(log)
 

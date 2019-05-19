@@ -142,10 +142,10 @@ export class InputPage {
 
           let log: logType = {
             timeStamp: Date.now(),
-            deviceType: this.deviceProv.terminalType,
             worker: this.userProv.currentWorker,
             amount: parseFloat(this.input),
-            note: ''
+            note: '',
+            workerId: this.userProv.currentWorkerCardId
           }
           this.nfcProv.saveTransaction(log)
 
@@ -209,10 +209,10 @@ export class InputPage {
 
             let log: logType = {
               timeStamp: Date.now(),
-              deviceType: this.deviceProv.terminalType,
               worker: this.userProv.currentWorker,
               amount: -parseFloat(this.input),
-              note: ''
+              note: '',
+              workerId: this.userProv.currentWorkerCardId
             }
             this.nfcProv.saveTransaction(log)
 
