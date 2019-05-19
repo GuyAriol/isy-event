@@ -1,14 +1,35 @@
-ion-content{
+ion-content {
   font-family: 'Montserrat';
 }
 
-ion-navbar{
+ion-navbar {
   font-family: 'BalooBhai'
 }
 
-.alert-ios, .alert-md {
+.alert-ios,
+.alert-md {
   .alert-wrapper {
     border-radius: 20px;
   }
+}
 
+.success {
+  .toast-message {
+    background: rgb(30, 185, 30);
+    font-family: montserrat;
+  }
+}
+
+.fail {
+  .toast-message {
+    background: tomato;
+    font-family: montserrat;
+  }
+}
+
+.caution {
+  .toast-message {
+    background: orange;
+    font-family: montserrat;
+  }
 }
