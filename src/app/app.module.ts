@@ -12,7 +12,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Broadcaster } from '@ionic-native/broadcaster';
 import { NFC, Ndef } from '@ionic-native/nfc';
 import { AES256 } from '@ionic-native/aes-256';
-import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 
 import { MyApp } from './app.component';
 import { DeviceProvider } from '../providers/device/device';
@@ -69,7 +68,6 @@ const firebaseConfig = {
     NFC,
     Ndef,
     AES256,
-    OpenNativeSettings,
     PricingProvider
   ]
 })

@@ -6,7 +6,6 @@ import { DialogProvider } from '../dialog/dialog';
 import { Events, AlertController } from 'ionic-angular';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AES256 } from '@ionic-native/aes-256';
-import { OpenNativeSettings } from '@ionic-native/open-native-settings';
 import { StorageProvider } from '../storage/storage';
 import { userRoleEnum } from '../user/user';
 
@@ -47,7 +46,6 @@ export class NfcProvider {
     private afdb: AngularFireDatabase,
     private encrypt: AES256,
     private alertCtrl: AlertController,
-    private openNativeSettings: OpenNativeSettings,
     private storageProv: StorageProvider,
 
 
@@ -62,6 +60,7 @@ export class NfcProvider {
 
     this.nfc.enabled()
       .then(result => {
+        console.log(result)
 
         if (result == 'NFC_OK') {
           let observable = this.nfc.addNdefListener(() => {
@@ -96,7 +95,7 @@ export class NfcProvider {
             {
               text: 'Activer',
               handler: () => {
-                this.openNativeSettings.open("nfc_settings")
+                this.nfc.showSettings()
               }
             }
           ]
@@ -459,6 +458,10 @@ export class NfcProvider {
 
     this.event.publish('iE-nfc card detected')
 
+  }
+
+  openNFCsettings(){
+    this.nfc.showSettings()
   }
 }
 
