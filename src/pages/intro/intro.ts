@@ -118,7 +118,7 @@ export class IntroPage {
     else this.showLogin = true
   }
 
-  openAdminPage() {
+  openAdminPage(eventId) {
     this.alertCtrl.create({
       title: 'Mot de passe',
       inputs: [
@@ -134,10 +134,10 @@ export class IntroPage {
         {
           text: 'Ok',
           handler: data => {
-            if (data.pass == this.userProv.currentUser.adminPass) this.navCtrl.setRoot('AdminPage')
+            if (data.pass == this.userProv.currentUser.adminPass) this.navCtrl.setRoot('AdminPage', eventId)
             else {
               this.dialogProv.showToast('Mot de passe incorrect')
-              this.openAdminPage()
+              this.openAdminPage(eventId)
             }
           }
         }

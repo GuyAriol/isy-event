@@ -228,7 +228,7 @@ export class SuperadminPage {
   }
 
   saveEventonDevice() {
-    this.userProv.seCurrentEvent(this.selectedUserEventId).then(res => {
+    this.userProv.setCurrentEvent(this.selectedUserEventId).then(res => {
       this.dialogProv.showToast('Success, Done!')
     })
   }

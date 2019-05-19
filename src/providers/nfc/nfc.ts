@@ -103,9 +103,6 @@ export class NfcProvider {
         alert.present();
       })
 
-
-
-
   }
 
   unsubscribeNFC() {
@@ -177,7 +174,7 @@ export class NfcProvider {
       console.log('--NfcProvider-nfcReadPostAction')
     }
 
-    if (this.currentCard.cmdType == nfcCmdEnum.login && currentPage.name != 'superadmin') {
+    if (this.currentCard.cmdType == nfcCmdEnum.login && currentPage.name != 'superadmin' && currentPage.name != 'admin') {
       this.event.publish('iE-login', this.currentCard.role)
     }
     else {
@@ -460,7 +457,7 @@ export class NfcProvider {
 
   }
 
-  openNFCsettings(){
+  openNFCsettings() {
     this.nfc.showSettings()
   }
 }

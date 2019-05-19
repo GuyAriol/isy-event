@@ -12,8 +12,6 @@
 
 <ion-content padding>
   <ion-row padding *ngIf="showLogin" class="animated jackInTheBox fadeOutUp" justify-content-center>
-    <!-- <ion-col *ngIf="deviceProv.screenWidth > 400"></ion-col> -->
-
     <ion-col col-sm-8>
       <div padding *ngIf="userProv?.currentUser" style="background: white">
         <h1 text-center>Connecté</h1><br>
@@ -49,7 +47,7 @@
     </ion-col>
   </ion-row>
 
-  <ion-row *ngIf="!showLogin" style="min-height: 90%;" justify-content-center>
+  <ion-row *ngIf="!showLogin && deviceProv.terminalType!=2" style="min-height: 90%;" justify-content-center>
     <ion-col col-sm-6>
       <ion-slides pager loop autoplay="3500" slidesPerView="1">
         <ion-slide>
@@ -101,7 +99,43 @@
       </div>
 
     </ion-col>
+
   </ion-row>
+
+  <div *ngIf="!showLogin && deviceProv.terminalType==2">
+    <ion-slides pager loop autoplay="3500" slidesPerView="1" style="height: 220px">
+      <ion-slide>
+        <h1 style="padding: 5px 15px">Bienvenue chers invités</h1>
+        <div style="color:#488aff">
+          <p padding-right padding-left>Nous vous souhaitons une très belle soirée. </p>
+        </div>
+      </ion-slide>
+
+      <ion-slide>
+        <h1>Page pub 1</h1>
+        <h2>Event xx in xx when xx </h2>
+      </ion-slide>
+
+      <ion-slide>
+        <h1>Page pub 2</h1>
+        <h2>Event xx in xx when xx </h2>
+      </ion-slide>
+
+      <ion-slide>
+        <h1>Page pub 3</h1>
+        <h2>Event xx in xx when xx </h2>
+      </ion-slide>
+    </ion-slides>
+
+    <ion-list padding>
+      <ion-item-divider style="font-size: 18px; color:brown">My events</ion-item-divider>
+      <ion-item *ngFor="let event of userProv.userEventList" detail-push (click)="openAdminPage(event.id)">
+        <h2>{{event.title}} </h2>
+        <p>{{event.date}} </p>
+        <p>{{event.location}} </p>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>
 
 <ion-footer no-border style="height: 22px; background: gainsboro" (click)="superAdmin()">

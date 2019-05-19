@@ -3,7 +3,7 @@ import { global } from '../global';
 import { Platform } from 'ionic-angular';
 import { StorageProvider } from '../storage/storage';
 
-export enum terminalEnum { terminal, display }
+export enum terminalEnum { terminal, display, none }
 
 @Injectable()
 export class DeviceProvider {
@@ -14,7 +14,7 @@ export class DeviceProvider {
   screenWidth = null; sreenHeight = null
   isAppBooting = 0
 
-  terminalType: terminalEnum = 0
+  terminalType: terminalEnum = 2
   bluetoothInfo = ''
 
   constructor(

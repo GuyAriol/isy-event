@@ -4,6 +4,7 @@ import { Events } from 'ionic-angular';
 import { UserProvider } from '../user/user';
 import { StorageProvider } from '../storage/storage';
 import { BluetoothProvider } from '../bluetooth/bluetooth';
+import { NetworkProvider } from '../network/network';
 
 @Injectable()
 export class SubscriptionProvider {
@@ -13,7 +14,8 @@ export class SubscriptionProvider {
     private event: Events,
     private userProv: UserProvider,
     private storageProv: StorageProvider,
-    private bluetoothProv: BluetoothProvider
+    private bluetoothProv: BluetoothProvider,
+    private networkProv: NetworkProvider
 
   ) {
 
@@ -24,6 +26,8 @@ export class SubscriptionProvider {
       this.nfcProv.subscribeNFC()
       this.userProv.getCurrentEvent()
       this.nfcProv.getAllTransactions()
+      this.networkProv.subscribeNetwork()
+
       resolve()
     });
   }
@@ -46,5 +50,6 @@ export class SubscriptionProvider {
     this.storageProv.removeFromLocalStorage('iE_user')
     this.storageProv.removeFromLocalStorage('iE_deviceType')
 
+    this.networkProv.unsubscribeNetwork()
   }
 }

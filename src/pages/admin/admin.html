@@ -9,60 +9,80 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
-    <ion-item no-lines style="background: rgb(235, 171, 171); color: black">
-      <ion-label style="color: black">Choisir un event</ion-label>
-      <ion-select (ionChange)="eventSelected($event)">
-        <ion-option *ngFor="let eventId of selectedUserEventIds" [value]="eventId">
-          {{userProv?.currentUser.events[eventId].title}}
-        </ion-option>
-      </ion-select>
-    </ion-item>
+  <ion-item no-lines style="background: rgba(128, 128, 128, 0.164); color: black">
+    <ion-label style="color: black">Event</ion-label>
+    <ion-select (ionChange)="eventSelected($event)" [placeholder]="eventPlaceholder ">
+      <ion-option *ngFor="let event of userProv.userEventList" [value]="event.id">
+        {{event.title}}
+      </ion-option>
+    </ion-select>
+  </ion-item>
 
-    <div padding-top *ngIf="selectedUserEventId">
-      <ion-item-divider style="font-size: 18px; color: blue">Crew members
-        <ion-icon item-right name="add-circle" (click)="isNewCrew=!isNewCrew"></ion-icon>
+  <ion-list padding-top *ngIf="selectedUserEventId">
+    <ion-item-divider style="font-size: 18px;" color=primary>Crew members
+      <ion-icon item-right name="add-circle" (click)="isNewCrew=!isNewCrew"></ion-icon>
+    </ion-item-divider>
+
+    <div *ngIf="isNewCrew" style="border-style: solid; border-color: gainsboro; border-width: 1px">
+      <ion-item>
+        <ion-label>Name</ion-label>
+        <ion-input [(ngModel)]="newCrew.name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Role</ion-label>
+        <ion-select [(ngModel)]="newCrew.role" style="max-width: 65%">
+          <ion-option [value]="2">Caissier boisson</ion-option>
+          <ion-option [value]="1">Caissier entrée</ion-option>
+          <ion-option [value]="3">Barman</ion-option>
+          <ion-option [value]="0">Admin</ion-option>
+          <ion-option [value]="6">Client</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <div text-center style="padding: 25px">
+        <button ion-button color=light (click)=" isNewCrew=false">Annuler</button>
+        <button ion-button margin-left (click)="newCrewMember()">Valider</button>
+      </div>
+    </div>
+
+    <div style="border-style: solid; border-color: #488aff; border-width: 1px">
+      <ion-item *ngFor="let crewMember of userProv.currentUser?.events[selectedUserEventId]?.crew; let index=index">
+        <p><b>{{crewMember.name}} </b></p>
+        <p>{{userProv.getRoleString(crewMember.role)}} </p>
+        <ion-icon item-right padding-right name="create" style="font-size: 22px" (click)="ongoing()"></ion-icon>
+        <ion-icon item-right padding-right name="card" color=primary style="font-size: 24px"
+          (click)="writeCard(crewMember)"></ion-icon>
+        <ion-icon item-right padding-right name="trash" color=danger style="font-size: 24px"
+          (click)="deleteCrewMember(index)"></ion-icon>
+      </ion-item>
+    </div>
+
+    <ion-list padding-top>
+      <ion-item-divider style="font-size: 18px;" color=dark (click)="isStats = true; getEventData()">Event Daten
+        <ion-icon item-right name="sync"></ion-icon>
       </ion-item-divider>
 
-      <div *ngIf="isNewCrew" >
-        <ion-item style="background: rgba(187, 241, 241, 0.541)">
-          <ion-label>Name</ion-label>
-          <ion-input [(ngModel)]="newCrew.name"></ion-input>
-        </ion-item>
-
-        <ion-item style="background: rgba(187, 241, 241, 0.541)">
-          <ion-label>Role</ion-label>
-          <ion-select [(ngModel)]="newCrew.role" style="max-width: 65%">
-            <ion-option [value]="2">Caissier boisson</ion-option>
-            <ion-option [value]="1">Caissier entrée</ion-option>
-            <ion-option [value]="3">Barman</ion-option>
-            <ion-option [value]="0">Admin</ion-option>
-            <ion-option [value]="6">Client</ion-option>
-          </ion-select>
-        </ion-item>
-
-        <ion-item text-center no-lines style="background: rgba(187, 241, 241, 0.541)">
-          <button ion-button color=light (click)="isNewCrew=false">Annuler</button>
-          <button ion-button margin-left (click)="newCrewMember()">Valider</button>
+      <div *ngIf="isStats" style="border-style: solid; border-color: #222; border-width: 1px">
+        <ion-item *ngFor="let worker of userProv.currentUser.events[selectedUserEventId]?.crew">
+          <h2>{{worker.name}} </h2>
+          <p *ngIf="worker.role == 2">Einkassiert: {{worker.money || 0}} euro</p>
+          <div *ngIf="worker.role == 3">
+            <div *ngFor="let drink of worker.drinks">
+              <p>{{drink.type}}: {{drink.total}} </p>
+            </div>
+          </div>
         </ion-item>
       </div>
 
-      <div *ngFor="let crewMember of userProv.currentUser.events[selectedUserEventId]?.crew; let index=index">
-        <ion-item>
-          <p><b>{{crewMember.name}} </b></p>
-          <p>{{userProv.getRoleString(crewMember.role)}} </p>
-          <ion-icon item-right padding-right name="create" style="font-size: 22px" (click)="ongoing()"></ion-icon>
-          <ion-icon item-right padding-right name="card" color=primary style="font-size: 24px" (click)="writeCard(crewMember)"></ion-icon>
-          <ion-icon item-right padding-right name="trash" color=danger style="font-size: 24px" (click)="deleteCrewMember(index)"></ion-icon>
-        </ion-item>
-      </div>
 
-    </div>
+    </ion-list>
 
 
   </ion-list>
 </ion-content>
 
-<ion-footer no-border style="height: 22px; background: white" (click)="superAdmin()">
-  <p padding-right float-right style="font-size: 9px">Powered by Vihautech.net</p>
+<ion-footer no-border style="height: 22px; background: gainsboro" (click)="superAdmin()">
+  <p padding-right float-right style="font-size: 9px">
+    <i>Powered by Vihautech.net</i></p>
 </ion-footer>

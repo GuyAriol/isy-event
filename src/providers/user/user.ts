@@ -20,7 +20,13 @@ export interface eventType {
   date: string,
   location: string,
   id: string,
-  crew?: [{ name: string, role: userRoleEnum }]
+  crew?: [
+    {
+      name: string,
+      role: userRoleEnum,
+      money?: number,
+      drinks: Array<{ type: string, total: number }>
+    }]
 }
 
 export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, owner, client }
@@ -34,6 +40,7 @@ export class UserProvider {
 
   userSubscription: Subscription
   currentWorker = ''
+  userEventList: eventType[] = []
 
   constructor(
     private localStorage: StorageProvider,
@@ -52,7 +59,7 @@ export class UserProvider {
     return new Promise((resolve, reject) => {
       this.localStorage.getFromLocalStorage('iE_user')
         .then(user => {
-          if (user) this.currentUser = user
+          if (user) { this.currentUser = user; this.getEventList() }
           else this.currentUser = null
 
           resolve(user)
@@ -152,7 +159,7 @@ export class UserProvider {
     })
   }
 
-  seCurrentEvent(eventId): Promise<any> {
+  setCurrentEvent(eventId): Promise<any> {
     if (global.isDebug) {
       console.log('--UserProvider-seCurrentEvent')
     }
@@ -196,6 +203,8 @@ export class UserProvider {
 
         this.localStorage.setToLocalStorage('iE_user', this.currentUser)
           .catch(error => console.log(error))
+
+        this.getEventList()
       }
     })
   }
@@ -232,5 +241,13 @@ export class UserProvider {
 
   getRoleString(role: number) {
     return userRoleEnum[role]
+  }
+
+  getEventList() {
+    this.userEventList = []
+
+    for (let eventKey in this.currentUser.events) {
+      this.userEventList.push(this.currentUser.events[eventKey])
+    }
   }
 }

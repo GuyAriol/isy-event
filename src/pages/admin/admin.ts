@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, NavParams } from 'ionic-angular';
 import { UserProvider, userRoleEnum } from '../../providers/user/user';
 import { DialogProvider } from '../../providers/dialog/dialog';
 import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
+import { currentPage } from '../../providers/global';
 
 @IonicPage()
 @Component({
@@ -11,40 +12,43 @@ import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
 })
 export class AdminPage {
 
-  selectedUserEventIds = []
   selectedUserEventId = ''
   crew = {}
+  eventPlaceholder = ''
 
   isNewCrew = false
   newCrew = { name: '', role: userRoleEnum.drinks }
+
+  isStats= false
 
   constructor(
     public navCtrl: NavController,
     public userProv: UserProvider,
     private dialogProv: DialogProvider,
     private alertCtrl: AlertController,
-    public nfcProv: NfcProvider
+    public nfcProv: NfcProvider,
+    private navParams: NavParams
 
 
   ) {
+    currentPage.name = 'admin'
+    if (this.navParams.data) this.selectedUserEventId = navParams.data
+
   }
 
-  ngOnInit() {
-    this.dialogProv.showLoading('loading ...', 10000)
-
+  ionViewDidEnter() {
     setTimeout(() => {
-      this.userProv.subscribeUser(this.userProv.currentUser.id)
-
       try {
-        this.selectedUserEventIds = Object.keys(this.userProv.currentUser.events)
-        console.log(this.selectedUserEventIds)
+        this.eventPlaceholder = this.userProv.currentUser.events[this.selectedUserEventId].title
+
       } catch (error) {
-        this.selectedUserEventIds = []
+
       }
+    }, 1000);
+  }
 
-      this.dialogProv.dismissLoading()
-    }, 2000);
-
+  ionViewDidLeave() {
+    currentPage.name = ''
   }
 
   superAdmin() {
@@ -81,7 +85,7 @@ export class AdminPage {
 
   writeCard(crewMember) {
     this.alertCtrl.create({
-      title: 'Activer carte pour CREW',
+      title: 'Activer carte pour ' + crewMember.name,
       subTitle: '',
       message: 'Rapprocher la carte du terminal et valider ensuite.',
       buttons: [
@@ -94,28 +98,50 @@ export class AdminPage {
         {
           text: 'Valider',
           handler: () => {
-            this.dialogProv.showLoading('En cours ...', 120000)
+            if (this.nfcProv.isNFC) {
+              this.dialogProv.showLoading('En cours ...', 30000)
 
-            let card: nfcCardType = {
-              id: '',
-              cmdType: nfcCmdEnum.login,
-              balance: 0,
-              maxsize: '',
-              type: '',
-              role: crewMember.role,
-              cardOk: false,
-              eventId: this.selectedUserEventId,
-              eventName: this.userProv.currentUser.events[this.selectedUserEventId].title,
-              workerName: crewMember.name
+              let card: nfcCardType = {
+                id: '',
+                cmdType: nfcCmdEnum.login,
+                balance: 0,
+                maxsize: '',
+                type: '',
+                role: crewMember.role,
+                cardOk: false,
+                eventId: this.selectedUserEventId,
+                eventName: this.userProv.currentUser.events[this.selectedUserEventId].title,
+                workerName: crewMember.name
+              }
+
+              this.nfcProv.writeCard(card)
+                .then(res => {
+                  this.dialogProv.dismissLoading()
+                  this.dialogProv.showToast('Action réussie', null, null, 'success')
+                })
+                .catch(error => {
+                  this.dialogProv.dismissLoading()
+                  console.log(error)
+                })
+            }
+            else {
+              this.alertCtrl.create(
+                {
+                  title: 'NFC déactivé !!',
+                  message: 'Vous devez activer le NFC pour continuer',
+                  buttons: [
+                    { text: 'Annuler' },
+                    {
+                      text: 'Activer',
+                      handler: () => {
+                        this.nfcProv.openNFCsettings()
+                      }
+                    }
+                  ]
+                }
+              ).present()
             }
 
-            this.nfcProv.writeCard(card)
-              .then(res => {
-                this.dialogProv.dismissLoading()
-              })
-              .catch(error => {
-                console.log(error)
-              })
           }
         }
       ]
@@ -149,5 +175,10 @@ export class AdminPage {
       .catch(error => {
         console.log(error)
       })
+  }
+
+  // toDo get data from all terminals only one at time
+  getEventData(){
+
   }
 }
