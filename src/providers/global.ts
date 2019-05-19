@@ -18,7 +18,6 @@ export interface logType {
   note: string
 }
 
-
 export interface langExprType {
   wrongInput: string
   emailInUse: string,
@@ -37,6 +36,11 @@ export interface langExprType {
   password: string,
   confrimPassword: string,
 
+}
+
+export var currentPage = {
+  component: '',
+  name: ''
 }
 
 export const langFR: langExprType = {

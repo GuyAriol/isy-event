@@ -8,6 +8,7 @@ import { UserProvider, eventType, userType, userRoleEnum } from '../../providers
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { SubscriptionProvider } from '../../providers/subscription/subscription';
+import { currentPage } from '../../providers/global';
 
 @IonicPage()
 @Component({
@@ -52,6 +53,7 @@ export class SuperadminPage {
 
   ) {
     this.nfcCard.role = userRoleEnum.superadmin
+    currentPage.name = 'superadmin'
   }
 
   ionViewDidLoad() {
@@ -64,6 +66,7 @@ export class SuperadminPage {
   ionViewDidLeave() {
     this.userList = []
     this.searchList = []
+    currentPage.name = ''
 
     try {
       this.allUserSubscription.unsubscribe()
@@ -117,10 +120,12 @@ export class SuperadminPage {
     this.nfcProv.activateCard(this.selectedUser.id, this.selectedUserEventId, card)
       .then(res => {
         this.dialogProv.dismissLoading()
+        this.dialogProv.showToast('Terminé avec succèss')
       })
       .catch(error => {
         console.log(error)
         this.dialogProv.dismissLoading()
+        this.dialogProv.showSimpleDialog('Érreur', '', 'Carte activée. Mais connection serveur echouée', 'Ok')
       })
   }
 

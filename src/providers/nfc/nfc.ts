@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { global, encription, logType } from '../global';
+import { global, encription, logType, currentPage } from '../global';
 import { NFC, Ndef } from '@ionic-native/nfc';
 import { DialogProvider } from '../dialog/dialog';
 import { Events, AlertController } from 'ionic-angular';
@@ -178,7 +178,9 @@ export class NfcProvider {
       console.log('--NfcProvider-nfcReadPostAction')
     }
 
-    if (this.currentCard.cmdType == nfcCmdEnum.login) this.event.publish('iE-login', this.currentCard.role)
+    if (this.currentCard.cmdType == nfcCmdEnum.login && currentPage.name != 'superadmin') {
+      this.event.publish('iE-login', this.currentCard.role)
+    }
     else {
       this.event.publish('iE-nfc card connected')
       bluetooth.send({ msg: this.currentCard.balance })

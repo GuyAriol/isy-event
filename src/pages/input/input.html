@@ -64,7 +64,8 @@
             </div>
 
             <div *ngIf="state!=0">
-              <p style="letter-spacing: 5px; font-size: 45px">{{nfcProv.currentCard.balance || '----'}}
+              <p style="letter-spacing: 5px; font-size: 45px">
+                {{nfcProv.currentCard.balance>=0 ?  nfcProv.currentCard.balance : '----'}}
                 <!-- <span style="font-size: 18px; letter-spacing: 1px; font-family: montserrat">Saldo insuffisant</span> -->
               </p>
               <p>euro</p>

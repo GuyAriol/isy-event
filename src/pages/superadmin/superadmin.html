@@ -46,7 +46,7 @@
         <ion-label>Déposer une carte</ion-label>
       </ion-item>
 
-      <div *ngIf="nfcProv?.currentCard.balance" padding>
+      <div *ngIf="nfcProv?.currentCard.id" padding>
         <p><b>Card info</b></p>
         <ion-item no-lines>
           <p>ID: {{nfcProv.currentCard.id}} </p>
@@ -175,7 +175,7 @@
             <ion-label>Déposer une carte</ion-label>
           </ion-item>
 
-          <div *ngIf="nfcProv?.currentCard.balance">
+          <div *ngIf="nfcProv?.currentCard.id">
 
             <div>
               <p><b>Card info</b></p>
