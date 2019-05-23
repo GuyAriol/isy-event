@@ -54,7 +54,7 @@ export class OutputPage {
 
     this.event.subscribe('iE-nfc card connected', () => {
       this.onGoing = false
-      this.statusMsg = `${this.nfcProv.currentCard.balance} euro, Saldo OK`
+      this.statusMsg = `Balance: ${this.nfcProv.currentCard.balance} euro, OK`
       console.log('output page, card connected')
     })
   }
@@ -62,6 +62,7 @@ export class OutputPage {
   ionViewDidLeave() {
     this.event.unsubscribe('iE-bluetooth connection')
     this.event.unsubscribe('iE-nfc card connected')
+    this.event.unsubscribe('iE-bluetooth disconnection')
   }
 
   book(price: string, item: string) {
@@ -70,52 +71,55 @@ export class OutputPage {
 
     let priceN = parseFloat(price)
 
-    if (priceN <= this.nfcProv.currentCard.balance) {
-      let card: nfcCardType = {
-        id: '',
-        cmdType: nfcCmdEnum.none,
-        balance: this.nfcProv.currentCard.balance - parseFloat(price),
-        maxsize: '',
-        type: '',
-        role: userRoleEnum.client,
-        cardOk: false,
-        eventId: this.userProv.currentEventID,
-        eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
-        workerName: ' '
-      }
-
-      this.nfcProv.writeCard(card)
-        .then(pass => {
-          bluetooth.send({ msg: this.nfcProv.currentCard.balance })
-
-          let log: logType = {
-            timeStamp: Date.now(),
-            worker: this.userProv.currentWorker,
-            amount: priceN,
-            note: item,
-            workerId: this.userProv.currentWorkerCardId
-          }
-          this.nfcProv.saveTransaction(log)
-
-          this.onGoing = false
-          this.statusMsg = 'Terminé avec succèss. OK'
-        },
-          fail => {
-            this.onGoing = false
-            this.statusMsg = 'Erreur! Vérifiez la carte et recommencer'
-          })
-        .catch(error => {
-          this.onGoing = false
-          this.statusMsg = 'Erreur! Veuillez recommencer'
-        })
+    if (this.nfcProv.currentCard.balance == null) {
+      this.onGoing = false
+      this.statusMsg = 'Error! Check the card and try again.'
     }
     else {
-      this.onGoing = false
-      this.statusMsg = `Solde insufficent !! ${this.nfcProv.currentCard.balance} euro `
+      if (priceN <= this.nfcProv.currentCard.balance) {
+        let card: nfcCardType = {
+          id: '',
+          cmdType: nfcCmdEnum.none,
+          balance: this.nfcProv.currentCard.balance - parseFloat(price),
+          maxsize: '',
+          type: '',
+          role: userRoleEnum.client,
+          cardOk: false,
+          eventId: this.userProv.currentEventID,
+          eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
+          workerName: ' '
+        }
+
+        this.nfcProv.writeCard(card)
+          .then(pass => {
+            bluetooth.send({ msg: this.nfcProv.currentCard.balance })
+
+            let log: logType = {
+              timeStamp: Date.now(),
+              worker: this.userProv.currentWorker,
+              amount: priceN,
+              note: item,
+              workerId: this.userProv.currentWorkerCardId
+            }
+            this.nfcProv.saveTransaction(log)
+
+            this.onGoing = false
+            this.statusMsg = 'OK. New balance ' + this.nfcProv.currentCard.balance + ' euro'
+          },
+            fail => {
+              this.onGoing = false
+              this.statusMsg = 'Error! Check the card and try again.'
+            })
+          .catch(error => {
+            this.onGoing = false
+            this.statusMsg = 'Error! Please try again'
+          })
+      }
+      else {
+        this.onGoing = false
+        this.statusMsg = `insufficient balance !! Balance:  ${this.nfcProv.currentCard.balance} euro `
+      }
     }
-
-
-
 
   }
 

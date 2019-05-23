@@ -185,6 +185,9 @@ export class NfcProvider {
     if (this.currentCard.cmdType == nfcCmdEnum.login && currentPage.name != 'superadmin' && currentPage.name != 'admin') {
       this.event.publish('iE-login', this.currentCard.role)
       this.userProv.currentWorkerCardId = this.currentCard.id
+      this.userProv.currentWorker = this.currentCard.workerName
+
+      this.currentCard.balance = null
     }
     else {
       this.event.publish('iE-nfc card connected')

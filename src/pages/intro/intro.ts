@@ -41,7 +41,6 @@ export class IntroPage {
     // app events handler
     this.event.subscribe('iE-login', data => {
       if (this.userProv.currentUser) {
-        this.userProv.currentWorker = this.nfcProv.currentCard.workerName
 
         if (data == userRoleEnum.superadmin) {
           this.navCtrl.setRoot('SuperadminPage');
