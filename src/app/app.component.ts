@@ -29,22 +29,25 @@ export class MyApp {
 
     platform.ready().then(() => {
 
-      deviceProv.getCurrentPlatform()
-      bluetoothProv.subscribeNativeEvent()
+      deviceProv.getCurrentPlatform().then(() => {
+        bluetoothProv.subscribeNativeEvent()
 
-      if (platform.is('cordova')) {
-        splashScreen.hide(); status.hide()
-        bluetooth.activateBluetooth()
-      }
+        if (platform.is('cordova')) {
+          splashScreen.hide(); status.hide()
 
-      subscribeProv.defaultSubscription().then(res => {
+          if(deviceProv.terminalType != terminalEnum.none) bluetooth.activateBluetooth()
+        }
 
-        userProv.getCurrentUser().then(user => {
-          if (user) subscribeProv.userSubscription(user.id).then(() => {
+        subscribeProv.defaultSubscription().then(res => {
 
+          userProv.getCurrentUser().then(user => {
+            if (user) subscribeProv.userSubscription(user.id).then(() => {
+
+            })
           })
         })
       })
+
     });
   }
 }

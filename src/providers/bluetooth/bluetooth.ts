@@ -49,12 +49,19 @@ export class BluetoothProvider {
     if (this.deviceProv.isCordova) {
       this.deviceConnectedSubscription = this.nativeBroadcast.addEventListener('iE-device-connected').subscribe(res => {
         this.dialogProv.dismissLoading()
+        console.log(res)
+        console.log(res.data.isConnected)
 
-        this.ngZone.run(() => {
-          this.connectedDevice = JSON.parse(res.data)
-          this.event.publish('iE-bluetooth connection')
-        })
-
+        if (res) {
+          console.log('###ok')
+          this.ngZone.run(() => {
+            this.connectedDevice = JSON.parse(res.data)
+            this.event.publish('iE-bluetooth connection')
+          })
+        }
+        else {
+          this.event.publish('iE-bluetooth disconnection')
+        }
       })
 
       this.messageReadSubscription = this.nativeBroadcast.addEventListener('iE-msg-read').subscribe(res => {
@@ -65,8 +72,10 @@ export class BluetoothProvider {
       })
 
       this.connectinLostSubscription = this.nativeBroadcast.addEventListener('iE-device-disconnected').subscribe(res => {
+        console.log('on bluetooth disconnect', res)
         this.ngZone.run(() => {
           this.connectedDevice = { isConnected: false, address: '', name: '' }
+          this.event.publish('iE-bluetooth disconnection')
           this.dialogProv.showSimpleDialog('Attention', '', "Le moniteur n'est plus connecté", 'Ok')
         })
       })

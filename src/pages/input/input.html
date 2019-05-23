@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar color="header" style="min-height: 30px">
-    <ion-title>Diaspo Night</ion-title>
+    <ion-title>White Night Party</ion-title>
 
     <ion-buttons end>
       <button ion-button text-capitalize style="font-family: 'MontSerrat'" (click)="isMenuDevice=!isMenuDevice">
@@ -54,8 +54,8 @@
     <div padding *ngIf="deviceProv.terminalType==0">
       <ion-row justify-content-center>
         <ion-col text-center col-5>
-          <button ion-button margin-left color=danger (click)="removeMoney()">Sortie</button>
-          <button ion-button margin-right color=secondary (click)="putMoney()">Entrée</button>
+          <button ion-button margin-left small color=danger (click)="removeMoney()">Cash out</button>
+          <button ion-button margin-right color=secondary (click)="putMoney()">Cash in</button>
 
           <!-- [style.background]="nfcProv.isCardPresent ? color : 'goldenrod'" -->
           <div class="balance" style="margin-top: 25px;" [style.background]="color">

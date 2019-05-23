@@ -38,11 +38,18 @@ export class OutputPage {
   }
 
   ionViewDidEnter() {
-    if (!Object.keys(this.bluetoothProv.connectedDevice).length) this.statusMsg = 'Le moniteur est déconnecté !!'
+    if (!Object.keys(this.bluetoothProv.connectedDevice).length) this.statusMsg = 'The display is not connected !!'
 
     this.event.subscribe('iE-bluetooth connection', () => {
       this.onGoing = false
       this.statusMsg = 'Device ready. OK'
+      console.log('on connect')
+    })
+
+    this.event.subscribe('iE-bluetooth disconnection', () => {
+      this.onGoing = true
+      this.statusMsg = "The display is not connected !!"
+      console.log('on disconnect')
     })
 
     this.event.subscribe('iE-nfc card connected', () => {

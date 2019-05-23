@@ -49,10 +49,10 @@ export class IntroPage {
         else if (data == userRoleEnum.admin || data == userRoleEnum.owner) {
           this.navCtrl.setRoot('AdminPage');
         }
-        else if(data == userRoleEnum.barman){
+        else if (data == userRoleEnum.barman) {
           this.navCtrl.setRoot('OutputPage')
         }
-        else{
+        else {
           this.navCtrl.setRoot('InputPage')
         }
       }
@@ -76,7 +76,9 @@ export class IntroPage {
 
   ionViewDidEnter() {
     setTimeout(() => {
-      if (!this.userProv.currentEventID) this.dialogProv.showSimpleDialog('Attention', '', 'Flag for target event is missing. The admin should configure this device !', 'Ok')
+      if (this.deviceProv.terminalType != terminalEnum.none && !this.userProv.currentEventID) {
+        this.dialogProv.showSimpleDialog('Attention', '', 'Flag for target event is missing. The admin should configure this device !', 'Ok')
+      }
     }, 5000);
   }
 
@@ -114,7 +116,7 @@ export class IntroPage {
   }
 
   superAdmin() {
-    if(this.userProv.currentUser)  this.navCtrl.setRoot('SuperadminPage')
+    if (this.userProv.currentUser) this.navCtrl.setRoot('SuperadminPage')
     else this.showLogin = true
   }
 

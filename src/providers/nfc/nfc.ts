@@ -9,7 +9,7 @@ import { AES256 } from '@ionic-native/aes-256';
 import { StorageProvider } from '../storage/storage';
 import { userRoleEnum, UserProvider } from '../user/user';
 import { NetworkProvider } from '../network/network';
-import { terminalEnum } from '../device/device';
+import { terminalEnum, DeviceProvider } from '../device/device';
 
 export interface nfcCardType {
   cmdType: nfcCmdEnum,  // 2 characters
@@ -50,7 +50,9 @@ export class NfcProvider {
     private alertCtrl: AlertController,
     private storageProv: StorageProvider,
     private networkProv: NetworkProvider,
-    private userProv: UserProvider
+    private userProv: UserProvider,
+    private deviceProv: DeviceProvider,
+
 
   ) {
 
@@ -90,20 +92,23 @@ export class NfcProvider {
       .catch(error => {
         console.log(error)
 
-        let alert = this.alertCtrl.create({
-          title: 'Attention',
-          subTitle: '',
-          message: 'Vous devez activer le NFC pour le bon fonctionement de ce logiciel !!',
-          buttons: [
-            {
-              text: 'Activer',
-              handler: () => {
-                this.nfc.showSettings()
+        if (this.deviceProv.terminalType != terminalEnum.none) {
+          let alert = this.alertCtrl.create({
+            title: 'Attention',
+            subTitle: '',
+            message: 'Vous devez activer le NFC pour le bon fonctionement de ce logiciel !!',
+            buttons: [
+              {
+                text: 'Activer',
+                handler: () => {
+                  this.nfc.showSettings()
+                }
               }
-            }
-          ]
-        });
-        alert.present();
+            ]
+          });
+          alert.present();
+        }
+
       })
 
   }

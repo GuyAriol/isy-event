@@ -14,7 +14,7 @@ export class DeviceProvider {
   screenWidth = null; sreenHeight = null
   isAppBooting = 0
 
-  terminalType: terminalEnum = 0
+  terminalType: terminalEnum = terminalEnum.none
   bluetoothInfo = ''
 
   constructor(
@@ -31,36 +31,42 @@ export class DeviceProvider {
      * @returns {Promise<any>}
      * @memberof DeviceProvider
      */
-  getCurrentPlatform() {
+  getCurrentPlatform(): Promise<any> {
     if (global.isDebug) {
       console.log('--DeviceProvider-getCurrentPlatform');
     }
 
-    let platform = this.platform.platforms()
+    return new Promise((resolve, reject) => {
+      let platform = this.platform.platforms()
 
-    if (platform.length && platform[0] == 'core') {
-      this.isDesktop = true
-    }
-    else if (platform.indexOf('android') != -1) {
-      this.isAndroid = true
-    }
-    else if (platform.indexOf('ios') != -1) {
-      this.isIos = true
-    }
-    else if (platform.indexOf('windows') != -1) {
-      this.isWindowsPhone = true
-    }
+      if (platform.length && platform[0] == 'core') {
+        this.isDesktop = true
+      }
+      else if (platform.indexOf('android') != -1) {
+        this.isAndroid = true
+      }
+      else if (platform.indexOf('ios') != -1) {
+        this.isIos = true
+      }
+      else if (platform.indexOf('windows') != -1) {
+        this.isWindowsPhone = true
+      }
 
-    this.isCordova = this.platform.is('cordova')
+      this.isCordova = this.platform.is('cordova')
 
-    this.sreenHeight = this.platform.height()
-    this.screenWidth = this.platform.width()
+      this.sreenHeight = this.platform.height()
+      this.screenWidth = this.platform.width()
 
-    this.storageProv.getFromLocalStorage('iE_deviceType').then(res => {
-      if (res) this.terminalType = res
+      this.storageProv.getFromLocalStorage('iE_deviceType').then(res => {
+        console.log('test', res)
+        if (res != null) this.terminalType = res
+
+        this.getLocalBluetoothInfo()
+
+        resolve()
+      })
+
     })
-
-    this.getLocalBluetoothInfo()
   }
 
   setDeviceType(arg) {
@@ -69,7 +75,7 @@ export class DeviceProvider {
     this.storageProv.setToLocalStorage('iE_deviceType', this.terminalType)
   }
 
-  getLocalBluetoothInfo() {
+  private getLocalBluetoothInfo() {
     if (global.isDebug) {
       console.log('--DeviceProvider-getLocalBluetoothInfo')
     }
