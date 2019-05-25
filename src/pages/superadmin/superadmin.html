@@ -14,11 +14,13 @@
       <ion-item>
         <p>Device type</p>
 
-        <div item-right>
+        <div text-center>
           <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 0)"
             (click)="deviceProv.setDeviceType(0)">Terminal</button>
           <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 1)"
             (click)="deviceProv.setDeviceType(1)">Monitor</button>
+            <button ion-button mode="ios" small [outline]="!(deviceProv.terminalType == 2)"
+            (click)="deviceProv.setDeviceType(2)">Client</button>
         </div>
       </ion-item>
 

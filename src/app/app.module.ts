@@ -23,9 +23,9 @@ import { StorageProvider } from '../providers/storage/storage';
 import { SubscriptionProvider } from '../providers/subscription/subscription';
 import { UserProvider } from '../providers/user/user';
 import { BluetoothProvider } from '../providers/bluetooth/bluetooth';
-import { PopoverPage } from '../pages/input/input';
 import { PricingProvider } from '../providers/pricing/pricing';
 import { NetworkProvider } from '../providers/network/network';
+import { TerminalPopover } from '../pages/terminal-popover/TerminalPopover';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfhQIXhUXY1FQOov_pQk63G4frcZe5HBk",
@@ -39,7 +39,7 @@ const firebaseConfig = {
 @NgModule({
   declarations: [
     MyApp,
-    PopoverPage
+    TerminalPopover
   ],
   imports: [
     BrowserModule,
@@ -52,7 +52,7 @@ const firebaseConfig = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    PopoverPage
+    TerminalPopover
   ],
   providers: [
     StatusBar,

@@ -21,6 +21,8 @@ export class AdminPage {
 
   isStats = false
 
+  summrary = {} as {cashIn: number, drinks: number, details:{type: string, count: number}[]}
+
   constructor(
     public navCtrl: NavController,
     public userProv: UserProvider,
@@ -32,8 +34,16 @@ export class AdminPage {
 
   ) {
     currentPage.name = 'admin'
-    if (this.navParams.data) this.selectedUserEventId = navParams.data
+    if (Object.keys(this.navParams.data).length) this.selectedUserEventId = navParams.data
 
+
+    this.summrary = {
+      cashIn: 560,
+      drinks: 1600,
+      details: [
+        {type: 'XS - 5 euro', count: 15}
+      ]
+    }
   }
 
   ionViewDidEnter() {

@@ -7,6 +7,7 @@ import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
 import { UserProvider, userRoleEnum } from '../../providers/user/user';
 import { StorageProvider } from '../../providers/storage/storage';
 import { logType } from '../../providers/global';
+import { TerminalPopover } from '../terminal-popover/TerminalPopover';
 
 enum stateEnum { ongoing, pass, fail, error }
 
@@ -244,82 +245,8 @@ export class InputPage {
   }
 
   logOff(event) {
-    let popover = this.popoverCtrl.create(PopoverPage)
+    let popover = this.popoverCtrl.create(TerminalPopover, { data: 'cash' })
     popover.present({ ev: event })
   }
 }
 
-@Component({
-  template: `
-    <ion-list>
-      <h2 text-center>{{userProv.currentWorker}}</h2>
-
-      <ion-item>
-        <ion-label color=danger>Cash box: {{total}} euro</ion-label>
-      </ion-item>
-
-      <div *ngFor="let worker of workerList">
-        <ion-item>
-          <p><b>{{worker.name}}</b></p>
-          <p>{{worker.total}} euro</p>
-        </ion-item>
-      </div>
-
-      <button ion-item (click)="close()">Verouiller l'écran</button>
-      <button ion-item (click)="openAdmin()">Admin</button>
-      </ion-list>
-  `
-})
-
-export class PopoverPage {
-
-  total = 0
-  workerLogs = {}
-  workerList = []
-
-  constructor(
-    public viewCtrl: ViewController,
-    public navCtrl: NavController,
-    private storageProv: StorageProvider,
-    public nfcProv: NfcProvider,
-    public userProv: UserProvider
-
-  ) {
-    this.storageProv.getFromLocalStorage('iE_eventLog').then((logs: logType[]) => {
-      if (logs) {
-
-        logs.forEach(log => {
-          this.total += log.amount
-
-          let found = false
-          for (let key in this.workerLogs) {
-            if (key == log.worker) {
-              found = true
-              this.workerLogs[log.worker].total += log.amount
-              break
-            }
-          }
-
-          if (!found) {
-            this.workerLogs[log.worker] = { name: log.worker, total: log.amount }
-          }
-        })
-
-        for (let worker in this.workerLogs) {
-          this.workerList.push({ name: worker, total: this.workerLogs[worker].total })
-        }
-      }
-
-    })
-  }
-
-  close() {
-    this.viewCtrl.dismiss();
-    this.navCtrl.setRoot('IntroPage')
-  }
-
-  openAdmin() {
-    this.viewCtrl.dismiss();
-    this.navCtrl.setRoot('AdminPage')
-  }
-}

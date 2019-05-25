@@ -8,6 +8,7 @@ import { DeviceProvider } from '../../providers/device/device';
 import { StorageProvider } from '../../providers/storage/storage';
 import { DialogProvider } from '../../providers/dialog/dialog';
 import { PricingProvider } from '../../providers/pricing/pricing';
+import { TerminalPopover } from '../terminal-popover/TerminalPopover';
 
 @IonicPage()
 @Component({
@@ -124,8 +125,8 @@ export class OutputPage {
   }
 
   logOff(event) {
-    // let popover = this.popoverCtrl.create(PopoverPage)
-    // popover.present({ ev: event })
+    let popover = this.popoverCtrl.create(TerminalPopover, {data: 'bar'})
+    popover.present({ ev: event })
   }
 
   // toDo: move to bluetooth provider

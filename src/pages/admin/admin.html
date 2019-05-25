@@ -19,7 +19,46 @@
   </ion-item>
 
   <ion-list padding-top *ngIf="selectedUserEventId">
-    <ion-item-divider style="font-size: 18px;" color=primary>Crew members
+
+    <ion-list padding-top>
+      <ion-item-divider style="font-size: 14px;" color=dark (click)="isStats = true">Event Daten
+        <ion-icon item-right name="sync"></ion-icon>
+      </ion-item-divider>
+
+      <div style="border-style: solid; border-color: #222; border-width: 1px">
+        <div *ngIf="isStats" style="border-style: solid; border-color: #222; border-width: 1px">
+          <h1 padding-left padding-top><u>Summary</u> </h1>
+
+          <ion-item style="color: tomato">
+            <h2>Total cash in :</h2>
+            <p item-right style="color: tomato; font-size: 14px">{{summrary.cashIn}}</p>
+          </ion-item>
+
+          <ion-item style="color: tomato">
+            <h2>Total drinks :</h2>
+            <p item-right style="color: tomato; font-size: 14px">{{summrary.drinks}}</p>
+          </ion-item>
+
+          <h1 padding-left><u>Details</u></h1>
+
+          <ion-item *ngFor="let worker of userProv.currentUser.events[selectedUserEventId]?.crew; let index=index">
+            <h2>{{worker.name}} </h2>
+            <p *ngIf="worker.role == 2">Cash in : <span item-right>{{worker.money || 0}} euro</span></p>
+
+            <div *ngIf="worker.role == 3">
+              <div *ngFor="let drink of userProv.getWorkerDrinkStatics(selectedUserEventId)[index]">
+                <ion-item>
+                  <p>{{drink.type}} <span padding-left>Total out:</span></p>
+                  <p item-right> {{drink.total}}</p>
+                </ion-item>
+              </div>
+            </div>
+          </ion-item>
+        </div>
+      </div>
+    </ion-list>
+
+    <ion-item-divider style="font-size: 14px;" color=primary>Crew members
       <ion-icon item-right name="add-circle" (click)="isNewCrew=!isNewCrew"></ion-icon>
     </ion-item-divider>
 
@@ -57,25 +96,6 @@
           (click)="deleteCrewMember(index)"></ion-icon>
       </ion-item>
     </div>
-
-    <ion-list padding-top>
-      <ion-item-divider style="font-size: 18px;" color=dark (click)="isStats = true">Event Daten
-        <ion-icon item-right name="sync"></ion-icon>
-      </ion-item-divider>
-
-      <div *ngIf="isStats" style="border-style: solid; border-color: #222; border-width: 1px">
-        <ion-item *ngFor="let worker of userProv.currentUser.events[selectedUserEventId]?.crew; let index=index">
-          <h2>{{worker.name}} </h2>
-          <p *ngIf="worker.role == 2">Cash in: {{worker.money || 0}} euro</p>
-          <div *ngIf="worker.role == 3">
-            <div *ngFor="let drink of userProv.getWorkerDrinkStatics(selectedUserEventId)[index]">
-              <p>{{drink.type}}: <span padding-left>{{drink.total}}</span></p>
-            </div>
-          </div>
-        </ion-item>
-      </div>
-    </ion-list>
-
   </ion-list>
 </ion-content>
 
