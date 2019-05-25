@@ -87,9 +87,14 @@ export class BluetoothProvider {
       console.log('--BluetoothProvider-unsubscribeNativeEvent')
     }
 
-    this.deviceConnectedSubscription.unsubscribe()
-    this.messageReadSubscription.unsubscribe()
-    this.connectinLostSubscription.unsubscribe()
+    try {
+      this.deviceConnectedSubscription.unsubscribe()
+      this.messageReadSubscription.unsubscribe()
+      this.connectinLostSubscription.unsubscribe()
+    } catch (error) {
+
+    }
+
   }
 
 }

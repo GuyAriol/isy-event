@@ -25,10 +25,32 @@
       <ion-item (click)="resetDevice()">
         <p>Reset local storage</p>
       </ion-item>
+
+      <ion-item (click)="setSuperAdmin()">
+        <p>Write super admin card</p>
+      </ion-item>
     </div>
   </ion-list>
 
-  <ion-item-divider style="font-size: 18px; color: brown" (click)="isManageClient=!isManageClient">Manage clients</ion-item-divider>
+  <ion-item-divider style="font-size: 18px; color: brown" (click)="isFinalizeEvent=!isFinalizeEvent; getLogs()">Finalize
+    event
+  </ion-item-divider>
+  <div *ngIf="isFinalizeEvent">
+    <ion-list>
+      <ion-item *ngFor="let worker of workerList">
+        <p><b>{{worker.name}}</b></p>
+        <p>Cash in: {{worker.total}} euro</p>
+
+        <div *ngFor="let drink of worker.drinks">
+          <p>{{drink.drink}} - {{drink.total}} sell </p>
+        </div>
+      </ion-item>
+
+    </ion-list>
+  </div>
+
+  <ion-item-divider style="font-size: 18px; color: brown" (click)="isManageClient=!isManageClient">Manage clients
+  </ion-item-divider>
   <div *ngIf="isManageClient">
     <div text-center>
       <button ion-button icon-start (click)="isSearch=true; isNewUser=false; selectedUser=null">

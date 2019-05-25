@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { DeviceProvider } from '../../providers/device/device';
+import { DeviceProvider, terminalEnum } from '../../providers/device/device';
 import { BluetoothProvider } from '../../providers/bluetooth/bluetooth';
 import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
 import { DialogProvider } from '../../providers/dialog/dialog';
@@ -8,7 +8,8 @@ import { UserProvider, eventType, userType, userRoleEnum } from '../../providers
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { SubscriptionProvider } from '../../providers/subscription/subscription';
-import { currentPage } from '../../providers/global';
+import { currentPage, logType } from '../../providers/global';
+import { StorageProvider } from '../../providers/storage/storage';
 
 @IonicPage()
 @Component({
@@ -40,6 +41,12 @@ export class SuperadminPage {
 
   isPreparemenu = false
   isManageClient = false
+  isFinalizeEvent = false
+
+  total = 0
+  totalDrinks = 0
+  workerLogs = {}
+  workerList = []
 
   constructor(
     public navCtrl: NavController,
@@ -49,7 +56,8 @@ export class SuperadminPage {
     public userProv: UserProvider,
     public nfcProv: NfcProvider,
     private dialogProv: DialogProvider,
-    private subscriptionProv: SubscriptionProvider
+    private subscriptionProv: SubscriptionProvider,
+    private storageProv: StorageProvider
 
   ) {
     this.nfcCard.role = userRoleEnum.superadmin
@@ -235,6 +243,100 @@ export class SuperadminPage {
 
   resetDevice() {
     this.subscriptionProv.defaultUnscription()
+    this.userProv.resetUser()
     this.dialogProv.showSimpleDialog('Important', '', "Rédemarrer l'application pour terminer l'initialisation", 'Ok')
+  }
+
+  setSuperAdmin() {
+    this.dialogProv.showLoading('En cours ...', 30000)
+
+    let card: nfcCardType = {
+      id: '',
+      cmdType: nfcCmdEnum.login,
+      balance: 0,
+      maxsize: '',
+      type: '',
+      role: userRoleEnum.superadmin,
+      cardOk: false,
+      eventId: '',
+      eventName: '',
+      workerName: ' '
+    }
+
+    this.nfcProv.writeCard(card)
+      .then(() => {
+        this.dialogProv.dismissLoading()
+        this.dialogProv.showToast('done')
+      })
+      .catch(error => {
+        console.log(error)
+        this.dialogProv.dismissLoading()
+        this.dialogProv.showToast('Error')
+      })
+  }
+
+  getLogs(): Promise<any> {
+    this.dialogProv.showLoading('Loading ...', 100000)
+
+    this.total = 0
+    this.workerLogs = {}
+    this.workerList = []
+
+    return new Promise((resolve, reject) => {
+      this.storageProv.getFromLocalStorage('iE_eventLog')
+        .then((logs: logType[]) => {
+          if (logs) {
+            logs.forEach(log => {
+              if (!log.note) this.total += log.amount
+              else this.totalDrinks += log.amount
+
+              let found = false
+              for (let key in this.workerLogs) {
+                if (key == log.worker) {
+                  found = true
+                  if (!log.note) this.workerLogs[log.worker].total += log.amount
+                  else {
+                    this.workerLogs[log.worker].totalDrinks += log.amount
+                    this.workerLogs[log.worker].drinks[log.note] += 1
+                  }
+                  break
+                }
+              }
+
+              if (!found) {
+                let temp = {}
+                if (log.note) temp[log.note] = 1
+
+                this.workerLogs[log.worker] = {
+                  name: log.worker,
+                  total: !log.note ? log.amount : 0,
+                  drinks: temp,
+                  totalDrinks: log.note ? log.amount : 0
+                }
+              }
+            })
+
+            for (let worker in this.workerLogs) {
+
+              let drinksTemp = []
+              for (let drink in this.workerLogs[worker].drinks) {
+                drinksTemp.push({ drink: drink, total: this.workerLogs[worker].drinks[drink] })
+              }
+
+              this.workerList.push({ name: worker, total: this.workerLogs[worker].total, drinks: drinksTemp })
+            }
+
+
+          }
+
+          this.dialogProv.dismissLoading()
+          this.dialogProv.showToast('Done')
+        })
+        .catch(error => {
+          this.dialogProv.dismissLoading()
+          this.dialogProv.showToast('Error')
+          console.log(error)
+        })
+    })
   }
 }

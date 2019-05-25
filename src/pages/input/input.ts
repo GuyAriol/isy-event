@@ -49,6 +49,7 @@ export class InputPage {
       this.ngZone.run(() => {
         this.state = stateEnum.ongoing
         this.color = 'grey'
+        console.log('on card detected')
       })
     })
 
@@ -156,7 +157,7 @@ export class InputPage {
             this.state = stateEnum.fail
             this.color = 'red'
 
-            this.dialogProv.showToast('Vérifiez la carte')
+            this.dialogProv.showToast('Error! Check the card.')
           })
         .catch(error => {
           this.state = stateEnum.error
@@ -165,7 +166,7 @@ export class InputPage {
         })
     }
     else {
-      this.dialogProv.showToast('Vérifiez le mountant')
+      this.dialogProv.showToast('Error! Check the amount.')
       this.state = stateEnum.ongoing
       this.color = 'goldenrod'
     }
@@ -180,60 +181,65 @@ export class InputPage {
 
   removeMoney() {
     if (this.input) {
-      if (parseFloat(this.input) > this.nfcProv.currentCard.balance) this.dialogProv
-        .showToast(`Vous pouvez débourser au maximum ${this.nfcProv.currentCard.balance} euro`)
+      if (this.nfcProv.currentCard.balance == null) {
+        this.dialogProv.showToast('Error! Check the card')
+      }
       else {
-        this.state = stateEnum.ongoing
-        this.color = 'grey'
+        if (parseFloat(this.input) > this.nfcProv.currentCard.balance) this.dialogProv
+          .showToast(`You cannot cash out more than ${this.nfcProv.currentCard.balance} euro`)
+        else {
+          this.state = stateEnum.ongoing
+          this.color = 'grey'
 
-        let card: nfcCardType = {
-          id: '',
-          cmdType: nfcCmdEnum.none,
-          balance: this.nfcProv.currentCard.balance - parseFloat(this.input),
-          maxsize: '',
-          type: '',
-          role: userRoleEnum.client,
-          cardOk: false,
-          eventId: this.userProv.currentEventID,
-          eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
-          workerName: ' '
-        }
+          let card: nfcCardType = {
+            id: '',
+            cmdType: nfcCmdEnum.none,
+            balance: this.nfcProv.currentCard.balance - parseFloat(this.input),
+            maxsize: '',
+            type: '',
+            role: userRoleEnum.client,
+            cardOk: false,
+            eventId: this.userProv.currentEventID,
+            eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
+            workerName: ' '
+          }
 
-        this.nfcProv.writeCard(card)
-          .then(pass => {
+          this.nfcProv.writeCard(card)
+            .then(pass => {
 
-            bluetooth.send({ msg: this.nfcProv.currentCard.balance })
+              bluetooth.send({ msg: this.nfcProv.currentCard.balance })
 
-            this.state = stateEnum.pass
-            this.color = 'green'
+              this.state = stateEnum.pass
+              this.color = 'green'
 
-            let log: logType = {
-              timeStamp: Date.now(),
-              worker: this.userProv.currentWorker,
-              amount: -parseFloat(this.input),
-              note: '',
-              workerId: this.userProv.currentWorkerCardId
-            }
-            this.nfcProv.saveTransaction(log)
+              let log: logType = {
+                timeStamp: Date.now(),
+                worker: this.userProv.currentWorker,
+                amount: -parseFloat(this.input),
+                note: '',
+                workerId: this.userProv.currentWorkerCardId
+              }
+              this.nfcProv.saveTransaction(log)
 
-            this.input = ''
+              this.input = ''
 
-          },
-            fail => {
-              this.state = stateEnum.fail
+            },
+              fail => {
+                this.state = stateEnum.fail
+                this.color = 'red'
+
+                this.dialogProv.showToast('Error! Check the card')
+              })
+            .catch(error => {
+              this.state = stateEnum.error
               this.color = 'red'
-
-              this.dialogProv.showToast('Vérifiez la carte')
+              console.log(error)
             })
-          .catch(error => {
-            this.state = stateEnum.error
-            this.color = 'red'
-            console.log(error)
-          })
+        }
       }
     }
     else {
-      this.dialogProv.showToast('Entrez le montant à rembourser')
+      this.dialogProv.showToast('Error! Enter the amount to be cashed out.')
     }
   }
 

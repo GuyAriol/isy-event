@@ -105,14 +105,20 @@ export class UserProvider {
 
     return new Promise((resolve, reject) => {
       this.auth.auth.signInWithEmailAndPassword(credentials.email, credentials.password)
-        .then(res => {
-          this.afd.object(`users/${res.uid}`).valueChanges().take(1).subscribe((user: userType) => {
-            this.currentUser = user
-            this.localStorage.setToLocalStorage('iE_user', this.currentUser)
+        .then(
+          res => {
+            // this.afd.object(`users/${res.uid}`).valueChanges().take(1).subscribe((user: userType) => {
+            //   this.currentUser = user
+            //   this.localStorage.setToLocalStorage('iE_user', this.currentUser)
 
+            //   resolve()
+            // })
+
+            this.subscribeUser(res.uid)
             resolve()
           })
-        })
+
+
         .catch(error => reject(error))
     });
   }
@@ -245,10 +251,21 @@ export class UserProvider {
   }
 
   getEventList() {
+    if (global.isDebug) {
+      console.log('--UserProvider-getEventList')
+    }
     this.userEventList = []
 
     for (let eventKey in this.currentUser.events) {
       this.userEventList.push(this.currentUser.events[eventKey])
     }
+  }
+
+  resetUser(){
+    this.currentEventID = ''
+    this.currentUser = null
+    this.currentWorkerCardId = ''
+    this.currentWorker = ''
+    this.userEventList = []
   }
 }

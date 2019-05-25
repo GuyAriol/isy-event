@@ -124,8 +124,8 @@ export class OutputPage {
   }
 
   logOff(event) {
-    let popover = this.popoverCtrl.create(PopoverPage)
-    popover.present({ ev: event })
+    // let popover = this.popoverCtrl.create(PopoverPage)
+    // popover.present({ ev: event })
   }
 
   // toDo: move to bluetooth provider

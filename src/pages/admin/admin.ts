@@ -159,6 +159,7 @@ export class AdminPage {
   // toDo get data from all terminals only one at time
   getEventData() {
     if (this.selectedUserEventId) {
+      this.dialogProv.showLoading('Loading', 10000)
       try {
         this.userProv.currentUser.events[this.selectedUserEventId].crew.forEach((worker, index) => {
           if (worker.role == 3) {
