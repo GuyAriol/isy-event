@@ -129,7 +129,7 @@
 
     <ion-list padding>
       <ion-item-divider style="font-size: 18px; color:brown">My events</ion-item-divider>
-      <ion-item *ngFor="let event of userProv.userEventList" detail-push (click)="openAdminPage(event.id)">
+      <ion-item padding-left *ngFor="let event of userProv.userEventList" detail-push (click)="openAdminPage(event.id)">
         <h2>{{event.title}} </h2>
         <p>{{event.date}} </p>
         <p>{{event.location}} </p>

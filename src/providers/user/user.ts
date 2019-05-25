@@ -205,7 +205,7 @@ export class UserProvider {
     }
 
     this.userSubscription = this.afd.object(`users/${userId}`).valueChanges().subscribe((user: userType) => {
-      if (user && Object.keys(user)) {
+      if (user && Object.keys(user).length) {
         this.currentUser = user
 
         this.localStorage.setToLocalStorage('iE_user', this.currentUser)
@@ -254,6 +254,7 @@ export class UserProvider {
     if (global.isDebug) {
       console.log('--UserProvider-getEventList')
     }
+
     this.userEventList = []
 
     for (let eventKey in this.currentUser.events) {
@@ -261,11 +262,37 @@ export class UserProvider {
     }
   }
 
-  resetUser(){
+  resetUser() {
     this.currentEventID = ''
     this.currentUser = null
     this.currentWorkerCardId = ''
     this.currentWorker = ''
     this.userEventList = []
+  }
+
+  evaluateEventData(){
+
+  }
+
+  getWorkerDrinkStatics(eventId){
+    let drinkStatics = {}
+    try {
+      this.currentUser.events[eventId].crew.forEach((worker, index) => {
+        if (worker.role == 3) {
+
+          drinkStatics[index] = []
+
+          for (let drink in worker.drinks) {
+            drinkStatics[index].push({ type: drink, total: worker.drinks[drink] })
+          }
+        }
+      })
+
+      return drinkStatics
+
+    } catch (error) {
+      console.log(error)
+      return drinkStatics
+    }
   }
 }

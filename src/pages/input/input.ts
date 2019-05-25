@@ -41,7 +41,7 @@ export class InputPage {
 
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     this.event.subscribe('iE-nfc card detected', () => {
 
       this.ngZone.run(() => {
@@ -252,9 +252,10 @@ export class InputPage {
 @Component({
   template: `
     <ion-list>
-      <ion-list-header>{{userProv.currentWorker}}</ion-list-header>
+      <h2 text-center>{{userProv.currentWorker}}</h2>
+
       <ion-item>
-        <ion-label>Total caise: {{total}} euro</ion-label>
+        <ion-label color=danger>Cash box: {{total}} euro</ion-label>
       </ion-item>
 
       <div *ngFor="let worker of workerList">

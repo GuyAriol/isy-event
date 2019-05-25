@@ -20,7 +20,6 @@ export class AdminPage {
   newCrew = { name: '', role: userRoleEnum.drinks }
 
   isStats = false
-  drinksStatistics = {}
 
   constructor(
     public navCtrl: NavController,
@@ -41,7 +40,7 @@ export class AdminPage {
     setTimeout(() => {
       try {
         this.eventPlaceholder = this.userProv.currentUser.events[this.selectedUserEventId].title
-        this.getEventData()
+        // this.getEventDataOnline()
 
       } catch (error) {
 
@@ -156,28 +155,29 @@ export class AdminPage {
     this.dialogProv.showToast('En développement ...')
   }
 
-  // toDo get data from all terminals only one at time
-  getEventData() {
-    if (this.selectedUserEventId) {
-      this.dialogProv.showLoading('Loading', 10000)
-      try {
-        this.userProv.currentUser.events[this.selectedUserEventId].crew.forEach((worker, index) => {
-          if (worker.role == 3) {
+  getEventDataOnline() {
 
-            this.drinksStatistics[index] = []
+    // if (this.selectedUserEventId) {
+    //   this.dialogProv.showLoading('Loading', 10000)
 
-            for (let drink in worker.drinks) {
-              this.drinksStatistics[index].push({ type: drink, total: worker.drinks[drink] })
-            }
-          }
-        })
+    //   try {
+    //     this.userProv.currentUser.events[this.selectedUserEventId].crew.forEach((worker, index) => {
+    //       if (worker.role == 3) {
 
-        this.drinksStatistics
+    //         this.drinksStatistics[index] = []
 
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    //         for (let drink in worker.drinks) {
+    //           this.drinksStatistics[index].push({ type: drink, total: worker.drinks[drink] })
+    //         }
+    //       }
+    //     })
+
+    //     this.dialogProv.dismissLoading()
+    //   } catch (error) {
+    //     console.log(error)
+    //     this.dialogProv.dismissLoading()
+    //   }
+    // }
 
   }
 
