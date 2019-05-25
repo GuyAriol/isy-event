@@ -44,8 +44,6 @@ export class InputPage {
   ionViewDidLoad() {
     this.event.subscribe('iE-nfc card detected', () => {
 
-      console.log('card detected')
-
       this.ngZone.run(() => {
         this.state = stateEnum.ongoing
         this.color = 'grey'
@@ -54,9 +52,11 @@ export class InputPage {
     })
 
     this.event.subscribe('iE-nfc card connected', () => {
-      this.state = stateEnum.pass
-      this.color = 'green'
-      console.log('card connected')
+      this.ngZone.run(() => {
+        this.state = stateEnum.pass
+        this.color = 'green'
+        console.log('card connected')
+      })
     })
   }
 

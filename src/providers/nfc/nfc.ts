@@ -150,14 +150,12 @@ export class NfcProvider {
               resolve()
             }
             else {
-              console.log('card Ok')
               this.currentCard.cardOk = true
               this.currentCard.cmdType = res.cmdType
               this.currentCard.role = res.role
               this.currentCard.balance = res.balance
               this.currentCard.workerName = res.workerName
 
-              console.log(this.currentCard)
               this.nfcReadPostAction()
               resolve()
             }
@@ -360,8 +358,6 @@ export class NfcProvider {
             eventName: temp[1],
             workerName: temp[3]
           }
-
-          console.log(cardData)
 
           resolve(cardData)
         })
