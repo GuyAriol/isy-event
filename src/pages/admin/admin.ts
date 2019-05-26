@@ -4,6 +4,7 @@ import { UserProvider, userRoleEnum } from '../../providers/user/user';
 import { DialogProvider } from '../../providers/dialog/dialog';
 import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
 import { currentPage } from '../../providers/global';
+import { DeviceProvider, terminalEnum } from '../../providers/device/device';
 
 @IonicPage()
 @Component({
@@ -21,7 +22,7 @@ export class AdminPage {
 
   isStats = false
 
-  summrary = {} as {cashIn: number, drinks: number, details:{type: string, count: number}[]}
+  summrary = {} as { cashIn: number, drinks: number, details: { type: string, count: number }[] }
 
   constructor(
     public navCtrl: NavController,
@@ -29,7 +30,8 @@ export class AdminPage {
     private dialogProv: DialogProvider,
     private alertCtrl: AlertController,
     public nfcProv: NfcProvider,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private deviceProv: DeviceProvider
 
 
   ) {
@@ -41,7 +43,7 @@ export class AdminPage {
       cashIn: 560,
       drinks: 1600,
       details: [
-        {type: 'XS - 5 euro', count: 15}
+        { type: 'XS - 5 euro', count: 15 }
       ]
     }
   }
@@ -50,7 +52,6 @@ export class AdminPage {
     setTimeout(() => {
       try {
         this.eventPlaceholder = this.userProv.currentUser.events[this.selectedUserEventId].title
-        // this.getEventDataOnline()
 
       } catch (error) {
 
@@ -69,7 +70,8 @@ export class AdminPage {
   }
 
   close() {
-    this.navCtrl.setRoot('InputPage', 0)
+    if (this.deviceProv.terminalType == terminalEnum.none) this.navCtrl.setRoot('IntroPage', 0)
+    else this.navCtrl.setRoot('InputPage', 0)
   }
 
   eventSelected(arg) {
@@ -163,32 +165,6 @@ export class AdminPage {
 
   ongoing() {
     this.dialogProv.showToast('En développement ...')
-  }
-
-  getEventDataOnline() {
-
-    // if (this.selectedUserEventId) {
-    //   this.dialogProv.showLoading('Loading', 10000)
-
-    //   try {
-    //     this.userProv.currentUser.events[this.selectedUserEventId].crew.forEach((worker, index) => {
-    //       if (worker.role == 3) {
-
-    //         this.drinksStatistics[index] = []
-
-    //         for (let drink in worker.drinks) {
-    //           this.drinksStatistics[index].push({ type: drink, total: worker.drinks[drink] })
-    //         }
-    //       }
-    //     })
-
-    //     this.dialogProv.dismissLoading()
-    //   } catch (error) {
-    //     console.log(error)
-    //     this.dialogProv.dismissLoading()
-    //   }
-    // }
-
   }
 
 }

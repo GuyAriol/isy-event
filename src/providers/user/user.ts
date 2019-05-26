@@ -4,7 +4,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import 'rxjs/add/operator/take'
 import { Observable } from 'rxjs/Observable';
-import { global } from '../global';
+import { global, logType } from '../global';
 import { Subscription } from 'rxjs/Subscription';
 
 export interface userType {
@@ -31,6 +31,7 @@ export interface eventType {
 
 export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, owner, client }
 
+interface logEval { workerObject: any, workerList: Array<any>, totalCash: number, totalDrinks: number }
 
 @Injectable()
 export class UserProvider {
@@ -46,7 +47,7 @@ export class UserProvider {
   constructor(
     private localStorage: StorageProvider,
     private auth: AngularFireAuth,
-    private afd: AngularFireDatabase
+    private afd: AngularFireDatabase,
 
   ) {
 
@@ -270,11 +271,71 @@ export class UserProvider {
     this.userEventList = []
   }
 
-  evaluateEventData(){
+  evaluateEventData(): Promise<logEval> {
+    return new Promise((resolve, reject) => {
+      let totalCash = 0
+      let totalDrinks = 0
+      let workerLogs = {}
+      let workerList = []
+
+      this.localStorage.getFromLocalStorage('iE_eventLog').then((logs: logType[]) => {
+        if (logs) {
+          logs.forEach(log => {
+            if (!log.note) totalCash += log.amount
+            else totalDrinks += log.amount
+
+            let found = false
+            for (let key in workerLogs) {
+              if (key == log.worker) {
+                found = true
+
+                if (!log.note) workerLogs[log.worker].totalCash += log.amount
+                else {
+                  workerLogs[log.worker].totalDrinks += log.amount
+
+                  if (workerLogs[log.worker].drinks[log.note]) workerLogs[log.worker].drinks[log.note]++
+                  else workerLogs[log.worker].drinks[log.note] = 1
+                }
+
+                break
+              }
+            }
+
+            if (!found) {
+              let temp = {}
+
+              if (log.note) temp[log.note] = 1
+
+              workerLogs[log.worker] = {
+                name: log.worker,
+                totalCash: !log.note ? log.amount : 0,
+                totalDrinks: log.note ? log.amount : 0,
+                drinks: temp
+              }
+
+            }
+          })
+
+          for (let worker in workerLogs) {
+            let drinksTemp = []
+            for (let drink in workerLogs[worker].drinks) {
+              drinksTemp.push({ drink: drink, total: workerLogs[worker].drinks[drink] })
+            }
+
+            workerList.push({
+              name: worker, totalCash: workerLogs[worker].totalCash,
+              totalDrinks: workerLogs[worker].totalDrinks, drinks: drinksTemp
+            })
+          }
+
+          resolve({ workerObject: workerLogs, workerList: workerList, totalCash: totalCash, totalDrinks: totalDrinks })
+        }
+      })
+    })
 
   }
 
-  getWorkerDrinkStatics(eventId){
+  getWorkerDrinkStatics(eventId) {
     let drinkStatics = {}
     try {
       this.currentUser.events[eventId].crew.forEach((worker, index) => {

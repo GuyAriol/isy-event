@@ -58,7 +58,6 @@ export class DeviceProvider {
       this.screenWidth = this.platform.width()
 
       this.storageProv.getFromLocalStorage('iE_deviceType').then(res => {
-        console.log('test', res)
         if (res != null) this.terminalType = res
 
         this.getLocalBluetoothInfo()

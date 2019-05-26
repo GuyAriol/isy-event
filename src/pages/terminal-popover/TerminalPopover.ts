@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { ViewController, NavController, NavParams } from "ionic-angular";
-import { StorageProvider } from "../../providers/storage/storage";
 import { NfcProvider } from "../../providers/nfc/nfc";
 import { UserProvider } from "../../providers/user/user";
 import { logType } from "../../providers/global";
@@ -18,13 +17,25 @@ import { logType } from "../../providers/global";
         <div *ngFor="let worker of workerList">
           <ion-item>
             <p><b>{{worker.name}}</b></p>
-            <p>{{worker.total}} euro</p>
+            <p>{{worker.totalCash}} euro</p>
           </ion-item>
         </div>
       </div>
 
       <div *ngIf="type=='bar'">
+        <ion-item>
+          <ion-label color=danger>Cash box: {{total}} euro</ion-label>
+        </ion-item>
 
+        <div *ngFor="let worker of workerList">
+          <ion-item>
+            <p><b>{{worker.name}} (sell for {{worker.totalDrinks}} euro)</b></p>
+
+            <div *ngFor="let drink of worker.drinks">
+              <p>{{drink.drink}} <span style="float: right">{{drink.total}}</span></p>
+            </div>
+          </ion-item>
+        </div>
       </div>
 
       <button ion-item (click)="close()">Verouiller l'écran</button>
@@ -44,7 +55,6 @@ export class TerminalPopover {
   constructor(
     public viewCtrl: ViewController,
     public navCtrl: NavController,
-    private storageProv: StorageProvider,
     public nfcProv: NfcProvider,
     public userProv: UserProvider,
     private navparams: NavParams
@@ -52,39 +62,15 @@ export class TerminalPopover {
   ) {
     this.type = this.navparams.data.data
 
-    if (this.type == 'cash') {
-      this.storageProv.getFromLocalStorage('iE_eventLog').then((logs: logType[]) => {
-        if (logs) {
+    this.userProv.evaluateEventData().then(result => {
+      if (this.type == 'cash') this.total = result.totalCash
+      else if (this.type == 'bar') this.total = result.totalDrinks
+      this.workerLogs = result.workerObject
+      this.workerList = result.workerList
 
-          logs.forEach(log => {
-            this.total += log.amount
-
-            let found = false
-            for (let key in this.workerLogs) {
-              if (key == log.worker) {
-                found = true
-                this.workerLogs[log.worker].total += log.amount
-                break
-              }
-            }
-
-            if (!found) {
-              this.workerLogs[log.worker] = { name: log.worker, total: log.amount }
-            }
-          })
-
-          for (let worker in this.workerLogs) {
-            this.workerList.push({ name: worker, total: this.workerLogs[worker].total })
-          }
-        }
-      })
-    }
-    else if (this.type == 'bar') {
-
-    }
-    else {
-
-    }
+      console.log(this.workerList)
+      console.log(this.workerLogs)
+    })
 
   }
 
