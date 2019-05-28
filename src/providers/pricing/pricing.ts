@@ -13,15 +13,15 @@ export class PricingProvider {
 
   setBasicPricing() {
     this.pricingList = [
-      { name: 'XS - 2 euro', price: 2, description: 'Wasser' },
-      { name: 'S - 3 euro', price: 3, description: 'Bier' },
-      { name: 'M - 5 euro', price: 5, description: 'Coca, Fanta, Sprite' },
-      { name: 'L - 20 euro', price: 20, description:'Sekt, Baileys' },
-      { name: 'XL - 40 euro', price: 40, description:'Jack Daniels, Hennesy' },
-      { name: 'XXL - 60 euro', price: 60, description:'Black, Chivas' },
-      { name: 'VIP 1 - 80 euro', price: 80, description:'' },
-      { name: 'VIP 2 - 150 euro', price: 150, description:'Ruinart Blanc' },
-      { name: 'VIP 3 - 250 euro', price: 250, description:'DOM Pe' },
+      { name: 'XS - 5 euro', price: 5, description: 'Water, Redbull, Bier' },
+      { name: 'S - 10 euro', price: 3, description: 'Limo, Baileys 0.2L, Whisky Cola' },
+      { name: 'M - 60 euro', price: 5, description: 'Asti, Baileys 0.7L' },
+      { name: 'L - 100 euro', price: 20, description:'Black, Red, Chivas 12Y, Jack' },
+      { name: 'XL - 120 euro', price: 40, description:'Chivas 18Y, Gold, Hennesy, Ciroc' },
+      { name: 'XL - 120 euro', price: 60, description:'Ruinart, MOET, Remy' },
+      { name: 'VIP 1 - 150 euro', price: 150, description:'Hennesy Fine de Cognac' },
+      { name: 'VIP 2 - 180 euro', price: 0, description:'' },
+      { name: 'VIP 3 - 250 euro', price: 0, description:'' },
     ]
   }
 }

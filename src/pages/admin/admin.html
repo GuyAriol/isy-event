@@ -3,7 +3,7 @@
     <ion-title>Admin</ion-title>
 
     <ion-buttons end>
-      <button ion-button (click)="close()" text-capitalize class="close-btn">Fermer</button>
+      <button ion-button (click)="close()" text-capitalize class="close-btn">Close</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -21,7 +21,7 @@
   <ion-list padding-top *ngIf="selectedUserEventId">
 
     <ion-list padding-top>
-      <ion-item-divider style="font-size: 14px;" color=dark (click)="isStats = true">Event Daten
+      <ion-item-divider style="font-size: 14px;" color=dark (click)="isStats = !isStats">Event summary
         <ion-icon item-right name="sync"></ion-icon>
       </ion-item-divider>
 
@@ -30,13 +30,33 @@
           <h1 padding-left padding-top><u>Summary</u> </h1>
 
           <ion-item style="color: tomato">
-            <h2>Total cash in :</h2>
-            <p item-right style="color: tomato; font-size: 14px">{{summrary.cashIn}} euro</p>
+            <h2>Cash available :</h2>
+            <p item-right style="color: tomato; font-size: 14px">
+              {{userProv.totalCash}} euro</p>
           </ion-item>
 
           <ion-item style="color: tomato">
-            <h2>Total drinks :</h2>
-            <p item-right style="color: tomato; font-size: 14px">{{summrary.drinks}} euro</p>
+            <h2>Total cash in :</h2>
+            <p item-right style="color: tomato; font-size: 14px">
+              {{userProv.totalCash}} euro</p>
+          </ion-item>
+
+          <ion-item style="color: tomato">
+            <h2>Total cash out :</h2>
+            <p item-right style="color: tomato; font-size: 14px">
+              euro</p>
+          </ion-item>
+
+          <ion-item style="color: tomato">
+            <h2>Total drinks sell :</h2>
+            <p item-right style="color: tomato; font-size: 14px">
+              {{userProv.totalDrinks}} euro</p>
+          </ion-item>
+
+          <ion-item style="color: tomato">
+            <h2>Total drinks begin :</h2>
+            <p item-right style="color: tomato; font-size: 14px">
+              {{userProv.totalDrinks}} euro</p>
           </ion-item>
 
           <h1 padding-left><u>Details</u></h1>
@@ -58,44 +78,103 @@
       </div>
     </ion-list>
 
-    <ion-item-divider style="font-size: 14px;" color=primary>Crew members
-      <ion-icon item-right name="add-circle" (click)="isNewCrew=!isNewCrew"></ion-icon>
+    <ion-item-divider style="font-size: 14px;" color=secondary (click)="isCompile = !isCompile">Compile event Data
+      <ion-icon item-right name="logo-buffer"></ion-icon>
     </ion-item-divider>
 
-    <div *ngIf="isNewCrew" style="border-style: solid; border-color: gainsboro; border-width: 1px">
-      <ion-item>
-        <ion-label>Name</ion-label>
-        <ion-input [(ngModel)]="newCrew.name"></ion-input>
-      </ion-item>
+    <div style="border-style: solid; border-color: #32db64; border-width: 1px">
+      <div *ngIf="isCompile">
 
-      <ion-item>
-        <ion-label>Role</ion-label>
-        <ion-select [(ngModel)]="newCrew.role" style="max-width: 65%">
-          <ion-option [value]="2">Caissier boisson</ion-option>
-          <ion-option [value]="1">Caissier entrée</ion-option>
-          <ion-option [value]="3">Barman</ion-option>
-          <ion-option [value]="0">Admin</ion-option>
-          <ion-option [value]="6">Client</ion-option>
-        </ion-select>
-      </ion-item>
+        <ion-list>
+          <ion-item-divider>Drinks before start</ion-item-divider>
+        </ion-list>
+        <div padding-left *ngFor="let type of pricingProv.pricingList">
+          <ion-item *ngIf="type.description">
+            <ion-label style="font-size: 12px">{{type.name}}</ion-label>
+            <ion-input type=number></ion-input>
+            <button ion-button clear item-right>bottles</button>
+          </ion-item>
+        </div>
 
-      <div text-center style="padding: 25px">
-        <button ion-button color=light (click)=" isNewCrew=false">Annuler</button>
-        <button ion-button margin-left (click)="newCrewMember()">Valider</button>
+        <div *ngFor="let worker of userProv.currentUser.events[selectedUserEventId].crew">
+          <p padding-left><b>{{worker.name}}</b></p>
+
+          <div *ngIf="worker.role == 2">
+            <ion-item>
+              <ion-label>Total cash in</ion-label>
+              <ion-input type=number>
+              </ion-input>
+              <button ion-button clear item-right>euro</button>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Total cash out</ion-label>
+              <ion-input type=number>
+              </ion-input>
+              <button ion-button clear item-right>euro</button>
+            </ion-item>
+          </div>
+
+          <div *ngIf="worker.role == 3">
+            <ion-item>
+              <ion-label>Total drinks sell</ion-label>
+              <ion-input type=number></ion-input>
+              <button ion-button clear item-right>euro</button>
+            </ion-item>
+
+            <ion-item padding-left *ngFor="let type of pricingProv.pricingList">
+              <ion-label>{{type.name}}</ion-label>
+              <ion-input type=number></ion-input>
+              <button ion-button clear item-right>bottles</button>
+            </ion-item>
+          </div>
+
+
+        </div>
       </div>
     </div>
 
+    <ion-item-divider margin-top style="font-size: 14px;" color=primary (click)="isCrew=!isCrew">Crew members
+      <ion-icon item-right name="add-circle" (click)="isNewCrew=!isNewCrew"></ion-icon>
+    </ion-item-divider>
+
     <div style="border-style: solid; border-color: #488aff; border-width: 1px">
-      <ion-item *ngFor="let crewMember of userProv.currentUser?.events[selectedUserEventId]?.crew; let index=index">
-        <p><b>{{crewMember.name}} </b></p>
-        <p>{{userProv.getRoleString(crewMember.role)}} </p>
-        <ion-icon item-right padding-right name="create" style="font-size: 22px" (click)="ongoing()"></ion-icon>
-        <ion-icon item-right padding-right name="card" color=primary style="font-size: 24px"
-          (click)="writeCard(crewMember)"></ion-icon>
-        <ion-icon item-right padding-right name="trash" color=danger style="font-size: 24px"
-          (click)="deleteCrewMember(index)"></ion-icon>
-      </ion-item>
+      <div *ngIf="isNewCrew" style="border-style: solid; border-color: gainsboro; border-width: 1px">
+        <ion-item>
+          <ion-label>Name</ion-label>
+          <ion-input [(ngModel)]="newCrew.name"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Role</ion-label>
+          <ion-select [(ngModel)]="newCrew.role" style="max-width: 65%">
+            <ion-option [value]="2">Caissier boisson</ion-option>
+            <ion-option [value]="1">Caissier entrée</ion-option>
+            <ion-option [value]="3">Barman</ion-option>
+            <ion-option [value]="0">Admin</ion-option>
+            <ion-option [value]="6">Client</ion-option>
+          </ion-select>
+        </ion-item>
+
+        <div text-center style="padding: 25px">
+          <button ion-button color=light (click)=" isNewCrew=false">Annuler</button>
+          <button ion-button margin-left (click)="newCrewMember()">Valider</button>
+        </div>
+      </div>
+
+      <div *ngIf="isCrew" style="border-style: solid; border-color: #488aff; border-width: 1px">
+        <ion-item *ngFor="let crewMember of userProv.currentUser?.events[selectedUserEventId]?.crew; let index=index">
+          <p><b>{{crewMember.name}} </b></p>
+          <p>{{userProv.getRoleString(crewMember.role)}} </p>
+          <ion-icon item-right padding-right name="create" style="font-size: 22px" (click)="ongoing()"></ion-icon>
+          <ion-icon item-right padding-right name="card" color=primary style="font-size: 24px"
+            (click)="writeCard(crewMember)"></ion-icon>
+          <ion-icon item-right padding-right name="trash" color=danger style="font-size: 24px"
+            (click)="deleteCrewMember(index)"></ion-icon>
+        </ion-item>
+      </div>
     </div>
+
   </ion-list>
 </ion-content>
 

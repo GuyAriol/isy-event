@@ -5,6 +5,7 @@ import { DialogProvider } from '../../providers/dialog/dialog';
 import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
 import { currentPage } from '../../providers/global';
 import { DeviceProvider, terminalEnum } from '../../providers/device/device';
+import { PricingProvider } from '../../providers/pricing/pricing';
 
 @IonicPage()
 @Component({
@@ -21,8 +22,8 @@ export class AdminPage {
   newCrew = { name: '', role: userRoleEnum.drinks }
 
   isStats = false
-
-  summrary = {} as { cashIn: number, drinks: number, details: { type: string, count: number }[] }
+  isCompile = false
+  isCrew = false
 
   constructor(
     public navCtrl: NavController,
@@ -31,33 +32,26 @@ export class AdminPage {
     private alertCtrl: AlertController,
     public nfcProv: NfcProvider,
     private navParams: NavParams,
-    private deviceProv: DeviceProvider
+    private deviceProv: DeviceProvider,
+    public pricingProv: PricingProvider
 
 
   ) {
     currentPage.name = 'admin'
     if (Object.keys(this.navParams.data).length) this.selectedUserEventId = navParams.data
-
-
-    this.summrary = {
-      cashIn: 560,
-      drinks: 1600,
-      details: [
-        { type: 'XS - 5 euro', count: 15 }
-      ]
-    }
+    if (this.selectedUserEventId) this.userProv.compileEventData(this.selectedUserEventId)
   }
 
   ionViewDidEnter() {
     setTimeout(() => {
       try {
         this.eventPlaceholder = this.userProv.currentUser.events[this.selectedUserEventId].title
+        this.userProv.currentEventID = this.selectedUserEventId
 
       } catch (error) {
 
       }
     }, 1000);
-
 
   }
 
@@ -66,7 +60,7 @@ export class AdminPage {
   }
 
   superAdmin() {
-    this.navCtrl.setRoot('SuperadminPage')
+    // this.navCtrl.setRoot('SuperadminPage')
   }
 
   close() {
@@ -76,6 +70,7 @@ export class AdminPage {
 
   eventSelected(arg) {
     this.selectedUserEventId = arg
+    this.userProv.compileEventData(arg)
   }
 
   newCrewMember() {

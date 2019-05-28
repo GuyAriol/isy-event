@@ -6,12 +6,13 @@ import 'rxjs/add/operator/take'
 import { Observable } from 'rxjs/Observable';
 import { global, logType } from '../global';
 import { Subscription } from 'rxjs/Subscription';
+import { terminalEnum } from '../device/device';
 
 export interface userType {
   name: string,
   email: string,
   id: string,
-  events: Array<eventType>,
+  events: eventType,
   adminPass: string
 }
 
@@ -20,13 +21,14 @@ export interface eventType {
   date: string,
   location: string,
   id: string,
-  crew?: [
+  crew: [
     {
       name: string,
       role: userRoleEnum,
       money: number,
-      drinks: Array<{ type: string, total: number }>
-    }]
+      drinks: any
+    }],
+    devices: Array<{bluetoothName: string, bluetoothId: string, type: terminalEnum}>
 }
 
 export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, owner, client }
@@ -43,6 +45,9 @@ export class UserProvider {
   currentWorker = ''
   currentWorkerCardId = ''
   userEventList: eventType[] = []
+
+  totalCash = 0
+  totalDrinks = 0
 
   constructor(
     private localStorage: StorageProvider,
@@ -83,7 +88,7 @@ export class UserProvider {
             name: credentials.name,
             email: credentials.email,
             id: res.uid,
-            events: [],
+            events: {} as eventType,
             adminPass: credentials.adminPass
           }
 
@@ -213,6 +218,7 @@ export class UserProvider {
           .catch(error => console.log(error))
 
         this.getEventList()
+        this.compileEventData(this.currentEventID)
       }
     })
   }
@@ -355,5 +361,34 @@ export class UserProvider {
       console.log(error)
       return drinkStatics
     }
+  }
+
+  compileEventData(eventId) {
+    this.totalCash = 0
+    this.totalDrinks = 0
+
+    if (eventId) {
+      this.currentEventID = eventId
+
+      this.currentUser.events[eventId].crew.forEach(worker => {
+        if (worker.role == userRoleEnum.drinks) {
+          this.totalCash += worker.money
+        }
+
+        else if (worker.role == userRoleEnum.barman) {
+          for (let drink in worker.drinks) {
+            this.totalDrinks += parseInt(drink.split('-')[1]) * worker.drinks[drink]
+          }
+        }
+      })
+    }
+    console.log(this.totalCash, this.totalDrinks)
+    return { cash: this.totalCash, drinks: this.totalDrinks }
+  }
+
+  uploadEventData(): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+    });
   }
 }
