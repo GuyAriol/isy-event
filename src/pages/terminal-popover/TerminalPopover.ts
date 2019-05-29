@@ -11,7 +11,9 @@ import { logType } from "../../providers/global";
 
       <div *ngIf="type=='cash'">
         <ion-item>
-          <ion-label color=danger>Cash box: {{total}} euro</ion-label>
+          <p style="color: tomato">Cash box: {{total}} euro</p>
+          <p style="color: tomato">Total cash in: {{totalIn}} euro</p>
+          <p style="color: tomato">Total cash out: {{totalOut}} euro</p>
         </ion-item>
 
         <div *ngFor="let worker of workerList">
@@ -24,7 +26,7 @@ import { logType } from "../../providers/global";
 
       <div *ngIf="type=='bar'">
         <ion-item>
-          <ion-label color=danger>Cash box: {{total}} euro</ion-label>
+          <ion-label color=danger>total drinks sell: {{total}} euro</ion-label>
         </ion-item>
 
         <div *ngFor="let worker of workerList">
@@ -47,6 +49,8 @@ import { logType } from "../../providers/global";
 export class TerminalPopover {
 
   total = 0
+  totalOut = 0
+  totalIn = 0
   workerLogs = {}
   workerList = []
 
@@ -67,6 +71,9 @@ export class TerminalPopover {
       else if (this.type == 'bar') this.total = result.totalDrinks
       this.workerLogs = result.workerObject
       this.workerList = result.workerList
+
+      this.totalIn = result.cashIN
+      this.totalOut = result.cashOut
 
       console.log(this.workerList)
       console.log(this.workerLogs)

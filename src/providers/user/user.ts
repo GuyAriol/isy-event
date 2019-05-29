@@ -21,19 +21,19 @@ export interface eventType {
   date: string,
   location: string,
   id: string,
-  crew: [
+  crew: Array<
     {
       name: string,
       role: userRoleEnum,
       money: number,
       drinks: any
-    }],
-    devices: Array<{bluetoothName: string, bluetoothId: string, type: terminalEnum}>
+    }>,
+  devices: Array<{ bluetoothName: string, bluetoothId: string, type: terminalEnum }>
 }
 
 export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, owner, client }
 
-interface logEval { workerObject: any, workerList: Array<any>, totalCash: number, totalDrinks: number }
+interface logEval { workerObject: any, workerList: Array<any>, totalCash: number, totalDrinks: number, cashIN: number, cashOut: number }
 
 @Injectable()
 export class UserProvider {
@@ -280,6 +280,8 @@ export class UserProvider {
   evaluateEventData(): Promise<logEval> {
     return new Promise((resolve, reject) => {
       let totalCash = 0
+      let cashIN = 0
+      let cashOut = 0
       let totalDrinks = 0
       let workerLogs = {}
       let workerList = []
@@ -287,8 +289,14 @@ export class UserProvider {
       this.localStorage.getFromLocalStorage('iE_eventLog').then((logs: logType[]) => {
         if (logs) {
           logs.forEach(log => {
-            if (!log.note) totalCash += log.amount
-            else totalDrinks += log.amount
+            if (!log.note) {
+              totalCash += log.amount
+              if (log.amount < 0) cashOut += log.amount
+              else cashIN += log.amount
+            }
+            else {
+              totalDrinks += log.amount
+            }
 
             let found = false
             for (let key in workerLogs) {
@@ -334,7 +342,7 @@ export class UserProvider {
             })
           }
 
-          resolve({ workerObject: workerLogs, workerList: workerList, totalCash: totalCash, totalDrinks: totalDrinks })
+          resolve({ workerObject: workerLogs, workerList: workerList, totalCash: totalCash, totalDrinks: totalDrinks, cashIN: cashIN, cashOut:cashOut })
         }
       })
     })
