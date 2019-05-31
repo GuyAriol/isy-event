@@ -156,6 +156,7 @@ export class InputPage {
             this.color = 'red'
 
             this.dialogProv.showToast('Error! Check the card.')
+            bluetooth.send({ msg: this.nfcProv.currentCard.balance+ "&&red" })
           })
         .catch(error => {
           this.state = stateEnum.error

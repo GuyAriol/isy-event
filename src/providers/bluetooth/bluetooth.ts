@@ -9,7 +9,8 @@ import { Events } from 'ionic-angular';
 export interface bluetoothMsgType {
   cmd: string,
   from: string,
-  msg: string
+  msg: string,
+  state?: string
 }
 
 export interface bluetoothDeviceType {
@@ -67,7 +68,9 @@ export class BluetoothProvider {
       this.messageReadSubscription = this.nativeBroadcast.addEventListener('iE-msg-read').subscribe(res => {
         this.ngZone.run(() => {
           this.display = JSON.parse(res.data)
-          console.log(this.display)
+
+          this.display.msg = JSON.parse(res.data).msg.split('&&')[0]
+          this.display.state = JSON.parse(res.data).msg.split('&&')[1]
         })
       })
 

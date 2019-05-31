@@ -122,10 +122,11 @@
 
         <ion-col align-self-center>
           <p text-center>Votre solde</p>
-          <div text-center class="balance" style.background="green">
+          <div text-center class="balance" [style.background]="bluetoothProv.display.state ? bluetoothProv.display.state: 'green'">
             <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg || '----'}} </p>
             <p>euro</p>
           </div>
+          <p text-center>{{bluetoothProv.display.state ? 'Error !!' : 'Alles Ok'}}</p>
         </ion-col>
       </ion-row>
     </div>
