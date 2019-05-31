@@ -78,6 +78,7 @@ public class bluetooth extends CordovaPlugin {
 
     bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     context = cordova.getActivity().getApplicationContext();
+    state = STATE_NONE;
   }
 
   // -------------------
@@ -380,24 +381,7 @@ public class bluetooth extends CordovaPlugin {
 
   @Override
   public boolean execute(final String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-    if ("Test".equals(action)) {
-
-      // toDo: remove tel from argument
-      try {
-        id = args.getJSONObject(0).getString("id");
-
-        Log.i(TAG, id);
-
-      } catch (JSONException e) {
-        Log.e(TAG, "ERROR creating JSON");
-      }
-
-      // set callback to success
-      callbackContext.success("Result from native Test");
-      return true;
-    }
-
-    else if ("activateBluetooth".equals(action)) {
+    if ("activateBluetooth".equals(action)) {
       if (!bluetoothAdapter.isEnabled()) {
         Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         cordova.getActivity().startActivityForResult(enableIntent, 1);

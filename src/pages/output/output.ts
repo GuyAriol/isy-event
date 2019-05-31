@@ -52,9 +52,11 @@ export class OutputPage {
 
     this.event.subscribe('iE-bluetooth disconnection', () => {
       this.ngzone.run(() => {
-        this.onGoing = true
-        this.statusMsg = "The display is not connected !!"
-        console.log('on disconnect')
+        setTimeout(() => {
+          this.onGoing = true
+          this.statusMsg = "The display is not connected !!"
+          console.log('on disconnect')
+        }, 1000);
       })
     })
 
