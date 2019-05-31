@@ -23,6 +23,7 @@ export class InputPage {
 
   state: stateEnum = stateEnum.ongoing
   color = 'grey'
+  message = ''
 
   constructor(
     public navCtrl: NavController,
@@ -155,8 +156,9 @@ export class InputPage {
             this.state = stateEnum.fail
             this.color = 'red'
 
-            this.dialogProv.showToast('Error! Check the card.')
-            bluetooth.send({ msg: this.nfcProv.currentCard.balance+ "&&red" })
+            // this.dialogProv.showToast('Error! Check the card.')
+            this.message = 'Error! Check the card.'
+            bluetooth.send({ msg: this.nfcProv.currentCard.balance + "&&red" })
           })
         .catch(error => {
           this.state = stateEnum.error
@@ -165,7 +167,8 @@ export class InputPage {
         })
     }
     else {
-      this.dialogProv.showToast('Error! Check the amount.')
+      // this.dialogProv.showToast('Error! Check the amount.')
+      this.message = 'Error! Check the amount.'
       this.state = stateEnum.ongoing
       this.color = 'goldenrod'
     }
@@ -176,11 +179,13 @@ export class InputPage {
       if (this.input) {
         if (result.workerObject[this.userProv.currentWorkerCardId].totalCash > parseFloat(this.input)) {
           if (this.nfcProv.currentCard.balance == null) {
-            this.dialogProv.showToast('Error! Check the card')
+            // this.dialogProv.showToast('Error! Check the card')
+            this.message = 'Error! Check the card'
           }
           else {
-            if (parseFloat(this.input) > this.nfcProv.currentCard.balance) this.dialogProv
-              .showToast(`You cannot cash out more than ${this.nfcProv.currentCard.balance} euro`)
+            if (parseFloat(this.input) > this.nfcProv.currentCard.balance)
+              // this.dialogProv.showToast(`You cannot cash out more than ${this.nfcProv.currentCard.balance} euro`)
+              this.message = `You cannot cash out more than ${this.nfcProv.currentCard.balance} euro`
             else {
               this.state = stateEnum.ongoing
               this.color = 'grey'
@@ -222,7 +227,8 @@ export class InputPage {
                     this.state = stateEnum.fail
                     this.color = 'red'
 
-                    this.dialogProv.showToast('Error! Check the card')
+                    // this.dialogProv.showToast('Error! Check the card')
+                    this.message = 'Error! Check the card'
                   })
                 .catch(error => {
                   this.state = stateEnum.error
@@ -232,11 +238,15 @@ export class InputPage {
             }
           }
         }
-        else this.dialogProv.showSimpleDialog('Error', '', 'There is not enough cash in the box', 'Ok')
+        else {
+          // this.dialogProv.showSimpleDialog('Error', '', 'There is not enough cash in the box', 'Ok')
+          this.message = 'There is not enough cash in the box'
+        }
 
       }
       else {
-        this.dialogProv.showToast('Error! Enter the amount to be cashed out.')
+        // this.dialogProv.showToast('Error! Enter the amount to be cashed out.')
+        this.message = 'Error! Enter the amount to be cashed out.'
       }
     })
   }

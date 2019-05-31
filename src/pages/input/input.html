@@ -68,8 +68,10 @@
               </p>
               <p>euro</p>
             </div>
-
           </div>
+
+          <p text-center>{{message}}</p>
+
         </ion-col>
 
         <ion-col col-7 no-padding-top>
@@ -122,7 +124,8 @@
 
         <ion-col align-self-center>
           <p text-center>Votre solde</p>
-          <div text-center class="balance" [style.background]="bluetoothProv.display.state ? bluetoothProv.display.state: 'green'">
+          <div text-center class="balance"
+            [style.background]="bluetoothProv.display.state ? bluetoothProv.display.state: 'green'">
             <p style="letter-spacing: 10px; font-size: 45px">{{bluetoothProv.display.msg || '----'}} </p>
             <p>euro</p>
           </div>
