@@ -121,11 +121,10 @@ export class OutputPage {
         this.statusMsg = `insufficient balance !! Balance:  ${this.nfcProv.currentCard.balance} euro `
       }
     }
-
   }
 
   logOff(event) {
-    let popover = this.popoverCtrl.create(TerminalPopover, {data: 'bar'})
+    let popover = this.popoverCtrl.create(TerminalPopover, { data: 'bar' })
     popover.present({ ev: event })
   }
 

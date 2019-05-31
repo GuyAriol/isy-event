@@ -19,7 +19,9 @@ import { logType } from "../../providers/global";
         <div *ngFor="let worker of workerList">
           <ion-item>
             <p><b>{{worker.name}}</b></p>
-            <p>{{worker.totalCash}} euro</p>
+            <p>Cash final: {{worker.totalCash}} euro</p>
+            <p>Cash in: {{worker.totalCash - worker.totalCashOut}} euro</p>
+            <p>Cash out: {{worker.totalCashOut}} euro</p>
           </ion-item>
         </div>
       </div>

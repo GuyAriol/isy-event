@@ -38,13 +38,11 @@ export class InputPage {
 
 
   ) {
-    // if (Object.keys(navParams.data).length) this.deviceProv.terminalType = navParams.data
 
   }
 
   ionViewDidEnter() {
     this.event.subscribe('iE-nfc card detected', () => {
-
       this.ngZone.run(() => {
         this.state = stateEnum.ongoing
         this.color = 'grey'
@@ -61,7 +59,7 @@ export class InputPage {
     })
   }
 
-  ionViewDidLeave() {
+  ionViewWillLeave() {
     this.event.unsubscribe('iE-nfc card detected')
     this.event.unsubscribe('iE-nfc card connected')
   }
@@ -116,7 +114,6 @@ export class InputPage {
   putMoney() {
     console.log(this.input)
 
-    // if (this.nfcProv.currentCard) {
     if (this.input) {
       this.state = stateEnum.ongoing
       this.color = 'grey'
@@ -171,77 +168,76 @@ export class InputPage {
       this.state = stateEnum.ongoing
       this.color = 'goldenrod'
     }
-    // }
-    // else {
-    //   this.dialogProv.showToast('Vérifiez la carte')
-    //   this.state = stateEnum.fail
-    //   this.color = 'red'
-    // }
-
   }
 
   removeMoney() {
-    if (this.input) {
-      if (this.nfcProv.currentCard.balance == null) {
-        this.dialogProv.showToast('Error! Check the card')
+    this.userProv.evaluateEventData().then(result => {
+      if (this.input) {
+        if (result.workerObject[this.userProv.currentWorkerCardId].totalCash > parseFloat(this.input)) {
+          if (this.nfcProv.currentCard.balance == null) {
+            this.dialogProv.showToast('Error! Check the card')
+          }
+          else {
+            if (parseFloat(this.input) > this.nfcProv.currentCard.balance) this.dialogProv
+              .showToast(`You cannot cash out more than ${this.nfcProv.currentCard.balance} euro`)
+            else {
+              this.state = stateEnum.ongoing
+              this.color = 'grey'
+
+              let card: nfcCardType = {
+                id: '',
+                cmdType: nfcCmdEnum.none,
+                balance: this.nfcProv.currentCard.balance - parseFloat(this.input),
+                maxsize: '',
+                type: '',
+                role: userRoleEnum.client,
+                cardOk: false,
+                eventId: this.userProv.currentEventID,
+                eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
+                workerName: ' '
+              }
+
+              this.nfcProv.writeCard(card)
+                .then(pass => {
+
+                  bluetooth.send({ msg: this.nfcProv.currentCard.balance })
+
+                  this.state = stateEnum.pass
+                  this.color = 'green'
+
+                  let log: logType = {
+                    timeStamp: Date.now(),
+                    worker: this.userProv.currentWorker,
+                    amount: -parseFloat(this.input),
+                    note: '',
+                    workerId: this.userProv.currentWorkerCardId
+                  }
+                  this.nfcProv.saveTransaction(log)
+
+                  this.input = ''
+
+                },
+                  fail => {
+                    this.state = stateEnum.fail
+                    this.color = 'red'
+
+                    this.dialogProv.showToast('Error! Check the card')
+                  })
+                .catch(error => {
+                  this.state = stateEnum.error
+                  this.color = 'red'
+                  console.log(error)
+                })
+            }
+          }
+        }
+        else this.dialogProv.showSimpleDialog('Error', '', 'There is not enough cash in the box', 'Ok')
+
       }
       else {
-        if (parseFloat(this.input) > this.nfcProv.currentCard.balance) this.dialogProv
-          .showToast(`You cannot cash out more than ${this.nfcProv.currentCard.balance} euro`)
-        else {
-          this.state = stateEnum.ongoing
-          this.color = 'grey'
-
-          let card: nfcCardType = {
-            id: '',
-            cmdType: nfcCmdEnum.none,
-            balance: this.nfcProv.currentCard.balance - parseFloat(this.input),
-            maxsize: '',
-            type: '',
-            role: userRoleEnum.client,
-            cardOk: false,
-            eventId: this.userProv.currentEventID,
-            eventName: this.userProv.currentUser.events[this.userProv.currentEventID].title,
-            workerName: ' '
-          }
-
-          this.nfcProv.writeCard(card)
-            .then(pass => {
-
-              bluetooth.send({ msg: this.nfcProv.currentCard.balance })
-
-              this.state = stateEnum.pass
-              this.color = 'green'
-
-              let log: logType = {
-                timeStamp: Date.now(),
-                worker: this.userProv.currentWorker,
-                amount: -parseFloat(this.input),
-                note: '',
-                workerId: this.userProv.currentWorkerCardId
-              }
-              this.nfcProv.saveTransaction(log)
-
-              this.input = ''
-
-            },
-              fail => {
-                this.state = stateEnum.fail
-                this.color = 'red'
-
-                this.dialogProv.showToast('Error! Check the card')
-              })
-            .catch(error => {
-              this.state = stateEnum.error
-              this.color = 'red'
-              console.log(error)
-            })
-        }
+        this.dialogProv.showToast('Error! Enter the amount to be cashed out.')
       }
-    }
-    else {
-      this.dialogProv.showToast('Error! Enter the amount to be cashed out.')
-    }
+    })
   }
 
   logOff(event) {

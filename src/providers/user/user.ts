@@ -26,7 +26,8 @@ export interface eventType {
       name: string,
       role: userRoleEnum,
       money: number,
-      drinks: any
+      drinks: any,
+      moneyOut: number
     }>,
   devices: Array<{ bluetoothName: string, bluetoothId: string, type: terminalEnum }>
 }
@@ -48,6 +49,8 @@ export class UserProvider {
 
   totalCash = 0
   totalDrinks = 0
+  totalCashIn = 0
+  totalCashOut = 0
 
   constructor(
     private localStorage: StorageProvider,
@@ -303,7 +306,10 @@ export class UserProvider {
               if (key == log.worker) {
                 found = true
 
-                if (!log.note) workerLogs[log.worker].totalCash += log.amount
+                if (!log.note) {
+                  workerLogs[log.worker].totalCash += log.amount
+                  if (log.amount < 0) workerLogs[log.worker].totalCashOut += log.amount
+                }
                 else {
                   workerLogs[log.worker].totalDrinks += log.amount
 
@@ -324,7 +330,8 @@ export class UserProvider {
                 name: log.worker,
                 totalCash: !log.note ? log.amount : 0,
                 totalDrinks: log.note ? log.amount : 0,
-                drinks: temp
+                drinks: temp,
+                totalCashOut: !log.note && log.amount < 0 ? log.amount : 0
               }
 
             }
@@ -338,11 +345,11 @@ export class UserProvider {
 
             workerList.push({
               name: worker, totalCash: workerLogs[worker].totalCash,
-              totalDrinks: workerLogs[worker].totalDrinks, drinks: drinksTemp
+              totalDrinks: workerLogs[worker].totalDrinks, drinks: drinksTemp, totalCashOut: workerLogs[worker].totalCashOut
             })
           }
 
-          resolve({ workerObject: workerLogs, workerList: workerList, totalCash: totalCash, totalDrinks: totalDrinks, cashIN: cashIN, cashOut:cashOut })
+          resolve({ workerObject: workerLogs, workerList: workerList, totalCash: totalCash, totalDrinks: totalDrinks, cashIN: cashIN, cashOut: cashOut })
         }
       })
     })
@@ -374,6 +381,8 @@ export class UserProvider {
   compileEventData(eventId) {
     this.totalCash = 0
     this.totalDrinks = 0
+    this.totalCashIn = 0
+    this.totalCashOut = 0
 
     if (eventId) {
       this.currentEventID = eventId
@@ -381,6 +390,7 @@ export class UserProvider {
       this.currentUser.events[eventId].crew.forEach(worker => {
         if (worker.role == userRoleEnum.drinks) {
           this.totalCash += worker.money
+          if (worker.moneyOut) this.totalCashOut += worker.moneyOut
         }
 
         else if (worker.role == userRoleEnum.barman) {
@@ -389,9 +399,10 @@ export class UserProvider {
           }
         }
       })
+
+      this.totalCashIn = this.totalCash - this.totalCashOut
     }
-    console.log(this.totalCash, this.totalDrinks)
-    return { cash: this.totalCash, drinks: this.totalDrinks }
+    return { cash: this.totalCash, drinks: this.totalDrinks, cashIn: this.totalCashIn, cashOut: this.totalCashOut }
   }
 
   uploadEventData(): Promise<any> {
