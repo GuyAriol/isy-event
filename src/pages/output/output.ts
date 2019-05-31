@@ -83,22 +83,20 @@ export class OutputPage {
     this.event.unsubscribe('iE-bluetooth disconnection')
   }
 
-  book(price: string, item: string) {
+  book(price: number, item: string) {
     this.onGoing = true
     this.statusMsg = 'Loading ...'
-
-    let priceN = parseFloat(price)
 
     if (this.nfcProv.currentCard.balance == null) {
       this.onGoing = false
       this.statusMsg = 'Error! Check the card and try again.'
     }
     else {
-      if (priceN <= this.nfcProv.currentCard.balance) {
+      if (price <= this.nfcProv.currentCard.balance) {
         let card: nfcCardType = {
           id: '',
           cmdType: nfcCmdEnum.none,
-          balance: this.nfcProv.currentCard.balance - parseFloat(price),
+          balance: this.nfcProv.currentCard.balance - price,
           maxsize: '',
           type: '',
           role: userRoleEnum.client,
@@ -115,7 +113,7 @@ export class OutputPage {
             let log: logType = {
               timeStamp: Date.now(),
               worker: this.userProv.currentWorker,
-              amount: priceN,
+              amount: price,
               note: item,
               workerId: this.userProv.currentWorkerCardId
             }

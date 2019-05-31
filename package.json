@@ -49,8 +49,7 @@
     "rxjs": "5.5.11",
     "sw-toolbox": "3.6.0",
     "vihautech-plugin-bluetooth": "file:plugins_custom/Bluetooth",
-    "zone.js": "0.8.29",
-    "cordova-open-native-settings": "1.5.2"
+    "zone.js": "0.8.29"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.2.2",
@@ -73,7 +72,6 @@
       "vihautech-plugin-bluetooth": {},
       "cordova-plugin-broadcaster": {},
       "cordova-plugin-aes256-encryption": {},
-      "cordova-open-native-settings": {},
       "phonegap-nfc": {},
       "cordova-plugin-network-information": {}
     },
