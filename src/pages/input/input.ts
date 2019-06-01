@@ -55,6 +55,7 @@ export class InputPage {
       this.ngZone.run(() => {
         this.state = stateEnum.pass
         this.color = 'green'
+        this.message = ''
         console.log('card connected')
       })
     })

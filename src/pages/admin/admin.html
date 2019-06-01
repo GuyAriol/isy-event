@@ -78,39 +78,62 @@
       </div>
     </ion-list>
 
-    <ion-item-divider style="font-size: 14px;" color=secondary (click)="isCompile = !isCompile">Compile event Data
-      <ion-icon item-right name="logo-buffer"></ion-icon>
+    <ion-item-divider style="font-size: 14px;" color=third (click)="isBeforeEvent = !isBeforeEvent">Data before
+      event start
+      <ion-icon item-right name="archive"></ion-icon>
     </ion-item-divider>
 
-    <div style="border-style: solid; border-color: #32db64; border-width: 1px">
-      <div *ngIf="isCompile">
-
-        <ion-list>
-          <ion-item-divider>Drinks before start</ion-item-divider>
-        </ion-list>
+    <div style="border-style: solid; border-color: #da08da; border-width: 1px">
+      <div *ngIf="isBeforeEvent" style="border-style: solid; border-color: #da08da; border-width: 1px">
+        <ion-item-divider style="color: black">Drinks stock</ion-item-divider>
         <div padding-left *ngFor="let type of pricingProv.pricingList">
-          <ion-item *ngIf="type.description">
+          <ion-item *ngIf="type.description" no-lines>
             <ion-label style="font-size: 12px">{{type.name}}</ion-label>
-            <ion-input type=number></ion-input>
+            <ion-input type=number
+              [(ngModel)]="userProv.currentUser.events[selectedUserEventId]?.drinksBegin[type.name]"></ion-input>
             <button ion-button clear item-right>bottles</button>
           </ion-item>
         </div>
 
+        <ion-item-divider style="color: black">Change in cash box</ion-item-divider>
+        <div padding-left *ngFor="let worker of userProv.currentUser.events[selectedUserEventId].crew; let index=index">
+          <div *ngIf="worker.role == 2">
+            <ion-item no-lines>
+              <ion-label style="font-size: 12px">{{worker.name}}</ion-label>
+              <ion-input type="number"
+                [(ngModel)]="userProv.currentUser.events[selectedUserEventId].crew[index].moneyBegin"></ion-input>
+              <button ion-button clear item-right>euro</button>
+            </ion-item>
+          </div>
+        </div>
+
+        <div padding>
+          <button ion-button block color=third (click)="uploadBeginData()">Submit</button>
+        </div>
+
+      </div>
+    </div>
+
+    <ion-item-divider margin-top style="font-size: 14px;" color=secondary (click)="isCompile = !isCompile">Compile event
+      Data
+      <ion-icon item-right name="logo-buffer"></ion-icon>
+    </ion-item-divider>
+
+    <div style="border-style: solid; border-color: #32db64; border-width: 1px">
+      <div *ngIf="isCompile" style="border-style: solid; border-color: #32db64; border-width: 1px">
         <div *ngFor="let worker of userProv.currentUser.events[selectedUserEventId].crew">
           <p padding-left><b>{{worker.name}}</b></p>
 
           <div *ngIf="worker.role == 2">
             <ion-item>
               <ion-label>Total cash in</ion-label>
-              <ion-input type=number>
-              </ion-input>
+              <ion-input type=number></ion-input>
               <button ion-button clear item-right>euro</button>
             </ion-item>
 
             <ion-item>
               <ion-label>Total cash out</ion-label>
-              <ion-input type=number>
-              </ion-input>
+              <ion-input type=number></ion-input>
               <button ion-button clear item-right>euro</button>
             </ion-item>
           </div>
@@ -128,14 +151,16 @@
               <button ion-button clear item-right>bottles</button>
             </ion-item>
           </div>
+        </div>
 
-
+        <div padding>
+          <button ion-button block color=secondary (click)="isCompile != isCompile">Submit</button>
         </div>
       </div>
     </div>
 
     <ion-item-divider margin-top style="font-size: 14px;" color=primary (click)="isCrew=!isCrew">Crew members
-      <ion-icon item-right name="add-circle" (click)="isNewCrew=!isNewCrew"></ion-icon>
+      <ion-icon item-right name="add-circle"></ion-icon>
     </ion-item-divider>
 
     <div style="border-style: solid; border-color: #488aff; border-width: 1px">
@@ -175,6 +200,32 @@
       </div>
     </div>
 
+    <ion-item-divider margin-top style="font-size: 14px;" color=gold (click)="ispricing=!ispricing">Set pricing
+      <ion-icon item-right name="pricetags"></ion-icon>
+    </ion-item-divider>
+
+    <div style="border-style: solid; border-color: orange; border-width: 1px">
+      <div *ngIf="ispricing" style="border-style: solid; border-color: orange; border-width: 1px">
+        <div padding-left
+          *ngFor="let price of userProv.currentUser.events[selectedUserEventId].pricing; let index=index">
+          <p no-margin margin-top>{{price.name.split('-')[0]}} </p>
+
+          <ion-item no-lines>
+            <ion-label>Price </ion-label>
+            <ion-input type=number [(ngModel)]="pricingProv.pricingList[index].price"></ion-input>
+            <button ion-button clear item-right>euro</button>
+          </ion-item>
+
+          <p padding-left>{{price.description}} </p>
+          <hr>
+        </div>
+
+        <div padding>
+          <button ion-button block color=gold (click)="uploadPricing()">Submit</button>
+        </div>
+
+      </div>
+    </div>
   </ion-list>
 </ion-content>
 

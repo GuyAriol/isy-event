@@ -162,7 +162,7 @@ export class SuperadminPage {
         .then(() => {
           this.dialogProv.dismissLoading()
           this.isNewEvent = false
-          this.newEvent = { title: '', location: '', date: '', id: '', crew: [], devices: [] }
+          this.newEvent = { title: '', location: '', date: '', id: '', crew: [], devices: [], pricing: [], drinksBegin: {} }
           this.dialogProv.showToast('Done')
         })
         .catch(error => {

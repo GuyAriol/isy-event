@@ -27,9 +27,12 @@ export interface eventType {
       role: userRoleEnum,
       money: number,
       drinks: any,
-      moneyOut: number
+      moneyOut: number,
+      moneyBegin: string
     }>,
-  devices: Array<{ bluetoothName: string, bluetoothId: string, type: terminalEnum }>
+  devices: Array<{ bluetoothName: string, bluetoothId: string, type: terminalEnum }>,
+  drinksBegin: any,
+  pricing: Array<any>
 }
 
 export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, owner, client }

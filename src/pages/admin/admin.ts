@@ -24,6 +24,8 @@ export class AdminPage {
   isStats = false
   isCompile = false
   isCrew = false
+  isBeforeEvent = false
+  ispricing = false
 
   constructor(
     public navCtrl: NavController,
@@ -162,4 +164,20 @@ export class AdminPage {
     this.dialogProv.showToast('En développement ...')
   }
 
+  uploadBeginData() {
+    this.userProv.updateUser(this.userProv.currentUser)
+    this.isBeforeEvent = false
+    this.dialogProv.showToast('Done', 2000, null, 'success')
+  }
+
+  uploadPricing() {
+    this.pricingProv.pricingList.map(price => {
+      return price.name = price.name.split('-')[0] + ' - ' + price.price
+    })
+
+    this.pricingProv.uploadPricingTable()
+
+    this.ispricing = false
+    this.dialogProv.showToast('Done', 2000, null, 'success')
+  }
 }
