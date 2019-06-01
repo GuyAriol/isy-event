@@ -5,7 +5,6 @@ import { DialogProvider } from '../../providers/dialog/dialog';
 import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
 import { currentPage } from '../../providers/global';
 import { DeviceProvider, terminalEnum } from '../../providers/device/device';
-import { PricingProvider } from '../../providers/pricing/pricing';
 
 @IonicPage()
 @Component({
@@ -35,7 +34,6 @@ export class AdminPage {
     public nfcProv: NfcProvider,
     private navParams: NavParams,
     private deviceProv: DeviceProvider,
-    public pricingProv: PricingProvider
 
 
   ) {
@@ -72,13 +70,15 @@ export class AdminPage {
 
   eventSelected(arg) {
     this.selectedUserEventId = arg
+    this.userProv.currentEventID = arg
     this.userProv.compileEventData(arg)
   }
 
   newCrewMember() {
+    // toDo: update missing properties
     if (this.userProv.currentUser.events[this.selectedUserEventId].crew) {
       this.userProv.currentUser.events[this.selectedUserEventId].crew
-        .push({ name: this.newCrew.name, role: this.newCrew.role })
+        .push({ name: this.newCrew.name, role: this.newCrew.role, money: 0, moneyBegin: 0 })
 
       this.userProv.updateUser(this.userProv.currentUser)
     }
@@ -165,18 +165,21 @@ export class AdminPage {
   }
 
   uploadBeginData() {
+    this.userProv.currentUser.events[this.selectedUserEventId].crew.forEach(worker => {
+      worker.moneyBegin = parseFloat(worker.moneyBegin.toString())
+    })
+
     this.userProv.updateUser(this.userProv.currentUser)
     this.isBeforeEvent = false
     this.dialogProv.showToast('Done', 2000, null, 'success')
   }
 
   uploadPricing() {
-    this.pricingProv.pricingList.map(price => {
-      return price.name = price.name.split('-')[0] + ' - ' + price.price
+    this.userProv.currentUser.events[this.selectedUserEventId].pricing.forEach(price => {
+      price.name = price.name.split('-')[0] + ' - ' + price.price + ' euro'
     })
 
-    this.pricingProv.uploadPricingTable()
-
+    this.userProv.updateUser(this.userProv.currentUser)
     this.ispricing = false
     this.dialogProv.showToast('Done', 2000, null, 'success')
   }

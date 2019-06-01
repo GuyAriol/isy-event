@@ -53,7 +53,7 @@
   </div>
 
   <ion-row style="padding-top: 5px" *ngIf="!isMenuDevice" justify-content-center align-items-center>
-    <div *ngFor="let price of pricingProv?.pricingList; let index=index">
+    <div *ngFor="let price of userProv.currentUser.events[this.userProv.currentEventID]?.pricing; let index=index">
       <div text-center class="temp" (click)="book(price.price, price.name)">
         <p style="margin: 6px"><b>{{price.name}}</b></p>
         <p [innerHTML]="price.description" style="line-height: 18px"></p>

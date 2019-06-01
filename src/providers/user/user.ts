@@ -39,6 +39,18 @@ export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, ow
 
 interface logEval { workerObject: any, workerList: Array<any>, totalCash: number, totalDrinks: number, cashIN: number, cashOut: number }
 
+export const pricingList = [
+  { name: 'XS - 5 euro', price: 5, description: 'Water, Redbull, Bier' },
+  { name: 'S - 10 euro', price: 10, description: 'Limo, Baileys 0.2L, <br>Whisky Cola' },
+  { name: 'M - 60 euro', price: 60, description: 'Asti, Baileys 0.7L' },
+  { name: 'L - 100 euro', price: 100, description: 'Black, Red Label, <br>Chivas 12Y, Jack' },
+  { name: 'XL - 120 euro', price: 120, description: 'Chivas 18Y, Gold, <br>Hennesy, Ciroc Vodka' },
+  { name: 'XL - 120 euro', price: 120, description: 'Ruinart, MOET, Remy' },
+  { name: 'VIP 1 - 150 euro', price: 150, description: 'Hennesy Fine <br>de Cognac' },
+  { name: 'VIP 2 - xx euro', price: 0, description: '' },
+  { name: 'VIP 3 - xx euro', price: 0, description: '' },
+]
+
 @Injectable()
 export class UserProvider {
 
@@ -249,8 +261,8 @@ export class UserProvider {
     this.localStorage.setToLocalStorage('iE_user', user)
 
     this.afd.object(`users/${this.currentUser.id}`).update(this.currentUser)
-      .then(res => {
-        console.log(res)
+      .then(() => {
+
       }, fail => {
         console.log(fail)
       })

@@ -85,22 +85,22 @@
 
     <div style="border-style: solid; border-color: #da08da; border-width: 1px">
       <div *ngIf="isBeforeEvent" style="border-style: solid; border-color: #da08da; border-width: 1px">
-        <ion-item-divider style="color: black">Drinks stock</ion-item-divider>
-        <div padding-left *ngFor="let type of pricingProv.pricingList">
+        <ion-item-divider style="color: black; font-weight: bold">Drinks stock</ion-item-divider>
+        <div padding-left *ngFor="let type of userProv.currentUser.events[selectedUserEventId].pricing">
           <ion-item *ngIf="type.description" no-lines>
-            <ion-label style="font-size: 12px">{{type.name}}</ion-label>
-            <ion-input type=number
+            <ion-label >{{type.name}}</ion-label>
+            <ion-input type=number text-right padding-right
               [(ngModel)]="userProv.currentUser.events[selectedUserEventId]?.drinksBegin[type.name]"></ion-input>
             <button ion-button clear item-right>bottles</button>
           </ion-item>
         </div>
 
-        <ion-item-divider style="color: black">Change in cash box</ion-item-divider>
+        <ion-item-divider style="color: black; font-weight: bold">Change in cash box</ion-item-divider>
         <div padding-left *ngFor="let worker of userProv.currentUser.events[selectedUserEventId].crew; let index=index">
           <div *ngIf="worker.role == 2">
             <ion-item no-lines>
-              <ion-label style="font-size: 12px">{{worker.name}}</ion-label>
-              <ion-input type="number"
+              <ion-label >{{worker.name}}</ion-label>
+              <ion-input type="number" text-right padding-right
                 [(ngModel)]="userProv.currentUser.events[selectedUserEventId].crew[index].moneyBegin"></ion-input>
               <button ion-button clear item-right>euro</button>
             </ion-item>
@@ -127,13 +127,20 @@
           <div *ngIf="worker.role == 2">
             <ion-item>
               <ion-label>Total cash in</ion-label>
-              <ion-input type=number></ion-input>
+              <ion-input type=number text-right padding-right></ion-input>
               <button ion-button clear item-right>euro</button>
             </ion-item>
 
             <ion-item>
               <ion-label>Total cash out</ion-label>
-              <ion-input type=number></ion-input>
+              <ion-input type=number text-right padding-right></ion-input>
+              <button ion-button clear item-right>euro</button>
+            </ion-item>
+
+            <ion-item>
+              <ion-label style="color: #999;">Cash at begin</ion-label>
+              <ion-label text-right padding-right style="color: #999; max-width: 100px;">{{worker.moneyBegin}}
+              </ion-label>
               <button ion-button clear item-right>euro</button>
             </ion-item>
           </div>
@@ -141,15 +148,17 @@
           <div *ngIf="worker.role == 3">
             <ion-item>
               <ion-label>Total drinks sell</ion-label>
-              <ion-input type=number></ion-input>
+              <ion-input type=number text-right padding-right></ion-input>
               <button ion-button clear item-right>euro</button>
             </ion-item>
 
-            <ion-item padding-left *ngFor="let type of pricingProv.pricingList">
-              <ion-label>{{type.name}}</ion-label>
-              <ion-input type=number></ion-input>
-              <button ion-button clear item-right>bottles</button>
-            </ion-item>
+            <div padding-left *ngFor="let type of userProv.currentUser.events[selectedUserEventId].pricing">
+              <ion-item *ngIf="type.price" no-lines>
+                <ion-label>{{type.name}}</ion-label>
+                <ion-input type=number text-right padding-right></ion-input>
+                <button ion-button clear item-right>bottles</button>
+              </ion-item>
+            </div>
           </div>
         </div>
 
@@ -212,7 +221,8 @@
 
           <ion-item no-lines>
             <ion-label>Price </ion-label>
-            <ion-input type=number [(ngModel)]="pricingProv.pricingList[index].price"></ion-input>
+            <ion-input type=number [(ngModel)]="userProv.currentUser.events[selectedUserEventId].pricing[index].price">
+            </ion-input>
             <button ion-button clear item-right>euro</button>
           </ion-item>
 
