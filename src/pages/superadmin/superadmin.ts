@@ -173,11 +173,23 @@ export class SuperadminPage {
         { name: 'VIP 3 - xx euro', price: 0, description: '' },
       ]
 
+      this.newEvent.drinksBegin =
+        {
+          'XS - 5 euro': 0,
+          'S - 10 euro': 0,
+          'M - 60 euro': 0,
+          'L - 100 euro': 0,
+          'XL - 120 euro': 0,
+          'VIP 1 - 150 euro': 0,
+          'VIP 2 - xx euro': 0,
+          'VIP 3 - xx euro': 0
+        }
+
       this.userProv.createNewEvent(this.newEvent, this.selectedUser.id)
         .then(() => {
           this.dialogProv.dismissLoading()
           this.isNewEvent = false
-          this.newEvent = { title: '', location: '', date: '', id: '', crew: [], devices: [], pricing: ['XS - 5 euro'], drinksBegin: {} }
+          this.newEvent = { title: '', location: '', date: '', id: '', crew: [], devices: [], pricing: [], drinksBegin: {} }
           this.dialogProv.showToast('Done')
         })
         .catch(error => {

@@ -48,6 +48,12 @@
           </ion-item>
 
           <ion-item style="color: tomato">
+            <h2>Total cash begin :</h2>
+            <p item-right style="color: tomato; font-size: 14px">
+              -- euro</p>
+          </ion-item>
+
+          <ion-item style="color: tomato">
             <h2>Total drinks sell :</h2>
             <p item-right style="color: tomato; font-size: 14px">
               {{userProv.totalDrinks}} euro</p>
@@ -59,18 +65,41 @@
               -- euro</p>
           </ion-item>
 
+          <ion-item style="color: tomato">
+            <h2>Drinks remaining :</h2>
+            <p item-right style="color: tomato; font-size: 14px">
+              -- euro</p>
+          </ion-item>
+
           <h1 padding-left><u>Details</u></h1>
 
           <ion-item *ngFor="let worker of userProv.currentUser.events[selectedUserEventId]?.crew; let index=index">
-            <h2>{{worker.name}} </h2>
-            <p *ngIf="worker.role == 2">Cash in : <span item-right>{{worker.money || 0}} euro</span></p>
+            <h2 style="color: #488aff">{{worker.name}} </h2>
+            <p *ngIf="worker.role == 2" style="color: tomato">Cash total <span float-right>{{worker.money || 0}}
+                euro</span></p>
+            <p *ngIf="worker.role == 2">Cash begin <span float-right>{{worker.moneyBegin || 0}} euro</span></p>
+            <p *ngIf="worker.role == 2">Cash in <span float-right>{{worker.moneyIn || 0}} euro</span></p>
+            <p *ngIf="worker.role == 2">Cash out <span float-right>{{worker.moneyOut || 0}} euro</span></p>
 
             <div *ngIf="worker.role == 3">
+              <p style="color: tomato;"> Drinks out <span float-right>{{worker.money}} euro</span></p>
               <div *ngFor="let drink of userProv.getWorkerDrinkStatics(selectedUserEventId)[index]">
-                <ion-item>
-                  <p>{{drink.type}} <span padding-left>Total out:</span></p>
-                  <p item-right> {{drink.total}}</p>
-                </ion-item>
+                <ion-row style="font-size: 14px; color: #666666">
+                  <ion-col col-6>{{drink.type}}</ion-col>
+                  <ion-col text-center>Total out:</ion-col>
+                  <ion-col text-right>{{drink.total}}</ion-col>
+                </ion-row>
+              </div>
+              <hr style="border-top: 1px solid #999999">
+
+              <p padding-top style="color: #488aff"> Drinks begin</p>
+              <p style="color: tomato">Total <span float-right>2400 euro</span></p>
+              <div *ngFor="let drink of getDrinksBeginList()">
+                <ion-row style="font-size: 14px; color: #666666">
+                  <ion-col col-6>{{drink.name}}</ion-col>
+                  <ion-col>Total in:</ion-col>
+                  <ion-col text-right>{{drink.value}}</ion-col>
+                </ion-row>
               </div>
             </div>
           </ion-item>
@@ -88,7 +117,7 @@
         <ion-item-divider style="color: black; font-weight: bold">Drinks stock</ion-item-divider>
         <div padding-left *ngFor="let type of userProv.currentUser.events[selectedUserEventId].pricing">
           <ion-item *ngIf="type.description" no-lines>
-            <ion-label >{{type.name}}</ion-label>
+            <ion-label>{{type.name}}</ion-label>
             <ion-input type=number text-right padding-right
               [(ngModel)]="userProv.currentUser.events[selectedUserEventId]?.drinksBegin[type.name]"></ion-input>
             <button ion-button clear item-right>bottles</button>
@@ -99,7 +128,7 @@
         <div padding-left *ngFor="let worker of userProv.currentUser.events[selectedUserEventId].crew; let index=index">
           <div *ngIf="worker.role == 2">
             <ion-item no-lines>
-              <ion-label >{{worker.name}}</ion-label>
+              <ion-label>{{worker.name}}</ion-label>
               <ion-input type="number" text-right padding-right
                 [(ngModel)]="userProv.currentUser.events[selectedUserEventId].crew[index].moneyBegin"></ion-input>
               <button ion-button clear item-right>euro</button>
@@ -121,19 +150,21 @@
 
     <div style="border-style: solid; border-color: #32db64; border-width: 1px">
       <div *ngIf="isCompile" style="border-style: solid; border-color: #32db64; border-width: 1px">
-        <div *ngFor="let worker of userProv.currentUser.events[selectedUserEventId].crew">
+        <div *ngFor="let worker of userProv.currentUser.events[selectedUserEventId].crew; let index=index">
           <p padding-left><b>{{worker.name}}</b></p>
 
           <div *ngIf="worker.role == 2">
             <ion-item>
               <ion-label>Total cash in</ion-label>
-              <ion-input type=number text-right padding-right></ion-input>
+              <ion-input type=number text-right padding-right
+                [(ngModel)]="userProv.currentUser.events[selectedUserEventId].crew[index].moneyIn"></ion-input>
               <button ion-button clear item-right>euro</button>
             </ion-item>
 
             <ion-item>
               <ion-label>Total cash out</ion-label>
-              <ion-input type=number text-right padding-right></ion-input>
+              <ion-input type=number text-right padding-right
+                [(ngModel)]="userProv.currentUser.events[selectedUserEventId].crew[index].moneyOut"></ion-input>
               <button ion-button clear item-right>euro</button>
             </ion-item>
 
@@ -148,14 +179,17 @@
           <div *ngIf="worker.role == 3">
             <ion-item>
               <ion-label>Total drinks sell</ion-label>
-              <ion-input type=number text-right padding-right></ion-input>
+              <ion-input type=number text-right padding-right
+                [(ngModel)]="userProv.currentUser.events[selectedUserEventId].crew[index].money"></ion-input>
               <button ion-button clear item-right>euro</button>
             </ion-item>
 
             <div padding-left *ngFor="let type of userProv.currentUser.events[selectedUserEventId].pricing">
               <ion-item *ngIf="type.price" no-lines>
                 <ion-label>{{type.name}}</ion-label>
-                <ion-input type=number text-right padding-right></ion-input>
+                <ion-input type=number text-right padding-right
+                  [(ngModel)]="userProv.currentUser.events[selectedUserEventId].crew[index].drinks[type.name]">
+                </ion-input>
                 <button ion-button clear item-right>bottles</button>
               </ion-item>
             </div>
@@ -163,7 +197,7 @@
         </div>
 
         <div padding>
-          <button ion-button block color=secondary (click)="isCompile != isCompile">Submit</button>
+          <button ion-button block color=secondary (click)="uploadEventData()">Submit</button>
         </div>
       </div>
     </div>

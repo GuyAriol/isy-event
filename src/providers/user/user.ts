@@ -21,18 +21,20 @@ export interface eventType {
   date: string,
   location: string,
   id: string,
-  crew: Array<
-    {
-      name: string,
-      role: userRoleEnum,
-      money: number,
-      drinks: any,
-      moneyOut: number,
-      moneyBegin: string
-    }>,
+  crew: Array<workerType>,
   devices: Array<{ bluetoothName: string, bluetoothId: string, type: terminalEnum }>,
   drinksBegin: any,
   pricing: Array<any>
+}
+
+export interface workerType {
+  name: string,
+  role: userRoleEnum,
+  money: number,
+  drinks: any,
+  moneyOut: number,
+  moneyIn: number
+  moneyBegin: number
 }
 
 export enum userRoleEnum { admin, entranceTicket, drinks, barman, superadmin, owner, client }
@@ -424,5 +426,21 @@ export class UserProvider {
     return new Promise((resolve, reject) => {
 
     });
+  }
+
+  test() {
+    let temp = {
+      'XS - 5 euro': 0,
+      'S - 10 euro': 0,
+      'M - 60 euro': 0,
+      'L - 100 euro': 0,
+      'XL - 120 euro': 0,
+      'VIP 1 - 150 euro': 0,
+      'VIP 2 - xx euro': 0,
+      'VIP 3 - xx euro': 0
+    }
+    this.afd.object(`users/${this.currentUser.id}/events/${this.currentEventID}`)
+      .update({drinksBegin: temp})
+
   }
 }

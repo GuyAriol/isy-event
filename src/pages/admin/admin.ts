@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, AlertController, NavParams } from 'ionic-angular';
-import { UserProvider, userRoleEnum } from '../../providers/user/user';
+import { UserProvider, userRoleEnum, workerType } from '../../providers/user/user';
 import { DialogProvider } from '../../providers/dialog/dialog';
 import { NfcProvider, nfcCardType, nfcCmdEnum } from '../../providers/nfc/nfc';
 import { currentPage } from '../../providers/global';
@@ -77,14 +77,20 @@ export class AdminPage {
   newCrewMember() {
     // toDo: update missing properties
     if (this.userProv.currentUser.events[this.selectedUserEventId].crew) {
-      this.userProv.currentUser.events[this.selectedUserEventId].crew
-        .push({ name: this.newCrew.name, role: this.newCrew.role, money: 0, moneyBegin: 0 })
+      let temp: workerType = {
+        name: this.newCrew.name, role: this.newCrew.role, money: 0, moneyBegin: 0, drinks: {}, moneyOut: 0, moneyIn: 0
+      }
+
+      this.userProv.currentUser.events[this.selectedUserEventId].crew.push(temp)
 
       this.userProv.updateUser(this.userProv.currentUser)
     }
     else {
-      this.userProv.currentUser.events[this.selectedUserEventId].crew =
-        [{ name: this.newCrew.name, role: this.newCrew.role }]
+      let temp: workerType = {
+        name: this.newCrew.name, role: this.newCrew.role, money: 0, moneyBegin: 0, drinks: {}, moneyOut: 0, moneyIn: 0
+      }
+
+      this.userProv.currentUser.events[this.selectedUserEventId].crew = [temp]
 
       this.userProv.updateUser(this.userProv.currentUser)
     }
@@ -169,6 +175,11 @@ export class AdminPage {
       worker.moneyBegin = parseFloat(worker.moneyBegin.toString())
     })
 
+    for (let drink in this.userProv.currentUser.events[this.selectedUserEventId].drinksBegin) {
+      this.userProv.currentUser.events[this.selectedUserEventId].drinksBegin[drink] =
+        parseFloat(this.userProv.currentUser.events[this.selectedUserEventId].drinksBegin[drink])
+    }
+
     this.userProv.updateUser(this.userProv.currentUser)
     this.isBeforeEvent = false
     this.dialogProv.showToast('Done', 2000, null, 'success')
@@ -176,11 +187,45 @@ export class AdminPage {
 
   uploadPricing() {
     this.userProv.currentUser.events[this.selectedUserEventId].pricing.forEach(price => {
-      price.name = price.name.split('-')[0] + ' - ' + price.price + ' euro'
+      price.name = price.name.split('-')[0].trim() + ' - ' + price.price + ' euro'
     })
 
     this.userProv.updateUser(this.userProv.currentUser)
     this.ispricing = false
     this.dialogProv.showToast('Done', 2000, null, 'success')
+  }
+
+  uploadEventData() {
+    this.userProv.currentUser.events[this.selectedUserEventId].crew.forEach((worker: workerType) => {
+      if (worker.role == userRoleEnum.drinks) {
+        worker.moneyIn = parseFloat(worker.moneyIn.toString())
+        worker.moneyOut = parseFloat(worker.moneyOut.toString())
+        worker.money = worker.moneyIn + worker.moneyBegin - worker.moneyOut
+      }
+      else if (worker.role == userRoleEnum.barman) {
+        for (let drink in worker.drinks) {
+          worker.drinks[drink] = parseFloat(worker.drinks[drink].toString())
+        }
+      }
+
+    })
+
+    this.userProv.updateUser(this.userProv.currentUser)
+    this.isCompile = false
+    this.dialogProv.showToast('Done', 2000, null, 'success')
+  }
+
+  getDrinksBeginList() {
+    let out = []
+
+    for (let drink in this.userProv.currentUser.events[this.selectedUserEventId].drinksBegin) {
+      out.push({ name: drink, value: this.userProv.currentUser.events[this.selectedUserEventId].drinksBegin[drink] })
+    }
+
+    return out
+  }
+
+  test() {
+    this.userProv.test()
   }
 }
