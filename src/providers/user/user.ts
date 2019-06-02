@@ -64,10 +64,7 @@ export class UserProvider {
   currentWorkerCardId = ''
   userEventList: eventType[] = []
 
-  totalCash = 0
-  totalDrinks = 0
-  totalCashIn = 0
-  totalCashOut = 0
+  eventSummray = {} as { totalCash: number, drinkOut: number, drinkBegin: number, totalCashIn: number, totalCashOut: number, restDrinks: any, cashBegin: number }
 
   constructor(
     private localStorage: StorageProvider,
@@ -75,7 +72,9 @@ export class UserProvider {
     private afd: AngularFireDatabase,
 
   ) {
-
+    this.eventSummray = {
+      totalCash: 0, totalCashIn: 0, totalCashOut: 0, drinkBegin: 0, restDrinks: null, cashBegin: 0, drinkOut: 0
+    }
   }
 
   getCurrentUser(): Promise<any> {
@@ -133,13 +132,6 @@ export class UserProvider {
       this.auth.auth.signInWithEmailAndPassword(credentials.email, credentials.password)
         .then(
           res => {
-            // this.afd.object(`users/${res.uid}`).valueChanges().take(1).subscribe((user: userType) => {
-            //   this.currentUser = user
-            //   this.localStorage.setToLocalStorage('iE_user', this.currentUser)
-
-            //   resolve()
-            // })
-
             this.subscribeUser(res.uid)
             resolve()
           })
@@ -396,30 +388,45 @@ export class UserProvider {
   }
 
   compileEventData(eventId) {
-    this.totalCash = 0
-    this.totalDrinks = 0
-    this.totalCashIn = 0
-    this.totalCashOut = 0
 
     if (eventId) {
       this.currentEventID = eventId
 
-      this.currentUser.events[eventId].crew.forEach(worker => {
+      this.eventSummray = {
+        totalCash: 0, totalCashIn: 0, totalCashOut: 0, drinkBegin: 0, restDrinks: {}, cashBegin: 0, drinkOut: 0
+      }
+      for(let drink in this.currentUser.events[eventId].drinksBegin){
+        this.eventSummray.restDrinks[drink] = this.currentUser.events[eventId].drinksBegin[drink]
+      }
+
+      this.currentUser.events[eventId].crew.forEach((worker: workerType) => {
         if (worker.role == userRoleEnum.drinks) {
-          this.totalCash += worker.money
-          if (worker.moneyOut) this.totalCashOut += worker.moneyOut
+          this.eventSummray.totalCash += worker.money
+          this.eventSummray.totalCashOut += worker.moneyOut
+          this.eventSummray.cashBegin += worker.moneyBegin
         }
 
         else if (worker.role == userRoleEnum.barman) {
           for (let drink in worker.drinks) {
-            this.totalDrinks += parseInt(drink.split('-')[1]) * worker.drinks[drink]
+            this.eventSummray.drinkOut += parseInt(drink.split('-')[1]) * worker.drinks[drink]
+              this.eventSummray.restDrinks[drink] -= worker.drinks[drink]
           }
         }
       })
 
-      this.totalCashIn = this.totalCash - this.totalCashOut
+      for (let drink in this.currentUser.events[eventId].drinksBegin) {
+        this.eventSummray.drinkBegin += parseInt(drink.split('-')[1]) * this.currentUser.events[eventId].drinksBegin[drink]
+      }
+
+      this.eventSummray.totalCashIn = this.eventSummray.totalCash - this.eventSummray.totalCashOut
+
+      let temp = []
+      for (let drink in this.eventSummray.restDrinks) {
+        temp.push({ name: drink, value: this.eventSummray.restDrinks[drink] })
+      }
+      this.eventSummray.restDrinks = temp
     }
-    return { cash: this.totalCash, drinks: this.totalDrinks, cashIn: this.totalCashIn, cashOut: this.totalCashOut }
+    return this.eventSummray
   }
 
   uploadEventData(): Promise<any> {
@@ -440,7 +447,7 @@ export class UserProvider {
       'VIP 3 - xx euro': 0
     }
     this.afd.object(`users/${this.currentUser.id}/events/${this.currentEventID}`)
-      .update({drinksBegin: temp})
+      .update({ drinksBegin: temp })
 
   }
 }

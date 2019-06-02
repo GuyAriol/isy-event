@@ -32,43 +32,43 @@
           <ion-item style="color: tomato">
             <h2>Cash available :</h2>
             <p item-right style="color: tomato; font-size: 14px">
-              {{userProv.totalCash}} euro</p>
+              {{userProv.eventSummray.totalCash}} euro</p>
           </ion-item>
 
           <ion-item style="color: tomato">
             <h2>Total cash in :</h2>
             <p item-right style="color: tomato; font-size: 14px">
-              -- euro</p>
+             {{userProv.eventSummray.totalCashIn}} euro</p>
           </ion-item>
 
           <ion-item style="color: tomato">
             <h2>Total cash out :</h2>
             <p item-right style="color: tomato; font-size: 14px">
-              -- euro</p>
+              {{userProv.eventSummray.totalCashOut}} euro</p>
           </ion-item>
 
           <ion-item style="color: tomato">
             <h2>Total cash begin :</h2>
             <p item-right style="color: tomato; font-size: 14px">
-              -- euro</p>
+              {{userProv.eventSummray.cashBegin}} euro</p>
           </ion-item>
 
           <ion-item style="color: tomato">
             <h2>Total drinks sell :</h2>
             <p item-right style="color: tomato; font-size: 14px">
-              {{userProv.totalDrinks}} euro</p>
+              {{userProv.eventSummray.drinkOut}} euro</p>
           </ion-item>
 
           <ion-item style="color: tomato">
             <h2>Total drinks begin :</h2>
             <p item-right style="color: tomato; font-size: 14px">
-              -- euro</p>
+                {{userProv.eventSummray.drinkBegin}} euro</p>
           </ion-item>
 
           <ion-item style="color: tomato">
             <h2>Drinks remaining :</h2>
             <p item-right style="color: tomato; font-size: 14px">
-              -- euro</p>
+              {{userProv.eventSummray.drinkBegin - userProv.eventSummray.drinkOut}} euro</p>
           </ion-item>
 
           <h1 padding-left><u>Details</u></h1>
@@ -92,9 +92,20 @@
               </div>
               <hr style="border-top: 1px solid #999999">
 
-              <p padding-top style="color: #488aff"> Drinks begin</p>
-              <p style="color: tomato">Total <span float-right>2400 euro</span></p>
+              <h2 padding-top style="color: #488aff"> Drinks begin</h2>
+              <p style="color: tomato">Total <span float-right>{{userProv.eventSummray.drinkBegin}} euro</span></p>
               <div *ngFor="let drink of getDrinksBeginList()">
+                <ion-row style="font-size: 14px; color: #666666">
+                  <ion-col col-6>{{drink.name}}</ion-col>
+                  <ion-col>Total in:</ion-col>
+                  <ion-col text-right>{{drink.value}}</ion-col>
+                </ion-row>
+              </div>
+
+              <h2 padding-top style="color: #488aff"> Drinks remaining</h2>
+              <p style="color: tomato">Total <span float-right>{{userProv.eventSummray.drinkBegin - userProv.eventSummray.drinkOut}} euro</span></p>
+
+              <div *ngFor="let drink of userProv.eventSummray.restDrinks">
                 <ion-row style="font-size: 14px; color: #666666">
                   <ion-col col-6>{{drink.name}}</ion-col>
                   <ion-col>Total in:</ion-col>
