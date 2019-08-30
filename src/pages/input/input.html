@@ -53,9 +53,16 @@
 
     <div padding *ngIf="deviceProv.terminalType==0">
       <ion-row justify-content-center>
-        <ion-col text-center col-5>
-          <button ion-button margin-left small color=danger (click)="removeMoney()">Cash out</button>
-          <button ion-button margin-right color=secondary (click)="putMoney()">Cash in</button>
+        <ion-col text-center no-padding col-5>
+          <ion-row>
+            <ion-col no-padding class="action-btn" (click)="removeMoney()" style="background: #f53d3d; color: white">
+              <p>Cash out</p>
+            </ion-col>
+
+            <ion-col no-padding class="action-btn" (click)="putMoney()" style="background: #32db64; color: white">
+              <p>Cash in</p>
+            </ion-col>
+          </ion-row>
 
           <div class="balance" style="margin-top: 25px;" [style.background]="color">
             <div *ngIf="state==0" style="padding-top: 30px">
@@ -72,20 +79,30 @@
 
           <p text-center>{{message}}</p>
 
+          <ion-row text-center>
+            <ion-col>
+              <button ion-button block outline color=danger (click)="openDlg('out')">Take out</button>
+            </ion-col>
+
+            <ion-col>
+              <button ion-button block outline color=secondary (click)="openDlg('in')">Take in</button>
+            </ion-col>
+          </ion-row>
+
         </ion-col>
 
-        <ion-col col-7 no-padding-top>
+        <ion-col col-6 no-padding-top>
           <div text-right class="input-amount">
             <h2><span style="letter-spacing: 10px; font-weight: bold">{{input}} </span> euro</h2>
           </div>
 
           <ion-row justify-content-center>
             <div *ngFor="let num of [7,8,9,4,5,6,1,2,3,0]">
-              <button ion-button round class="numpad" (click)="input=input+num">{{num}}</button>
+              <button ion-button class="numpad" (click)="input=input+num">{{num}}</button>
             </div>
 
-            <button ion-button round class="numpad" color=light (click)="numPad(',')">,</button>
-            <button ion-button round class="numpad" color=danger (click)="backscape()">c</button>
+            <button ion-button class="numpad" color=light (click)="numPad(',')">,</button>
+            <button ion-button class="numpad" color=danger (click)="backscape()">c</button>
           </ion-row>
         </ion-col>
       </ion-row>

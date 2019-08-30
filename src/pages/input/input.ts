@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, PopoverController, ViewController, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, PopoverController, ViewController, Events, AlertController, ModalController } from 'ionic-angular';
 import { DeviceProvider } from '../../providers/device/device';
 import { BluetoothProvider } from '../../providers/bluetooth/bluetooth';
 import { DialogProvider } from '../../providers/dialog/dialog';
@@ -36,6 +36,8 @@ export class InputPage {
     public userProv: UserProvider,
     private event: Events,
     private ngZone: NgZone,
+    private alertCrl: AlertController,
+    private modalCtrl: ModalController
 
 
   ) {
@@ -146,7 +148,9 @@ export class InputPage {
             worker: this.userProv.currentWorker,
             amount: parseFloat(this.input),
             note: '',
-            workerId: this.userProv.currentWorkerCardId
+            workerId: this.userProv.currentWorkerCardId,
+            takeIn: 0,
+            takeOut: 0
           }
           this.nfcProv.saveTransaction(log)
 
@@ -217,7 +221,9 @@ export class InputPage {
                     worker: this.userProv.currentWorker,
                     amount: -parseFloat(this.input),
                     note: '',
-                    workerId: this.userProv.currentWorkerCardId
+                    workerId: this.userProv.currentWorkerCardId,
+                    takeIn: 0,
+                    takeOut: 0
                   }
                   this.nfcProv.saveTransaction(log)
 
@@ -255,6 +261,28 @@ export class InputPage {
   logOff(event) {
     let popover = this.popoverCtrl.create(TerminalPopover, { data: 'cash' })
     popover.present({ ev: event })
+  }
+
+  openDlg(arg) {
+    let title = ''
+    let msg = ''
+    let type = ''
+
+    if (arg == 'in') {
+      title = 'Filling cash box'
+      msg = 'Take money into the cash box i.e. change'
+      type = 'takeIn'
+    }
+    else if (arg == 'out') {
+      title = 'Reduce cash box'
+      msg = 'Take out money out of cash box'
+      type = 'takeOut'
+    }
+
+    this.modalCtrl.create('ModalPage', {
+      title:title, msg: msg, type:type
+    }, {cssClass: 'my-modal-inner my-stretch'}).present()
+
   }
 }
 

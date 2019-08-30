@@ -297,14 +297,18 @@ export class UserProvider {
       let totalDrinks = 0
       let workerLogs = {}
       let workerList = []
+      let takeIn = 0
+      let takeOut = 0
 
       this.localStorage.getFromLocalStorage('iE_eventLog').then((logs: logType[]) => {
         if (logs) {
           logs.forEach(log => {
             if (!log.note) {
-              totalCash += log.amount
+              totalCash += log.amount + log.takeIn + log.takeOut
               if (log.amount < 0) cashOut += log.amount
               else cashIN += log.amount
+              takeIn += log.takeIn
+              takeOut += log.takeOut
             }
             else {
               totalDrinks += log.amount
@@ -318,6 +322,8 @@ export class UserProvider {
                 if (!log.note) {
                   workerLogs[log.worker].totalCash += log.amount
                   if (log.amount < 0) workerLogs[log.worker].totalCashOut += log.amount
+                  workerLogs[log.worker].totalTakeIn += log.takeIn
+                  workerLogs[log.worker].totalTakeOut += log.takeOut
                 }
                 else {
                   workerLogs[log.worker].totalDrinks += log.amount
@@ -340,7 +346,9 @@ export class UserProvider {
                 totalCash: !log.note ? log.amount : 0,
                 totalDrinks: log.note ? log.amount : 0,
                 drinks: temp,
-                totalCashOut: !log.note && log.amount < 0 ? log.amount : 0
+                totalCashOut: !log.note && log.amount < 0 ? log.amount : 0,
+                totalTakeIn: log.takeIn ? log.takeIn : 0,
+                totalTakeOut: log.takeOut ? log.takeOut : 0
               }
 
             }
@@ -353,7 +361,7 @@ export class UserProvider {
             }
 
             workerList.push({
-              name: worker, totalCash: workerLogs[worker].totalCash,
+              name: worker, totalCash: workerLogs[worker].totalCash, totalTakeIn:workerLogs[worker].totalTakeIn, totalTakeOut:workerLogs[worker].totalTakeOut,
               totalDrinks: workerLogs[worker].totalDrinks, drinks: drinksTemp, totalCashOut: workerLogs[worker].totalCashOut
             })
           }
@@ -395,21 +403,22 @@ export class UserProvider {
       this.eventSummray = {
         totalCash: 0, totalCashIn: 0, totalCashOut: 0, drinkBegin: 0, restDrinks: {}, cashBegin: 0, drinkOut: 0
       }
-      for(let drink in this.currentUser.events[eventId].drinksBegin){
+      for (let drink in this.currentUser.events[eventId].drinksBegin) {
         this.eventSummray.restDrinks[drink] = this.currentUser.events[eventId].drinksBegin[drink]
       }
 
       this.currentUser.events[eventId].crew.forEach((worker: workerType) => {
         if (worker.role == userRoleEnum.drinks) {
-          this.eventSummray.totalCash += worker.money
+          this.eventSummray.totalCash += worker.money + worker.moneyBegin
           this.eventSummray.totalCashOut += worker.moneyOut
           this.eventSummray.cashBegin += worker.moneyBegin
+          this.eventSummray.totalCashIn += worker.moneyIn
         }
 
         else if (worker.role == userRoleEnum.barman) {
           for (let drink in worker.drinks) {
             this.eventSummray.drinkOut += parseInt(drink.split('-')[1]) * worker.drinks[drink]
-              this.eventSummray.restDrinks[drink] -= worker.drinks[drink]
+            this.eventSummray.restDrinks[drink] -= worker.drinks[drink]
           }
         }
       })
@@ -417,8 +426,6 @@ export class UserProvider {
       for (let drink in this.currentUser.events[eventId].drinksBegin) {
         this.eventSummray.drinkBegin += parseInt(drink.split('-')[1]) * this.currentUser.events[eventId].drinksBegin[drink]
       }
-
-      this.eventSummray.totalCashIn = this.eventSummray.totalCash - this.eventSummray.totalCashOut
 
       let temp = []
       for (let drink in this.eventSummray.restDrinks) {

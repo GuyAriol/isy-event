@@ -16,7 +16,9 @@ export interface logType {
   worker: string,
   amount: number,
   note: string,
-  workerId: string
+  workerId: string,
+  takeIn : number,
+  takeOut: number
 
 }
 

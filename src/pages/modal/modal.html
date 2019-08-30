@@ -1,0 +1,25 @@
+<ion-content padding>
+  <div class="my-modal-inner">
+    <ion-row align-items-center>
+      <ion-col text-center>
+        <h3>{{data.title}} </h3>
+        <p>{{data.msg}}</p>
+
+        <p style="font-size: 18px; font-weight: bold;  color: tomato">{{input || 0}} euro</p>
+
+        <button ion-button color=secondary (click)="submit()">Submit</button>
+      </ion-col>
+
+      <ion-col paddin-top col-7 >
+        <ion-row align-items-center justify-content-center>
+          <div *ngFor="let num of [9,8,7,6,5,4,3,2,1,0]">
+            <button ion-button mode=ios  class="numpad" (click)="input=input+num">{{num}}</button>
+          </div>
+
+          <button ion-button  mode=ios class="numpad" color=light (click)="numPad(',')">,</button>
+          <button ion-button  mode=ios class="numpad" color=danger (click)="backscape()">c</button>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

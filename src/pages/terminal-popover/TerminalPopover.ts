@@ -19,9 +19,11 @@ import { logType } from "../../providers/global";
         <div *ngFor="let worker of workerList">
           <ion-item>
             <p><b>{{worker.name}}</b></p>
-            <p>Cash final: {{worker.totalCash}} euro</p>
+            <p>Cash final: {{worker.totalCash + worker.totalTakeIn + worker.totalTakeOut}} euro</p>
             <p>Cash in: {{worker.totalCash - worker.totalCashOut}} euro</p>
             <p>Cash out: {{worker.totalCashOut}} euro</p>
+            <p>Take in: {{worker.totalTakeIn}} euro</p>
+            <p>Take out: {{worker.totalTakeOut}} euro</p>
           </ion-item>
         </div>
       </div>
@@ -55,6 +57,8 @@ export class TerminalPopover {
   totalIn = 0
   workerLogs = {}
   workerList = []
+  totalTakeIn = 0
+  totalTakeOut = 0
 
   type = ''
 
@@ -77,8 +81,6 @@ export class TerminalPopover {
       this.totalIn = result.cashIN
       this.totalOut = result.cashOut
 
-      console.log(this.workerList)
-      console.log(this.workerLogs)
     })
 
   }

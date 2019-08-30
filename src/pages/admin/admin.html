@@ -75,7 +75,7 @@
 
           <ion-item *ngFor="let worker of userProv.currentUser.events[selectedUserEventId]?.crew; let index=index">
             <h2 style="color: #488aff">{{worker.name}} </h2>
-            <p *ngIf="worker.role == 2" style="color: tomato">Cash total <span float-right>{{worker.money || 0}}
+            <p *ngIf="worker.role == 2" style="color: tomato">Cash total <span float-right>{{(worker.money + worker.moneyBegin) || 0}}
                 euro</span></p>
             <p *ngIf="worker.role == 2">Cash begin <span float-right>{{worker.moneyBegin || 0}} euro</span></p>
             <p *ngIf="worker.role == 2">Cash in <span float-right>{{worker.moneyIn || 0}} euro</span></p>

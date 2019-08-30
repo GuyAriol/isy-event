@@ -439,8 +439,9 @@ export class NfcProvider {
 
     if (this.networkProv.isOnline) {
       let statistics = this.getUserTotaltransaction()
+
       this.afdb.object(`users/${this.userProv.currentUser.id}/events/${this.userProv.currentEventID}/crew/${statistics.workerIndex}`)
-        .update({ money: statistics.money, drinks: statistics.drinks })
+        .update({ money: statistics.money, drinks: statistics.drinks,  moneyIn: statistics.moneyIn, moneyOut: statistics.moneyOut})
         .catch(error => {
           this.networkProv.isOnline = false
           console.log(error)
@@ -488,6 +489,8 @@ export class NfcProvider {
 
     let moneyTotal = 0
     let drinkTotal = {}
+    let moneyIn = 0
+    let moneyOut = 0
 
     this.allNFCtransactions.forEach(log => {
       if (log.worker == this.userProv.currentWorker) {
@@ -495,6 +498,8 @@ export class NfcProvider {
         // Fall Kassierer
         if (!log.note) {
           moneyTotal = moneyTotal + log.amount
+          if(log.amount > 0) moneyIn += log.amount
+          else moneyOut += log.amount
         }
         else {
           if (Object.keys(drinkTotal).indexOf(log.note) > -1) {
@@ -503,6 +508,7 @@ export class NfcProvider {
           else {
             drinkTotal[log.note] = 1
           }
+          moneyTotal += log.amount
         }
       }
     })
@@ -512,7 +518,7 @@ export class NfcProvider {
       drinks.push({ type: drink, total: drinkTotal[drink] })
     }
 
-    return { money: moneyTotal, drinks: drinkTotal, workerIndex: userIndex }
+    return { money: moneyTotal, drinks: drinkTotal, workerIndex: userIndex, moneyIn: moneyIn, moneyOut: moneyOut }
   }
 }
 

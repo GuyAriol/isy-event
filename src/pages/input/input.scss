@@ -21,14 +21,14 @@ page-input {
 
   .numpad {
     margin: 10px;
-    font-size: 14px;
+    font-size: 18px;
   }
 
-  .amount{
+  .amount {
     letter-spacing: 10px;
   }
 
-  ion-slides{
+  ion-slides {
     height: 60vh;
     border-style: solid;
     border-color: gainsboro;
@@ -40,18 +40,26 @@ page-input {
     height: 32px;
   }
 
-  .vert-bar{
+  .vert-bar {
     border-left-style: solid;
     border-left-width: 0.5px;
     border-left-color: white;
     padding: 15px;
   }
 
-  .input-amount{
+  .input-amount {
     border-style: solid;
     border-color: gainsboro;
     padding: 10px 10px 0px 0px;
     margin: 0px 0px 0px 0px;
+  }
 
+  .action-btn {
+    border-style: solid;
+    border-color: #999;
+    border-width: 1px;
+    height: 45px;
+    margin: 5px;
+    border-radius: 10px;
   }
 }

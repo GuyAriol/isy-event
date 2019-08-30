@@ -113,7 +113,9 @@ export class OutputPage {
               worker: this.userProv.currentWorker,
               amount: price,
               note: item,
-              workerId: this.userProv.currentWorkerCardId
+              workerId: this.userProv.currentWorkerCardId,
+              takeIn: 0,
+              takeOut: 0
             }
             this.nfcProv.saveTransaction(log)
 
